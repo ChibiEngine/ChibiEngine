@@ -1,6 +1,7 @@
 // https://docs.cocos2d-x.org/api-ref/cplusplus/v4x/d3/d82/classcocos2d_1_1_node.html
 
 import * as PIXI from "pixi.js";
+import Behavior from "../behavior/Behavior";
 import Event from "../event/Event";
 import Position from "../geom/position/Position";
 
@@ -29,6 +30,8 @@ export default abstract class INode implements Positionable, Sizeable {
 
   private readonly _size: Size;
   public readonly onSizeChange: Event<Size>;
+
+  private behaviors: Behavior<this>[] = [];
 
   public constructor(position: Position = Position.zero()) {
     this._position = position;
@@ -89,6 +92,17 @@ export default abstract class INode implements Positionable, Sizeable {
 
   public get center() {
     return center(this);
+  }
+
+  public addBehavior(behavior: Behavior<this>) {
+    this.behaviors.push(behavior);
+    behavior.control(this);
+  }
+
+  public removeBehavior(behavior: Behavior<this>) {
+    const index = this.behaviors.indexOf(behavior);
+    if (index === -1) return false;
+    this.behaviors.splice(index, 1)[0]
   }
 
   /**
