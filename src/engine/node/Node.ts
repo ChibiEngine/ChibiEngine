@@ -29,6 +29,7 @@ export default class Node extends INode {
    * @param child
    */
   public add<T extends INode>(child: T): T {
+    child.parent = this;
     return null;
   }
 
@@ -40,6 +41,7 @@ export default class Node extends INode {
   public remove(child: INode): boolean {
     const index = this.children.indexOf(child);
     if (index === -1) return false;
+    child.parent = null;
     this.children.splice(index, 1)[0].destroy();
     return true;
   }

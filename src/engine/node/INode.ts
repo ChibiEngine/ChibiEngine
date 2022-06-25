@@ -23,6 +23,7 @@ import center from "./positioning/center";
  *   - Text
  */
 export default abstract class INode implements Positionable, Sizeable {
+  protected _parent: INode = null;
   protected abstract readonly internal: PIXI.Container;
 
   private readonly _position: Position;
@@ -38,6 +39,10 @@ export default abstract class INode implements Positionable, Sizeable {
     this._size = Size.zero();
     this.onPositionChange = this._position.onChange;
     this.onSizeChange = this._size.onChange;
+  }
+
+  public set parent(parent: INode) {
+    this._parent = parent;
   }
 
   public get position() {
@@ -104,6 +109,16 @@ export default abstract class INode implements Positionable, Sizeable {
     if (index === -1) return false;
     this.behaviors.splice(index, 1)[0]
   }
+
+  public getParentBehavior<T extends Behavior<any>>(type: typeof Behavior): T {
+    return null as T;
+  }
+
+  public getParent<T extends INode>(type: typeof INode): T {
+    return null as T;
+  }
+
+
 
   /**
    * Détruit le noeud et libère ses ressources
