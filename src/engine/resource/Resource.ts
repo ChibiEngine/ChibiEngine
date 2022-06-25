@@ -58,6 +58,8 @@ export default abstract class Resource {
   public load(): Promise<this> {
     this._loading = true;
     return this._load().then(val => {
+      this._loading = false;
+      this._loaded = true;
       this.onLoaded.trigger(this);
       return val;
     });
