@@ -12,12 +12,4 @@ export class Scene extends Node {
   public constructor() {
     super();
   }
-
-  public load<T extends INode | Resource<any>>(dependency: T): T {
-    return null;
-  }
-
-  public add<T extends INode>(child: T): T {
-    return null;
-  }
 }

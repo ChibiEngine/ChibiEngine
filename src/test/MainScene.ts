@@ -7,6 +7,9 @@ import Node from "../engine/node/Node";
 export default class MainScene extends Scene {
   private container: Node;
   public async create() {
+    const loadingText = this.load(new Text("/assets/paragraph.txt"));
+    loadingText.onProgress.subscribe(info => console.log);
+    const text = await loadingText;
     // Create a container at the center
     this.container = this.add(new Node(this.center));
 

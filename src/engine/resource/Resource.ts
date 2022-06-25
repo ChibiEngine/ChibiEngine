@@ -7,21 +7,24 @@ import { loadResource } from "./ResourcesManager";
  *  const sprite2 = new Sprite(new Image("/assets/bunny.png"));
  * Résultat: deux Image avec un referenceCount à 1
  * Il faut trouver un moyen de partager cette ressource.
+ * 
+ * Solution :
+ * Se servir de l'appel à this.load() pour renvoyer la ressource déjà chargée. :
+ * const ressource1 = this.laod(new Image("/assets/bunny.png"));
+ * const ressource2 = this.laod(new Image("/assets/bunny.png"));
+ * assert(ressource1 === ressource2);
  */
 
-export default abstract class Resource<T> {
+export default abstract class Resource {
   private referenceCount: number = 0;
   private _path: string;
   private _loaded: boolean = false;
   private _loading: boolean = false;
   private _bytesLoaded: number = 0;
-  private _bytesRemaining: number = 0;
   private _bytesTotal: number = 0;
 
-  protected internal: T;
-
-  public readonly onDestroy: Event<Resource<T>> = new Event();
-  public readonly onLoaded: Event<Resource<T>> = new Event();
+  public readonly onDestroy: Event<Resource> = new Event();
+  public readonly onLoaded: Event<Resource> = new Event();
 
   protected constructor(path: string) {
     // Normalize path ?
@@ -41,18 +44,6 @@ export default abstract class Resource<T> {
   }
 
   public retain() {
-    if (this.ref) {
-      this.ref.retain();
-      return;
-    }
-    if (!this.loaded) {
-      const ref = loadResource(this);
-      if (ref !== this) {
-        this.ref = ref;
-        this.ref.retain();
-        return;
-      }
-    }
     this.referenceCount++;
   }
 
@@ -64,22 +55,15 @@ export default abstract class Resource<T> {
     }
   }
 
-  public load(): Promise<void> {
+  public load(): Promise<this> {
     this._loading = true;
-    return this._load();
+    return this._load().then(val => {
+      this.onLoaded.trigger(this);
+      return val;
+    });
   }
 
-  protected abstract _load(): Promise<void>;
-
-  public set(internal: T) {
-    this._loading = false;
-    this._loaded = true;
-    this.onLoaded.trigger(this);
-  }
-
-  public get(): T {
-    return null;
-  }
+  protected abstract _load(): Promise<this>;
 
   protected abstract destroy(): void;
 }

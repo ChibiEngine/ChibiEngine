@@ -1,5 +1,6 @@
 import * as PIXI from "pixi.js";
 import Position from "../geom/position/Position";
+import PromiseWithLoaderInfo from "../resource/loader/PromiseWithLoaderInfo";
 import Resource from "../resource/Resource";
 import INode from "./INode";
 
@@ -20,7 +21,7 @@ export default class Node extends INode {
    * Charge une dépendance (explicit loading)
    * @param dependency
    */
-  public load<T extends INode | Resource<any>>(dependency: T): T {
+  public load<T extends INode | Resource>(dependency: T): PromiseWithLoaderInfo<T> {
     return null;
   }
 
@@ -28,7 +29,7 @@ export default class Node extends INode {
    * Ajoute un enfant à ce noeud et charge ses dépendances si nécessaire (just-in-time loading)
    * @param child
    */
-  public add<T extends INode>(child: T): T {
+  public add<T extends INode>(child: T): PromiseWithLoaderInfo<T> {
     child.parent = this;
     return null;
   }

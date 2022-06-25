@@ -1,5 +1,3 @@
-// https://docs.cocos2d-x.org/api-ref/cplusplus/v4x/d3/d82/classcocos2d_1_1_node.html
-
 import * as PIXI from "pixi.js";
 import Behavior from "../behavior/Behavior";
 import Event from "../event/Event";
@@ -8,7 +6,11 @@ import Position from "../geom/position/Position";
 import Positionable from "../geom/position/Positionable";
 import Size from "../geom/size/Size";
 import Sizeable from "../geom/size/Sizeable";
+import PromiseWithLoaderInfo from "../resource/loader/PromiseWithLoaderInfo";
+import Resource from "../resource/Resource";
 import center from "./positioning/center";
+
+// Inspired by https://docs.cocos2d-x.org/api-ref/cplusplus/v4x/d3/d82/classcocos2d_1_1_node.html
 
 /**
  * Noeud abstrait implémenté par les wrapper d'objets Pixi
@@ -39,6 +41,15 @@ export default abstract class INode implements Positionable, Sizeable {
     this._size = Size.zero();
     this.onPositionChange = this._position.onChange;
     this.onSizeChange = this._size.onChange;
+  }
+
+  /**
+   * Charge une dépendance (explicit loading)
+   * @param dependency
+   */
+  public load<T extends Resource>(dependency: T): PromiseWithLoaderInfo<T> {
+    // TODO: retain ici plutôt que dans l'enfant?
+    return null;
   }
 
   public set parent(parent: INode) {
@@ -118,10 +129,8 @@ export default abstract class INode implements Positionable, Sizeable {
     return null as T;
   }
 
-
-
   /**
-   * Détruit le noeud et libère ses ressources
+   * Détruit le noeud et libère ses ressources.
    */
-  public abstract destroy(): void;
+  public abstract destroy(): void; // TODO: release ici ?
 }
