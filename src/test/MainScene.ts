@@ -3,13 +3,14 @@ import { Scene } from "../engine/Scene";
 import Image from "../engine/resource/Image";
 import Sprite from "../engine/node/Sprite";
 import Node from "../engine/node/Node";
+import Text from "../engine/resource/Text";
 
 export default class MainScene extends Scene {
   private container: Node;
+  private text: Text;
   public async create() {
-    const loadingText = this.load(new Text("/assets/paragraph.txt"));
-    loadingText.onProgress.subscribe(info => console.log);
-    const text = await loadingText;
+    this.text = await this.load(new Text("/assets/paragraph.txt"));
+    this.text.onProgress.subscribe(info => console.log);
     // Create a container at the center
     this.container = this.add(new Node(this.center));
 

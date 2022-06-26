@@ -21,7 +21,7 @@ export default class Node extends INode {
    * Charge une dépendance (explicit loading)
    * @param dependency
    */
-  public load<T extends INode | Resource>(dependency: T): PromiseWithLoaderInfo<T> {
+  public load<T extends INode | Resource>(dependency: T): T & Promise<T> {
     return null;
   }
 

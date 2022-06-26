@@ -47,9 +47,10 @@ export default abstract class INode implements Positionable, Sizeable {
    * Charge une dépendance (explicit loading)
    * @param dependency
    */
-  public load<T extends Resource>(dependency: T): PromiseWithLoaderInfo<T> {
+  public load<T extends Resource>(dependency: T): T & Promise<T> {
     // TODO: retain ici plutôt que dans l'enfant?
-    return null;
+    const promise = dependency.onLoaded;
+    return Object.assign(dependency, promise);
   }
 
   public set parent(parent: INode) {

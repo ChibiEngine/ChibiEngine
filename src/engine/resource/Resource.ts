@@ -1,4 +1,4 @@
-import Event from "../event/Event";
+import Event, { makeEventPromise } from "../event/Event";
 import { loadResource } from "./ResourcesManager";
 
 /**
@@ -23,8 +23,8 @@ export default abstract class Resource {
   private _bytesLoaded: number = 0;
   private _bytesTotal: number = 0;
 
-  public readonly onDestroy: Event<Resource> = new Event();
-  public readonly onLoaded: Event<Resource> = new Event();
+  public readonly onDestroy: Event<this> = new Event();
+  public readonly onLoaded: Event<this> & Promise<this> = makeEventPromise(new Event());
 
   protected constructor(path: string) {
     // Normalize path ?

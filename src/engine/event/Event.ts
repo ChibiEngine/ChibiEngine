@@ -1,5 +1,5 @@
 export default class Event<T> {
-  private listeners: ((value: T) => void)[] = [];
+  private listeners: (<K extends T>(value: K) => void)[] = [];
 
   public subscribe(listener: (value: T) => void) {
     this.listeners.push(listener);
@@ -8,7 +8,7 @@ export default class Event<T> {
   public unsubscribe(listener: (value: T) => void) {
     const index = this.listeners.indexOf(listener);
     if (index === -1) return false;
-    this.listeners.splice(index, 1)[0];
+    this.listeners.splice(index, 1);
     return true;
   }
 
@@ -27,4 +27,9 @@ export default class Event<T> {
       this.subscribe(callback);
     });
   }
+}
+
+export function makeEventPromise<K, T extends Event<K>>(event: T): T & Promise<K> {
+  const promise = event.promise();
+  return Object.assign(event, promise);
 }
