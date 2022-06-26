@@ -1,5 +1,6 @@
-import Event, { makeEventPromise } from "../event/Event";
-import { loadResource } from "./ResourcesManager";
+import Event from "../event/Event";
+import EventPromise, { makePromise } from "../event/PromiseEvent";
+import LoaderInfo from "./loader/LoaderInfo";
 
 /**
  * PB : Si deux resources sont créées pour référencer la même chose :
@@ -20,11 +21,12 @@ export default abstract class Resource {
   private _path: string;
   private _loaded: boolean = false;
   private _loading: boolean = false;
-  private _bytesLoaded: number = 0;
-  private _bytesTotal: number = 0;
+
+  public readonly loaderInfo = new LoaderInfo();
 
   public readonly onDestroy: Event<this> = new Event();
-  public readonly onLoaded: Event<this> & Promise<this> = makeEventPromise(new Event());
+  public readonly onLoaded: EventPromise<this> = makePromise(new Event<this>());
+  public readonly onProgress: Event<LoaderInfo> = this.loaderInfo.onProgress;
 
   protected constructor(path: string) {
     // Normalize path ?
@@ -33,6 +35,14 @@ export default abstract class Resource {
 
   public get path() {
     return this._path;
+  }
+
+  public get bytesLoaded() {
+    return this.loaderInfo.bytesLoaded;
+  }
+
+  public get bytesTotal() {
+    return this.loaderInfo.bytesTotal;
   }
 
   public get loading() {

@@ -28,8 +28,3 @@ export default class Event<T> {
     });
   }
 }
-
-export function makeEventPromise<K, T extends Event<K>>(event: T): T & Promise<K> {
-  const promise = event.promise();
-  return Object.assign(event, promise);
-}
