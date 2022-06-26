@@ -1,4 +1,4 @@
-import Event from "../../event/Event";
+import Event from "../event/Event";
 
 export default class LoaderInfo {
     private _bytesLoaded: number = -1;

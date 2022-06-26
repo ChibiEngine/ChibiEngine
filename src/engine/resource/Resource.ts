@@ -1,6 +1,7 @@
 import Event from "../event/Event";
-import EventPromise, { makePromise } from "../event/PromiseEvent";
-import LoaderInfo from "./loader/LoaderInfo";
+import EventPromise, { makePromise } from "../event/EventPromise";
+import Loadable from "../loadable/Loadable";
+import LoaderInfo from "../loadable/LoaderInfo";
 
 /**
  * PB : Si deux resources sont créées pour référencer la même chose :
@@ -16,7 +17,7 @@ import LoaderInfo from "./loader/LoaderInfo";
  * assert(ressource1 === ressource2);
  */
 
-export default abstract class Resource {
+export default abstract class Resource implements Loadable {
   private referenceCount: number = 0;
   private _path: string;
   private _loaded: boolean = false;

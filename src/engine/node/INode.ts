@@ -1,12 +1,14 @@
 import * as PIXI from "pixi.js";
 import Behavior from "../behavior/Behavior";
 import Event from "../event/Event";
+import EventPromise from "../event/EventPromise";
 import Position from "../geom/position/Position";
 
 import Positionable from "../geom/position/Positionable";
 import Size from "../geom/size/Size";
 import Sizeable from "../geom/size/Sizeable";
-import PromiseWithLoaderInfo from "../resource/loader/PromiseWithLoaderInfo";
+import Loadable, { LoadablePromise, makePromise } from "../loadable/Loadable";
+import LoaderInfo from "../loadable/LoaderInfo";
 import Resource from "../resource/Resource";
 import center from "./positioning/center";
 
@@ -24,7 +26,7 @@ import center from "./positioning/center";
  * - Sprite
  *   - Text
  */
-export default abstract class INode implements Positionable, Sizeable {
+export default abstract class INode implements Positionable, Sizeable, Loadable {
   protected _parent: INode = null;
   protected abstract readonly internal: PIXI.Container;
 
@@ -43,14 +45,22 @@ export default abstract class INode implements Positionable, Sizeable {
     this.onSizeChange = this._size.onChange;
   }
 
+  // TODO : implement
+  onProgress: Event<LoaderInfo>;
+  onLoaded: EventPromise<this>;
+  loaderInfo: LoaderInfo;
+  loaded: boolean;
+  loading: boolean;
+  bytesLoaded: number;
+  bytesTotal: number;
+
   /**
    * Charge une dépendance (explicit loading)
    * @param dependency
    */
-  public load<T extends Resource>(dependency: T): T & Promise<T> {
+  public load<T extends Resource>(dependency: T): LoadablePromise<T> {
     // TODO: retain ici plutôt que dans l'enfant?
-    const promise = dependency.onLoaded;
-    return Object.assign(dependency, promise);
+    return makePromise(dependency);
   }
 
   public set parent(parent: INode) {
