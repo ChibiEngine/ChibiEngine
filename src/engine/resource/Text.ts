@@ -5,7 +5,7 @@ export default class Text extends Resource {
         super(url);
     }
 
-    protected _load(): Promise<this> {
+    protected create(): Promise<void> {
         throw new Error("Method not implemented.");
     }
     

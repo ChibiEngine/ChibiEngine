@@ -1,7 +1,7 @@
 import Event from "../event/Event";
 import EventPromise, { makePromise } from "../event/EventPromise";
-import Loadable from "../loadable/Loadable";
-import LoaderInfo from "../loadable/LoaderInfo";
+import Loadable from "../loader/Loadable";
+import LoaderInfo from "../loader/LoaderInfo";
 
 /**
  * PB : Si deux resources sont créées pour référencer la même chose :
@@ -17,11 +17,9 @@ import LoaderInfo from "../loadable/LoaderInfo";
  * assert(ressource1 === ressource2);
  */
 
-export default abstract class Resource implements Loadable {
+export default abstract class Resource extends Loadable {
   private referenceCount: number = 0;
   private _path: string;
-  private _loaded: boolean = false;
-  private _loading: boolean = false;
 
   public readonly loaderInfo = new LoaderInfo();
 
@@ -30,6 +28,7 @@ export default abstract class Resource implements Loadable {
   public readonly onProgress: Event<LoaderInfo> = this.loaderInfo.onProgress;
 
   protected constructor(path: string) {
+    super();
     // Normalize path ?
     this._path = path;
   }
@@ -46,14 +45,6 @@ export default abstract class Resource implements Loadable {
     return this.loaderInfo.bytesTotal;
   }
 
-  public get loading() {
-    return this._loading;
-  }
-
-  public get loaded() {
-    return this._loaded;
-  }
-
   public retain() {
     this.referenceCount++;
   }
@@ -68,15 +59,15 @@ export default abstract class Resource implements Loadable {
 
   public load(): Promise<this> {
     this._loading = true;
-    return this._load().then(val => {
+    return this.create().then(() => {
       this._loading = false;
       this._loaded = true;
       this.onLoaded.trigger(this);
-      return val;
+      return this;
     });
   }
 
-  protected abstract _load(): Promise<this>;
+  protected abstract create(): Promise<void>;
 
   protected abstract destroy(): void;
 }

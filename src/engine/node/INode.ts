@@ -7,8 +7,9 @@ import Position from "../geom/position/Position";
 import Positionable from "../geom/position/Positionable";
 import Size from "../geom/size/Size";
 import Sizeable from "../geom/size/Sizeable";
-import Loadable, { LoadablePromise, makePromise } from "../loadable/Loadable";
-import LoaderInfo from "../loadable/LoaderInfo";
+import Loadable, { LoadablePromise, makePromise } from "../loader/Loadable";
+import Loader from "../loader/Loader";
+import LoaderInfo from "../loader/LoaderInfo";
 import Resource from "../resource/Resource";
 import center from "./positioning/center";
 
@@ -26,7 +27,8 @@ import center from "./positioning/center";
  * - Sprite
  *   - Text
  */
-export default abstract class INode implements Positionable, Sizeable, Loadable {
+export default abstract class INode extends Loadable implements Positionable, Sizeable, Loader {
+  // Pas Node pour éviter dépendance circulaire
   protected _parent: INode = null;
   protected abstract readonly internal: PIXI.Container;
 
@@ -39,6 +41,7 @@ export default abstract class INode implements Positionable, Sizeable, Loadable 
   private behaviors: Behavior<this>[] = [];
 
   public constructor(position: Position = Position.zero()) {
+    super();
     this._position = position;
     this._size = Size.zero();
     this.onPositionChange = this._position.onChange;
@@ -49,10 +52,8 @@ export default abstract class INode implements Positionable, Sizeable, Loadable 
   onProgress: Event<LoaderInfo>;
   onLoaded: EventPromise<this>;
   loaderInfo: LoaderInfo;
-  loaded: boolean;
-  loading: boolean;
-  bytesLoaded: number;
-  bytesTotal: number;
+
+  public abstract create(): Promise<void>;
 
   /**
    * Charge une dépendance (explicit loading)

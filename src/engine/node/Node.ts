@@ -1,6 +1,6 @@
 import * as PIXI from "pixi.js";
 import Position from "../geom/position/Position";
-import { LoadablePromise } from "../loadable/Loadable";
+import { LoadablePromise } from "../loader/Loadable";
 import Resource from "../resource/Resource";
 import INode from "./INode";
 
@@ -17,11 +17,19 @@ export default class Node extends INode {
     this.internal = new PIXI.Container();
   }
 
+  public async create(): Promise<void> { }
+
   /**
    * Charge une dépendance (explicit loading)
    * @param dependency
    */
   public load<T extends INode | Resource>(dependency: T): LoadablePromise<T> {
+    if(dependency instanceof INode) {
+      
+    } else {
+      // Déléguer au parent
+      this.parent.load(dependency);
+    }
     return null;
   }
 

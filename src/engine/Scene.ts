@@ -8,8 +8,4 @@ export class Scene extends Node {
   game: Game = null;
 
   private camera: Camera;
-
-  public constructor() {
-    super();
-  }
 }
