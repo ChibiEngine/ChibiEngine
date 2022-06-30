@@ -1,4 +1,5 @@
 import * as PIXI from "pixi.js";
+import INode from "../node/INode";
 import { Scene } from "./Scene";
 
 interface GameConfig {
@@ -8,14 +9,22 @@ interface GameConfig {
   resolution: number;
 }
 
-export default class Game {
+export default class Game extends INode {
+  protected readonly internal: PIXI.Container = null;
+
   private readonly app: PIXI.Application;
   private readonly sceneStack: Scene[];
 
   public constructor(config: GameConfig) {
+    super();
     this.app = new PIXI.Application(config);
     document.body.appendChild(this.app.view);
+    this.internal = this.app.stage;
   }
+
+  public async create() { }
+
+  public destroy() { }
 
   public currentScene(): Scene {
     if (this.sceneStack.length === 0) return null;

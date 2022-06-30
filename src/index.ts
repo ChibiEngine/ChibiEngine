@@ -1,5 +1,5 @@
 import * as PIXI from "pixi.js";
-import Game from "./engine/Game";
+import Game from "./engine/game/Game";
 
 const game = new Game({
   width: 800,

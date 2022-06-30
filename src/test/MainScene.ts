@@ -1,9 +1,9 @@
 import bunnyURL from "./assets/bunny.png?url";
-import { Scene } from "../engine/Scene";
 import Image from "../engine/resource/Image";
 import Sprite from "../engine/node/Sprite";
 import Node from "../engine/node/Node";
 import Text from "../engine/resource/Text";
+import Scene from "../engine/game/Scene";
 
 export default class MainScene extends Scene {
   private container: Node;
