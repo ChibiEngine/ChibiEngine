@@ -14,4 +14,4 @@ export default class LoaderInfo {
         this._bytesLoaded = value;
         this.onProgress.trigger(this);
     }
-};
+}

@@ -130,14 +130,16 @@ export default abstract class INode extends Loadable implements Positionable, Si
   public removeBehavior(behavior: Behavior<this>) {
     const index = this.behaviors.indexOf(behavior);
     if (index === -1) return false;
-    this.behaviors.splice(index, 1)[0]
+    this.behaviors.splice(index, 1);
   }
 
   public getParentBehavior<T extends Behavior<any>>(type: typeof Behavior): T {
+    // TODO: implement
     return null as T;
   }
-
+  
   public getParent<T extends INode>(type: typeof INode): T {
+    // TODO: implement
     return null as T;
   }
 

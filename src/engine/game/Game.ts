@@ -22,9 +22,13 @@ export default class Game extends INode {
     this.internal = this.app.stage;
   }
 
-  public async create() { }
-
-  public destroy() { }
+  public async create() {
+    // To be overridden
+  }
+  
+  public destroy() {
+    // To be overridden
+  }
 
   public currentScene(): Scene {
     if (this.sceneStack.length === 0) return null;
@@ -37,5 +41,7 @@ export default class Game extends INode {
     this.updateScene();
   }
 
-  private updateScene() {}
+  private updateScene() {
+    // TODO: implement
+  }
 }

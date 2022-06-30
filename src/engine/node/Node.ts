@@ -17,7 +17,9 @@ export default class Node extends INode {
     this.internal = new PIXI.Container();
   }
 
-  public async create(): Promise<void> { }
+  public async create(): Promise<void> {
+    // To be overridden
+  }
 
   /**
    * Charge une dépendance (explicit loading)
@@ -25,7 +27,7 @@ export default class Node extends INode {
    */
   public load<T extends INode | Resource>(dependency: T): LoadablePromise<T> {
     if(dependency instanceof INode) {
-      
+      // TODO: implement
     } else {
       // Déléguer au parent
       this.parent.load(dependency);

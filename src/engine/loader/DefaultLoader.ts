@@ -4,7 +4,7 @@ import Loader from "./Loader";
 
 export default class DefaultLoader implements Loader {
     // Resource by path
-    private readonly resources: Map<String, Resource> = new Map();
+    private readonly resources: Map<string, Resource> = new Map();
 
     private onResourceDestroy(resource: Resource) {
         this.resources.delete(resource.path);
@@ -21,7 +21,7 @@ export default class DefaultLoader implements Loader {
             }
             this.resources.set(dependency.path, dependency);
             dependency.onDestroy.subscribe(this.onResourceDestroy);
-            return await dependency.load();
+            return dependency.load();
 
         })();
         return Object.assign(dependency, promise);
