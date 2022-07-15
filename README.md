@@ -33,9 +33,9 @@ Le rendu est réalisé grâce à [PixiJS](https://github.com/pixijs/pixijs)
 - [ ] Filtres PIXI (shaders)
 - [ ] Masques
 - [ ] Meshes
-- [ ] Prefab compilés
+- [ ] Chargement dynamique de noeud
 - [ ] Optimisation par génération d'atlas au runtime
-    - [ ] Ou ahead-of-time avec un CLI ?
+    - [ ] Ou ahead-of-time au compile-time ? Ou avec un CLI ?
 
 ⚒️ : Work in progress...
 
