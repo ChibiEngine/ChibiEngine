@@ -39,6 +39,6 @@ Le rendu est réalisé grâce à [PixiJS](https://github.com/pixijs/pixijs)
 
 ⚒️ : Work in progress...
 
-[MADE FOR CHIBILAND](http://chibi.land/)
+[Designed for Chibiland](http://chibi.land/)
 
 FEAVY 2022 - https://feavy.fr/
