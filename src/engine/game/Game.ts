@@ -1,6 +1,11 @@
 import * as PIXI from "pixi.js";
 import INode from "../node/INode";
-import { Scene } from "./Scene";
+import Scene from "./Scene";
+import Resource from "../resource/Resource";
+import {LoadablePromise, makePromise} from "../loader/Loadable";
+import Node from "../node/Node";
+import DefaultLoader from "../loader/DefaultLoader";
+import Loader from "../loader/Loader";
 
 interface GameConfig {
   width: number;
@@ -9,26 +14,38 @@ interface GameConfig {
   resolution: number;
 }
 
-export default class Game extends INode {
-  protected readonly internal: PIXI.Container = null;
+export default class Game extends Node {
+  public readonly _internal: PIXI.Container = null;
 
   private readonly app: PIXI.Application;
-  private readonly sceneStack: Scene[];
+  private readonly sceneStack: Scene[] = [];
+
+  private readonly loader: Loader = new DefaultLoader();
 
   public constructor(config: GameConfig) {
     super();
     this.app = new PIXI.Application(config);
     document.body.appendChild(this.app.view);
-    this.internal = this.app.stage;
+    this._internal = this.app.stage;
   }
 
-  public async create() {
-    // To be overridden
+  public load<T extends Resource | INode>(dependency: T): T {
+    if(dependency instanceof Resource) {
+      return this.loader.load(dependency) as T; // TODO: cast bizarre
+    }else{
+      return super.load(dependency);
+    }
   }
-  
-  public destroy() {
-    // To be overridden
-  }
+
+  /**
+   * To be overridden
+   */
+  public async create() { }
+
+  /**
+   * To be overridden
+   */
+  public destroy() { }
 
   public currentScene(): Scene {
     if (this.sceneStack.length === 0) return null;
@@ -37,6 +54,7 @@ export default class Game extends INode {
 
   public addScene(scene: Scene) {
     scene.game = this;
+    this.add(scene);
     this.sceneStack.push(scene);
     this.updateScene();
   }

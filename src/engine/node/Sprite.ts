@@ -1,17 +1,25 @@
 import { Sprite as PixiSprite } from "pixi.js";
 import Image from "../resource/Image";
 import INode from "./INode";
+import Position from "../geom/position/Position";
 
 export default class Sprite extends INode {
-  protected internal: PixiSprite;
+  public _internal: PixiSprite;
 
-  public constructor(image: Image, x: number = 0, y: number = 0) {
-    super();
+  public constructor(private readonly image: Image, x: number = 0, y: number = 0) {
+    super(new Position(x, y));
+  }
+
+  public async create(): Promise<void> {
     // Load Texture
-    this.internal = new PixiSprite();
+    const image = await this.load(this.image);
+    this._internal = new PixiSprite(image.texture);
+    this._internal.x = this.x;
+    this._internal.y = this.y;
   }
 
   public destroy(): void {
-    throw new Error("Method not implemented.");
+    this._internal.destroy();
+    this.image.release();
   }
 }

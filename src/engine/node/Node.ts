@@ -1,6 +1,5 @@
 import * as PIXI from "pixi.js";
 import Position from "../geom/position/Position";
-import { LoadablePromise } from "../loader/Loadable";
 import Resource from "../resource/Resource";
 import INode from "./INode";
 
@@ -9,39 +8,48 @@ import INode from "./INode";
  * Toute la hiérarchie d'une scène se base sur ces noeuds
  */
 export default class Node extends INode {
-  protected internal: PIXI.Container;
+  public readonly _internal: PIXI.Container;
   private children: INode[] = [];
 
   public constructor(position: Position = Position.zero()) {
     super(position);
-    this.internal = new PIXI.Container();
+    this._internal = new PIXI.Container();
   }
 
-  public async create(): Promise<void> {
-    // To be overridden
-  }
+  /**
+   * Sans effet.
+   * A redéfinir dans les sous-classes.
+   */
+  public async create(): Promise<void> { }
 
   /**
    * Charge une dépendance (explicit loading)
    * @param dependency
    */
-  public load<T extends INode | Resource>(dependency: T): LoadablePromise<T> {
+  public load<T extends INode | Resource>(dependency: T): T {
     if(dependency instanceof INode) {
-      // TODO: implement
+      dependency.parent = this;
+      // TODO: dependency.waitForCreation.then(...)   waitForCreation calls create, waits for it to finish and waits for each child to be loaded
+      dependency.create().then(() => dependency.onLoaded.trigger(dependency));
+      return dependency;
     } else {
       // Déléguer au parent
-      this.parent.load(dependency);
+      // TODO: ce cast est bizarre
+      return super.load(dependency) as T;
     }
-    return null;
   }
 
   /**
    * Ajoute un enfant à ce noeud et charge ses dépendances si nécessaire (just-in-time loading)
    * @param child
    */
-  public add<T extends INode>(child: T): LoadablePromise<T> {
-    child.parent = this;
-    return null;
+  public add<T extends INode>(child: T): T {
+    let loadPromise = this.load(child).loaded;
+    loadPromise.then(node => {
+      console.log("adds");
+      this._internal.addChild(node.internal)
+    });
+    return child;
   }
 
   /**
@@ -65,7 +73,7 @@ export default class Node extends INode {
     for (const child of this.children) {
       child.destroy();
     }
-    // Détruire le noeud
-    this.internal.destroy();
+    // Détruire le noeud interne
+    this._internal.destroy();
   }
 }

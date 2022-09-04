@@ -8,9 +8,16 @@ import Scene from "../engine/game/Scene";
 export default class MainScene extends Scene {
   private container: Node;
   private text: Text;
+
   public async create() {
-    this.text = await this.load(new Text("/assets/paragraph.txt"));
-    this.text.onProgress.subscribe(info => console.log);
+    this.loaderInfo.onProgress.subscribe(info => {
+        console.log("loading", info.bytesLoaded+"/"+info.bytesTotal);
+    });
+    this.text = this.load(new Text("/assets/paragraph.txt"));
+    this.text.onProgress.subscribe(info => console.log("loading text"));
+    await this.text.loaded;
+    console.log("loader info", this.text.loaderInfo);
+    console.log("text", this.text, this.text.content);
     // Create a container at the center
     this.container = this.add(new Node(this.center));
 
@@ -24,8 +31,10 @@ export default class MainScene extends Scene {
       this.container.add(bunny);
     }
 
+
     // Center bunny sprite in local container coordinates
-    this.container.pivot(this.container.size.half);
+    // TODO
+    // this.container.pivot(this.container.size.half);
   }
 
   /**
@@ -36,6 +45,7 @@ export default class MainScene extends Scene {
   public update(dt: number) {
     // rotate the container!
     // use delta to create frame-independent transform
-    this.container.rotation -= 0.01 * dt;
+    // TODO
+    // this.container.rotation -= 0.01 * dt;
   }
 }

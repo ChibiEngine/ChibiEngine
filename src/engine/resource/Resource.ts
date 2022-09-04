@@ -1,7 +1,6 @@
 import Event from "../event/Event";
-import EventPromise, { makePromise } from "../event/EventPromise";
 import Loadable from "../loader/Loadable";
-import LoaderInfo from "../loader/LoaderInfo";
+import HttpRequest from "../loader/HttpRequest";
 
 /**
  * PB : Si deux resources sont créées pour référencer la même chose :
@@ -12,20 +11,16 @@ import LoaderInfo from "../loader/LoaderInfo";
  * 
  * Solution :
  * Se servir de l'appel à this.load() pour renvoyer la ressource déjà chargée. :
- * const ressource1 = this.laod(new Image("/assets/bunny.png"));
- * const ressource2 = this.laod(new Image("/assets/bunny.png"));
+ * const ressource1 = this.load(new Image("/assets/bunny.png"));
+ * const ressource2 = this.load(new Image("/assets/bunny.png"));
  * assert(ressource1 === ressource2);
  */
 
 export default abstract class Resource extends Loadable {
   private referenceCount: number = 0;
-  private _path: string;
-
-  public readonly loaderInfo = new LoaderInfo();
+  private readonly _path: string;
 
   public readonly onDestroy: Event<this> = new Event();
-  public readonly onLoaded: EventPromise<this> = makePromise(new Event<this>());
-  public readonly onProgress: Event<LoaderInfo> = this.loaderInfo.onProgress;
 
   protected constructor(path: string) {
     super();
@@ -35,14 +30,6 @@ export default abstract class Resource extends Loadable {
 
   public get path() {
     return this._path;
-  }
-
-  public get bytesLoaded() {
-    return this.loaderInfo.bytesLoaded;
-  }
-
-  public get bytesTotal() {
-    return this.loaderInfo.bytesTotal;
   }
 
   public retain() {
@@ -57,14 +44,21 @@ export default abstract class Resource extends Loadable {
     }
   }
 
-  public load(): Promise<this> {
-    this._loading = true;
-    return this.create().then(() => {
-      this._loading = false;
-      this._loaded = true;
+  public load() {
+    this._isLoading = true;
+    this.create().then(() => {
+      this._isLoading = false;
+      this._isLoaded = true;
       this.onLoaded.trigger(this);
       return this;
     });
+  }
+
+  protected async request(url: string): Promise<Blob> {
+    const request = new HttpRequest(url);
+    this.loaderInfo.add(request.loaderInfo);
+    await request.create();
+    return request.response;
   }
 
   protected abstract create(): Promise<void>;

@@ -1,13 +1,12 @@
 import * as PIXI from "pixi.js";
 import Behavior from "../behavior/Behavior";
 import Event from "../event/Event";
-import EventPromise from "../event/EventPromise";
 import Position from "../geom/position/Position";
 
 import Positionable from "../geom/position/Positionable";
 import Size from "../geom/size/Size";
 import Sizeable from "../geom/size/Sizeable";
-import Loadable, { LoadablePromise, makePromise } from "../loader/Loadable";
+import Loadable from "../loader/Loadable";
 import Loader from "../loader/Loader";
 import LoaderInfo from "../loader/LoaderInfo";
 import Resource from "../resource/Resource";
@@ -27,10 +26,11 @@ import center from "./positioning/center";
  * - Sprite
  *   - Text
  */
+// TODO: Renommer INode en Leaf?
 export default abstract class INode extends Loadable implements Positionable, Sizeable, Loader {
-  // Pas Node pour éviter dépendance circulaire
+  // Pas Node pour éviter dépendance cyclique
   protected _parent: INode = null;
-  protected abstract readonly internal: PIXI.Container;
+  protected abstract _internal: PIXI.Container;
 
   private readonly _position: Position;
   public readonly onPositionChange: Event<Position>;
@@ -40,7 +40,7 @@ export default abstract class INode extends Loadable implements Positionable, Si
 
   private behaviors: Behavior<this>[] = [];
 
-  public constructor(position: Position = Position.zero()) {
+  protected constructor(position: Position = Position.zero()) {
     super();
     this._position = position;
     this._size = Size.zero();
@@ -48,10 +48,7 @@ export default abstract class INode extends Loadable implements Positionable, Si
     this.onSizeChange = this._size.onChange;
   }
 
-  // TODO : implement
-  onProgress: Event<LoaderInfo>;
-  onLoaded: EventPromise<this>;
-  loaderInfo: LoaderInfo;
+  // TODO : ajouter Skew
 
   public abstract create(): Promise<void>;
 
@@ -59,13 +56,25 @@ export default abstract class INode extends Loadable implements Positionable, Si
    * Charge une dépendance (explicit loading)
    * @param dependency
    */
-  public load<T extends Resource>(dependency: T): LoadablePromise<T> {
-    // TODO: retain ici plutôt que dans l'enfant?
-    return makePromise(dependency);
+  public load<T extends Resource>(dependency: T): T {
+    // TODO: retain ici plutôt que dans le Loader?
+    // TODO: add dependency loaderInfo
+    // relay to parent (Top level parent is Game)
+    dependency = this.parent.load(dependency);
+    this.loaderInfo.add(dependency.loaderInfo);
+    return dependency;
   }
 
   public set parent(parent: INode) {
     this._parent = parent;
+  }
+
+  public get parent() {
+    return this._parent;
+  }
+
+  public get internal(): PIXI.Container {
+    return this._internal;
   }
 
   public get position() {

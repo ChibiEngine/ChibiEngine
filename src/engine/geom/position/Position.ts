@@ -1,4 +1,4 @@
-import Event from "../../events/Event";
+import Event from "../../event/Event";
 
 export default class Position {
   public static zero() {

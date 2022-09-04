@@ -1,5 +1,4 @@
 import Resource from "../resource/Resource";
-import { LoadablePromise } from "./Loadable";
 import Loader from "./Loader";
 
 export default class DefaultLoader implements Loader {
@@ -10,20 +9,17 @@ export default class DefaultLoader implements Loader {
         this.resources.delete(resource.path);
     }
 
-    public load<T extends Resource>(dependency: T): LoadablePromise<T> {
-        const promise = (async () => {
-            const actual = this.resources.get(dependency.path);
-            if (actual) {
-                if (!actual.loaded) {
-                    await actual.onLoaded.promise();
-                }
-                return dependency;
-            }
+    public load<T extends Resource>(dependency: T): T {
+        let existing = this.resources.get(dependency.path) as T;
+        if (existing) {
+            existing.retain();
+            return existing;
+        }else{
             this.resources.set(dependency.path, dependency);
             dependency.onDestroy.subscribe(this.onResourceDestroy);
-            return dependency.load();
-
-        })();
-        return Object.assign(dependency, promise);
+            dependency.retain();
+            dependency.load();
+            return dependency;
+        }
     }
 }

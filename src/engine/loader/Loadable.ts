@@ -1,5 +1,4 @@
 import Event from "../event/Event";
-import EventPromise, {makePromise as makeEventPromise} from "../event/EventPromise";
 import LoaderInfo from "./LoaderInfo";
 
 // Inspired by https://help.adobe.com/fr_FR/FlashPlatform/reference/actionscript/3/flash/display/LoaderInfo.html
@@ -8,18 +7,23 @@ import LoaderInfo from "./LoaderInfo";
 export default abstract class Loadable {
     public readonly loaderInfo: LoaderInfo = new LoaderInfo();
 
-    public readonly onProgress: Event<LoaderInfo> = new Event();
-    public readonly onLoaded: EventPromise<this> = makeEventPromise(new Event<this>());
+    // TODO: pb si les sous-classes utilisent un LoaderInfoAggregate
+    public readonly onProgress: Event<LoaderInfo> = this.loaderInfo.onProgress;
+    public readonly onLoaded: Event<this> = new Event<this>();
 
-    protected _loaded: boolean = false;
-    protected _loading: boolean = false;
+    protected _isLoaded: boolean = false;
+    protected _isLoading: boolean = false;
 
-    public get loaded() {
-        return this._loaded;
+    public get loaded(): Promise<this> {
+        return this.onLoaded.promise();
     }
 
-    public get loading() {
-        return this._loading;
+    public get isLoaded() {
+        return this._isLoaded;
+    }
+
+    public get isLoading() {
+        return this._isLoading;
     }
 
     public get bytesLoaded(): number {
@@ -32,11 +36,4 @@ export default abstract class Loadable {
 
     protected abstract create(): Promise<void>;
     protected abstract destroy(): void;
-}
-
-export type LoadablePromise<T extends Loadable> = T & Promise<T>;
-
-export function makePromise<T extends Loadable>(resource: T): LoadablePromise<T> {
-    const promise = resource.onLoaded;
-    return Object.assign(resource, promise);
 }

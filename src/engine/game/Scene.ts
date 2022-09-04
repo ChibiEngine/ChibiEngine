@@ -3,7 +3,6 @@ import Node from "../node/Node";
 import Game from "./Game";
 
 export default class Scene extends Node {
-  game: Game = null;
-
+  public game: Game;
   private camera: Camera;
 }

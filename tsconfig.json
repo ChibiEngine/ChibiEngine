@@ -15,5 +15,8 @@
     "moduleResolution": "node",
     "strictNullChecks": false,
     "strictPropertyInitialization": false
-  }
+  },
+  "include": [
+    "src/**/*"
+  ],
 }
