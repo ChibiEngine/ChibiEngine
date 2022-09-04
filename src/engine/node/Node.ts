@@ -2,6 +2,7 @@ import * as PIXI from "pixi.js";
 import Position from "../geom/position/Position";
 import Resource from "../resource/Resource";
 import INode from "./INode";
+import {assignPosition} from "../geom/utils";
 
 /**
  * Noeud simple au sens conteneur PIXI : possède des enfants
@@ -14,13 +15,14 @@ export default class Node extends INode {
   public constructor(position: Position = Position.zero()) {
     super(position);
     this._internal = new PIXI.Container();
+    assignPosition(this._internal, position);
   }
 
   /**
    * Sans effet.
    * A redéfinir dans les sous-classes.
    */
-  public async create(): Promise<void> { }
+  protected async create(): Promise<void> { }
 
   /**
    * Charge une dépendance (explicit loading)
@@ -29,9 +31,11 @@ export default class Node extends INode {
   public load<T extends INode | Resource>(dependency: T): T {
     if(dependency instanceof INode) {
       dependency.parent = this;
+      this.loading();
       this.children.push(dependency);
+      this.addLoadableChild(dependency);
+      dependency.loadSelf();
       // TODO: dependency.waitForCreation.then(...)   waitForCreation calls create, waits for it to finish and waits for each child to be loaded
-      dependency.create().then(() => dependency.onLoaded.trigger(dependency));
       return dependency;
     } else {
       // Déléguer au parent

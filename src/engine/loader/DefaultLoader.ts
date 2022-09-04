@@ -18,7 +18,7 @@ export default class DefaultLoader implements Loader {
             this.resources.set(dependency.path, dependency);
             dependency.onDestroy.subscribe(this.onResourceDestroy);
             dependency.retain();
-            dependency.load();
+            dependency.loadSelf();
             return dependency;
         }
     }

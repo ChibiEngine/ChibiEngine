@@ -5,15 +5,14 @@ import Node from "../engine/node/Node";
 import Text from "../engine/resource/Text";
 import Scene from "../engine/game/Scene";
 
-export default class MainScene extends Scene {
+export default class Example1 extends Scene {
   private container: Node;
   private text: Text;
 
   public async create() {
-    this.text = this.load(new Text("/assets/paragraph.txt"));
-    await this.text.loaded;
+    this.text = await this.load(new Text("/assets/paragraph.txt")).loaded;
     // Create a container at the center
-    this.container = this.add(new Node());
+    this.container = this.add(new Node(this.game.screen.center));
 
     // Create a 5x5 grid of bunnies
     for (let i = 0; i < 25; i++) {
@@ -25,7 +24,10 @@ export default class MainScene extends Scene {
       this.container.add(bunny);
     }
 
+    await this.container.loaded;
 
+    this.container.internal.pivot.x = this.container.internal.width / 2;
+    this.container.internal.pivot.y = this.container.internal.height / 2;
     // Center bunny sprite in local container coordinates
     // TODO
     // this.container.pivot(this.container.size.half);

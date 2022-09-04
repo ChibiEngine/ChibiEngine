@@ -44,20 +44,12 @@ export default abstract class Resource extends Loadable {
     }
   }
 
-  public load() {
-    this._isLoading = true;
-    this.create().then(() => {
-      this._isLoading = false;
-      this._isLoaded = true;
-      this.onLoaded.trigger(this);
-      return this;
-    });
-  }
-
   protected async request(url: string): Promise<Blob> {
     const request = new HttpRequest(url);
     this.loaderInfo.add(request.loaderInfo);
-    await request.create();
+    this.addLoadableChild(request);
+    request.loadSelf();
+    await request.loaded;
     return request.response;
   }
 

@@ -37,5 +37,3 @@ app.ticker.add((delta) => {
     // use delta to create frame-independent transform
     container.rotation -= 0.01 * delta;
 });
-
-console.log("PIXI stage", app.stage);

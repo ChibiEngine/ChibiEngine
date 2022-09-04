@@ -1,5 +1,5 @@
 import Game from "../engine/game/Game";
-import MainScene from "./MainScene";
+import Example1 from "./Example1";
 import "./pixi";
 
 const game = new Game({
@@ -11,6 +11,4 @@ const game = new Game({
     // autoResize: true,
 });
 
-game.addScene(new MainScene());
-
-console.log("stage", game.internal);
+game.addScene(new Example1());

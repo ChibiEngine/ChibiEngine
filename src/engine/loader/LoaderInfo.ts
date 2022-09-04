@@ -6,7 +6,7 @@ export default class LoaderInfo {
 
     public readonly onProgress: Event<LoaderInfo> = new Event();
 
-    public readonly children: LoaderInfo[] = [];
+    private readonly children: LoaderInfo[] = [];
 
     constructor() {
         this.onChildProgress = this.onChildProgress.bind(this);

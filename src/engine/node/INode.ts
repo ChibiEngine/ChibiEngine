@@ -50,7 +50,7 @@ export default abstract class INode extends Loadable implements Positionable, Si
 
   // TODO : ajouter Skew
 
-  public abstract create(): Promise<void>;
+  protected abstract create(): Promise<void>;
 
   /**
    * Charge une dépendance (explicit loading)

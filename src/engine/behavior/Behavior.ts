@@ -16,7 +16,7 @@ export default abstract class Behavior<T extends INode> {
     // BehaviorRequirementsNotMetException levée à la fin du create si le parent n'a pas les comportements requis
 }
 
-// MainScene
+// Example1
 // create() {
 //     this.addBehavior(new PhysicWorld(-9.8));
 //

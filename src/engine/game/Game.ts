@@ -2,10 +2,10 @@ import * as PIXI from "pixi.js";
 import INode from "../node/INode";
 import Scene from "./Scene";
 import Resource from "../resource/Resource";
-import {LoadablePromise, makePromise} from "../loader/Loadable";
 import Node from "../node/Node";
 import DefaultLoader from "../loader/DefaultLoader";
 import Loader from "../loader/Loader";
+import Rectangle from "../geom/rect/Rectangle";
 
 interface GameConfig {
   width: number;
@@ -27,6 +27,10 @@ export default class Game extends Node {
     this.app = new PIXI.Application(config);
     document.body.appendChild(this.app.view);
     this._internal = this.app.stage;
+  }
+
+  public get screen(): Rectangle {
+    return new Rectangle(this.app.screen.x, this.app.screen.y, this.app.screen.width, this.app.screen.height);
   }
 
   public load<T extends Resource | INode>(dependency: T): T {

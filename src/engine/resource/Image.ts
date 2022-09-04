@@ -28,7 +28,6 @@ export default class Image extends Resource {
     return new Promise((resolve, reject) => {
       image.onload = () => {
         this._texture = PIXI.Texture.from(image);
-        console.log("Texture created");
         resolve();
       }
     });

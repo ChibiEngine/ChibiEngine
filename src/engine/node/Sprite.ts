@@ -2,6 +2,7 @@ import { Sprite as PixiSprite } from "pixi.js";
 import Image from "../resource/Image";
 import INode from "./INode";
 import Position from "../geom/position/Position";
+import {assignPosition} from "../geom/utils";
 
 export default class Sprite extends INode {
   public _internal: PixiSprite;
@@ -16,8 +17,7 @@ export default class Sprite extends INode {
     //
     const image = await this.load(this.image).loaded;
     this._internal = new PixiSprite(image.texture);
-    this._internal.x = this.x;
-    this._internal.y = this.y;
+    assignPosition(this._internal, this.position);
   }
 
   public destroy(): void {

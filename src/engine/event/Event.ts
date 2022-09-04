@@ -1,13 +1,19 @@
 export default class Event<T> {
   private listeners: (<K extends T>(value: K) => void)[] = [];
-  public readonly promise: Promise<T>;
 
-  public constructor() {
-    this.promise = new Promise((resolve) => {
-      this.subscribe(resolve);
+  public get promise(): Promise<T> {
+    return new Promise((resolve) => {
+      const that = this;
+
+      function listener(value: T) {
+        resolve(value);
+        //@ts-ignore
+        that.unsubscribe(this);
+      }
+
+      this.subscribe(listener);
     });
   }
-
 
   public subscribe(listener: (value: T) => void) {
     this.listeners.push(listener);
