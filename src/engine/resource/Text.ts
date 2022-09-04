@@ -17,8 +17,6 @@ export default class Text extends Resource {
 
     protected async create(): Promise<void> {
         const blob = await this.request(this.path);
-        console.log("Request after");
-        console.log(blob);
 
         this._text = await blob.text();
     }

@@ -25,7 +25,13 @@ export default class Image extends Resource {
     const image = newImage();
     image.src = URL.createObjectURL(blob);
 
-    this._texture = PIXI.Texture.from(image);
+    return new Promise((resolve, reject) => {
+      image.onload = () => {
+        this._texture = PIXI.Texture.from(image);
+        console.log("Texture created");
+        resolve();
+      }
+    });
   }
 
   protected destroy(): void {

@@ -1,5 +1,13 @@
 export default class Event<T> {
   private listeners: (<K extends T>(value: K) => void)[] = [];
+  public readonly promise: Promise<T>;
+
+  public constructor() {
+    this.promise = new Promise((resolve) => {
+      this.subscribe(resolve);
+    });
+  }
+
 
   public subscribe(listener: (value: T) => void) {
     this.listeners.push(listener);
@@ -16,15 +24,5 @@ export default class Event<T> {
     for (const listener of this.listeners) {
       listener(value);
     }
-  }
-
-  public promise(): Promise<T> {
-    return new Promise((resolve) => {
-      const callback = (value: T) => {
-          resolve(value);
-          this.unsubscribe(callback);
-      }
-      this.subscribe(callback);
-    });
   }
 }

@@ -10,16 +10,10 @@ export default class MainScene extends Scene {
   private text: Text;
 
   public async create() {
-    this.loaderInfo.onProgress.subscribe(info => {
-        console.log("loading", info.bytesLoaded+"/"+info.bytesTotal);
-    });
     this.text = this.load(new Text("/assets/paragraph.txt"));
-    this.text.onProgress.subscribe(info => console.log("loading text"));
     await this.text.loaded;
-    console.log("loader info", this.text.loaderInfo);
-    console.log("text", this.text, this.text.content);
     // Create a container at the center
-    this.container = this.add(new Node(this.center));
+    this.container = this.add(new Node());
 
     // Create a 5x5 grid of bunnies
     for (let i = 0; i < 25; i++) {

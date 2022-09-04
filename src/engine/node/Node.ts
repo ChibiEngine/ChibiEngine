@@ -29,6 +29,7 @@ export default class Node extends INode {
   public load<T extends INode | Resource>(dependency: T): T {
     if(dependency instanceof INode) {
       dependency.parent = this;
+      this.children.push(dependency);
       // TODO: dependency.waitForCreation.then(...)   waitForCreation calls create, waits for it to finish and waits for each child to be loaded
       dependency.create().then(() => dependency.onLoaded.trigger(dependency));
       return dependency;
@@ -46,7 +47,6 @@ export default class Node extends INode {
   public add<T extends INode>(child: T): T {
     let loadPromise = this.load(child).loaded;
     loadPromise.then(node => {
-      console.log("adds");
       this._internal.addChild(node.internal)
     });
     return child;

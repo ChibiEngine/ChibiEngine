@@ -12,7 +12,9 @@ export default class Sprite extends INode {
 
   public async create(): Promise<void> {
     // Load Texture
-    const image = await this.load(this.image);
+    // TODO: syntaxe bizarre, on s'attendrait à juste faire `const image = await this.load(this.image)` sans le .loaded
+    //
+    const image = await this.load(this.image).loaded;
     this._internal = new PixiSprite(image.texture);
     this._internal.x = this.x;
     this._internal.y = this.y;

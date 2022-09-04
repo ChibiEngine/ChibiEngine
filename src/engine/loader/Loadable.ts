@@ -15,7 +15,7 @@ export default abstract class Loadable {
     protected _isLoading: boolean = false;
 
     public get loaded(): Promise<this> {
-        return this.onLoaded.promise();
+        return this.onLoaded.promise;
     }
 
     public get isLoaded() {
