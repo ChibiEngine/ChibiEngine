@@ -1,10 +1,10 @@
-import Loadable from "./Loadable";
+import Resource from "../resource/Resource";
 
-export default class HttpRequest extends Loadable {
+export default class HttpRequest extends Resource {
     private _response: Blob;
 
     public constructor(private readonly url: string) {
-        super();
+        super(url);
     }
 
     public create(): Promise<void> {
@@ -39,7 +39,14 @@ export default class HttpRequest extends Loadable {
         throw new Error("Method not implemented.");
     }
 
-    get response(): Blob {
+    public get response(): Blob {
         return this._response;
+    }
+
+    public get blob(): Promise<Blob> {
+        return new Promise(async (resolve, reject) => {
+            await this.loaded;
+            resolve(this._response);
+        });
     }
 }

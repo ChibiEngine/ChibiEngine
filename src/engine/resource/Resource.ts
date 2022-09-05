@@ -1,6 +1,5 @@
 import Event from "../event/Event";
 import Loadable from "../loader/Loadable";
-import HttpRequest from "../loader/HttpRequest";
 
 /**
  * PB : Si deux resources sont créées pour référencer la même chose :
@@ -8,7 +7,7 @@ import HttpRequest from "../loader/HttpRequest";
  *  const sprite2 = new Sprite(new Image("/assets/bunny.png"));
  * Résultat: deux Image avec un referenceCount à 1
  * Il faut trouver un moyen de partager cette ressource.
- * 
+ *
  * Solution :
  * Se servir de l'appel à this.load() pour renvoyer la ressource déjà chargée. :
  * const ressource1 = this.load(new Image("/assets/bunny.png"));
@@ -18,14 +17,18 @@ import HttpRequest from "../loader/HttpRequest";
 
 export default abstract class Resource extends Loadable {
   private referenceCount: number = 0;
+  public readonly id: string;
   private readonly _path: string;
+
+  public parent: Loadable;
 
   public readonly onDestroy: Event<this> = new Event();
 
-  protected constructor(path: string) {
+  protected constructor(path: string, ...args: any[]) {
     super();
     // Normalize path ?
     this._path = path;
+    this.id = this.constructor.name + "_" + path + "_" + JSON.stringify(args);
   }
 
   public get path() {
@@ -42,15 +45,6 @@ export default abstract class Resource extends Loadable {
       this.destroy();
       this.onDestroy.trigger(this);
     }
-  }
-
-  protected async request(url: string): Promise<Blob> {
-    const request = new HttpRequest(url);
-    this.loaderInfo.add(request.loaderInfo);
-    this.addLoadableChild(request);
-    request.loadSelf();
-    await request.loaded;
-    return request.response;
   }
 
   protected abstract create(): Promise<void>;

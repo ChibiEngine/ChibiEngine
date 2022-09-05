@@ -27,9 +27,9 @@ import center from "./positioning/center";
  *   - Text
  */
 // TODO: Renommer INode en Leaf?
-export default abstract class INode extends Loadable implements Positionable, Sizeable, Loader {
+export default abstract class INode extends Loadable implements Positionable, Sizeable {
   // Pas Node pour éviter dépendance cyclique
-  protected _parent: INode = null;
+  public parent: INode;
   protected abstract _internal: PIXI.Container;
 
   private readonly _position: Position;
@@ -51,27 +51,6 @@ export default abstract class INode extends Loadable implements Positionable, Si
   // TODO : ajouter Skew
 
   protected abstract create(): Promise<void>;
-
-  /**
-   * Charge une dépendance (explicit loading)
-   * @param dependency
-   */
-  public load<T extends Resource>(dependency: T): T {
-    // TODO: retain ici plutôt que dans le Loader?
-    // TODO: add dependency loaderInfo
-    // relay to parent (Top level parent is Game)
-    dependency = this.parent.load(dependency);
-    this.loaderInfo.add(dependency.loaderInfo);
-    return dependency;
-  }
-
-  public set parent(parent: INode) {
-    this._parent = parent;
-  }
-
-  public get parent() {
-    return this._parent;
-  }
 
   public get internal(): PIXI.Container {
     return this._internal;

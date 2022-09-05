@@ -1,8 +1,8 @@
 import * as PIXI from "pixi.js";
 import Position from "../geom/position/Position";
-import Resource from "../resource/Resource";
 import INode from "./INode";
 import {assignPosition} from "../geom/utils";
+import Loadable from "../loader/Loadable";
 
 /**
  * Noeud simple au sens conteneur PIXI : possède des enfants
@@ -28,10 +28,9 @@ export default class Node extends INode {
    * Charge une dépendance (explicit loading)
    * @param dependency
    */
-  public load<T extends INode | Resource>(dependency: T): T {
+  public load<T extends Loadable>(dependency: T): T {
     if(dependency instanceof INode) {
       dependency.parent = this;
-      this.loading();
       this.children.push(dependency);
       this.addLoadableChild(dependency);
       dependency.loadSelf();
@@ -39,8 +38,7 @@ export default class Node extends INode {
       return dependency;
     } else {
       // Déléguer au parent
-      // TODO: ce cast est bizarre
-      return super.load(dependency) as T;
+      return super.load(dependency);
     }
   }
 

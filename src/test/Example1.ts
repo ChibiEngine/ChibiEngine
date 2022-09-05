@@ -11,6 +11,7 @@ export default class Example1 extends Scene {
 
   public async create() {
     this.text = await this.load(new Text("/assets/paragraph.txt")).loaded;
+    console.log("text:", this.text.content);
     // Create a container at the center
     this.container = this.add(new Node(this.game.screen.center));
 
@@ -28,9 +29,12 @@ export default class Example1 extends Scene {
 
     this.container.internal.pivot.x = this.container.internal.width / 2;
     this.container.internal.pivot.y = this.container.internal.height / 2;
+
     // Center bunny sprite in local container coordinates
     // TODO
     // this.container.pivot(this.container.size.half);
+    console.log(this.loadableChildren);
+    console.log(this.game.loader.resources);
   }
 
   /**

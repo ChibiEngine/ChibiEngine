@@ -11,7 +11,8 @@ export default abstract class Loadable {
     public readonly onProgress: Event<LoaderInfo> = this.loaderInfo.onProgress;
     public readonly onLoaded: Event<this> = new Event<this>();
 
-    private readonly loadableChildren: Loadable[] = [];
+    public parent: Loadable;
+    protected readonly loadableChildren: Loadable[] = [];
 
     private _isLoaded: boolean = false;
     private _isLoading: boolean = false;
@@ -22,7 +23,6 @@ export default abstract class Loadable {
 
     protected addLoadableChild(child: Loadable) {
         this.loadableChildren.push(child);
-        // this.loaderInfo.add(child.loaderInfo);
         child.loaded.then(this.onChildLoaded);
     }
 
@@ -40,6 +40,21 @@ export default abstract class Loadable {
         }
     }
 
+    /**
+     * Charge une dépendance (explicit loading)
+     * @param dependency
+     */
+    public load<T extends Loadable>(dependency: T): T {
+        // TODO: retain ici plutôt que dans le Loader?
+        // TODO: add dependency loaderInfo
+        // relay to parent (Top level parent is Game)
+        dependency.parent = this;
+        dependency = this.parent.load(dependency);
+        this.addLoadableChild(dependency);
+        this.loaderInfo.add(dependency.loaderInfo);
+        return dependency;
+    }
+
     public loadSelf() {
         this.loading();
         this.create().then(() => {
@@ -49,13 +64,11 @@ export default abstract class Loadable {
     }
 
     public loading() {
-        if(this._isLoading) return;
         this._isLoading = true;
         this._isLoaded = false;
     }
 
     public finishLoading() {
-        if(!this._isLoading || this._isLoaded) return;
         this._isLoading = false;
         this._isLoaded = true;
         if(this.allChildrenLoaded()) {
