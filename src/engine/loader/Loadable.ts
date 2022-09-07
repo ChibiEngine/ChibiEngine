@@ -1,42 +1,37 @@
 import Event from "../event/Event";
-import LoaderInfo from "./LoaderInfo";
+import type Blob from "./Blob";
+import Cache from "./Cache";
+import type Resource from "../resource/Resource";
+
 
 // Inspired by https://help.adobe.com/fr_FR/FlashPlatform/reference/actionscript/3/flash/display/LoaderInfo.html
 // https://help.adobe.com/fr_FR/FlashPlatform/reference/actionscript/3/flash/display/Loader.html
 
 export default abstract class Loadable {
-    public readonly loaderInfo: LoaderInfo = new LoaderInfo();
+    public abstract readonly type: string;
 
+    public _parent: Loadable;
     // TODO: pb si les sous-classes utilisent un LoaderInfoAggregate
-    public readonly onProgress: Event<LoaderInfo> = this.loaderInfo.onProgress;
+    public readonly onProgress: Event<this> = new Event<this>();
     public readonly onLoaded: Event<this> = new Event<this>();
 
-    public parent: Loadable;
-    protected readonly loadableChildren: Loadable[] = [];
+    public readonly dependencies: Loadable[] = [];
+    public readonly blobs: Blob[] = [];
 
     private _isLoaded: boolean = false;
     private _isLoading: boolean = false;
 
     protected constructor() {
-        this.onChildLoaded = this.onChildLoaded.bind(this);
+        this.onDependencyLoaded = this.onDependencyLoaded.bind(this);
     }
 
-    protected addLoadableChild(child: Loadable) {
-        this.loadableChildren.push(child);
-        child.loaded.then(this.onChildLoaded);
-    }
-
-    private allChildrenLoaded(): boolean {
-        return !this.loadableChildren.some(child => !child.isLoaded);
-    }
-
-    private hasChildrenLoading(): boolean {
-        return this.loadableChildren.some(child => child.isLoading);
-    }
-
-    private onChildLoaded(_: Loadable) {
-        if(this._isLoaded && this.allChildrenLoaded()) {
-            this.onLoaded.trigger(this);
+    public addBlob(blob: Blob) {
+        for(const child of this.blobs) {
+            if(child.id === blob.id) return;
+        }
+        this.blobs.push(blob);
+        if(this._parent) {
+            this._parent.addBlob(blob);
         }
     }
 
@@ -45,23 +40,51 @@ export default abstract class Loadable {
      * @param dependency
      */
     public load<T extends Loadable>(dependency: T): T {
-        // TODO: retain ici plutôt que dans le Loader?
-        // TODO: add dependency loaderInfo
-        // relay to parent (Top level parent is Game)
-        dependency.parent = this;
-        dependency = this.parent.load(dependency);
-        this.addLoadableChild(dependency);
-        this.loaderInfo.add(dependency.loaderInfo);
+        dependency._parent = this;
+        if(dependency.type === "resource") {
+            // TODO: cast bizarre à revoir
+            Cache.load(dependency as any);
+        } else {
+            dependency.create();
+        }
+        if(dependency.type === "blob") {
+            // Si c'est un blob, appeler addBlob
+            this.addBlob(dependency as any);
+            dependency.onProgress.subscribe(() => this.onProgress.trigger(this));
+        }
+        this.dependencies.push(dependency);
+        dependency.loaded.then(this.onDependencyLoaded);
         return dependency;
     }
 
-    public loadSelf() {
-        this.loading();
-        this.create().then(() => {
-            this.finishLoading();
-            return this;
-        });
+    private onDependencyLoaded(_: Loadable) {
+        if(this.isLoaded) {
+            this.onLoaded.trigger(this);
+        }
     }
+
+    public async create() {
+        // On set le parent de la dépendance comme ça lorsqu'il appellera this.load, il pourra faire remonter les appels
+        this.loading();
+        await this._create()
+        this.finishLoading();
+    }
+
+    protected abstract _create(): Promise<void>;
+
+    /**
+     * Détruit l'objet et libère ses ressources.
+     */
+    public async destroy() {
+        const promises = [];
+        for(const dependency of this.dependencies) {
+            promises.push(dependency.destroy());
+        }
+        await Promise.all(promises);
+        await this._destroy();
+    }
+
+    protected abstract _destroy(): Promise<void>;
 
     public loading() {
         this._isLoading = true;
@@ -71,7 +94,7 @@ export default abstract class Loadable {
     public finishLoading() {
         this._isLoading = false;
         this._isLoaded = true;
-        if(this.allChildrenLoaded()) {
+        if(this.allDependenciesLoaded()) {
             this.onLoaded.trigger(this);
         }
     }
@@ -81,21 +104,26 @@ export default abstract class Loadable {
     }
 
     public get isLoaded() {
-        return this._isLoaded && this.allChildrenLoaded();
+        return this._isLoaded && this.allDependenciesLoaded();
     }
 
     public get isLoading() {
-        return this._isLoading || this.hasChildrenLoading();
+        return this._isLoading || this.hasDependencyLoading();
+    }
+
+    private allDependenciesLoaded(): boolean {
+        return !this.dependencies.some(dep => !dep.isLoaded);
+    }
+
+    private hasDependencyLoading(): boolean {
+        return this.dependencies.some(dep => dep.isLoading);
     }
 
     public get bytesLoaded(): number {
-        return this.loaderInfo.bytesLoaded;
+        return [...this.blobs].reduce((sum, child) => sum + child.bytesLoaded, 0);
     }
 
     public get bytesTotal(): number {
-        return this.loaderInfo.bytesTotal;
+        return [...this.blobs].reduce((sum, child) => sum + child.bytesTotal, 0);
     }
-
-    protected abstract create(): Promise<void>;
-    protected abstract destroy(): void;
 }

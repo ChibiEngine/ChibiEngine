@@ -7,10 +7,9 @@ import Positionable from "../geom/position/Positionable";
 import Size from "../geom/size/Size";
 import Sizeable from "../geom/size/Sizeable";
 import Loadable from "../loader/Loadable";
-import Loader from "../loader/Loader";
-import LoaderInfo from "../loader/LoaderInfo";
-import Resource from "../resource/Resource";
 import center from "./positioning/center";
+
+import type Node from "./Node";
 
 // Inspired by https://docs.cocos2d-x.org/api-ref/cplusplus/v4x/d3/d82/classcocos2d_1_1_node.html
 
@@ -28,8 +27,10 @@ import center from "./positioning/center";
  */
 // TODO: Renommer INode en Leaf?
 export default abstract class INode extends Loadable implements Positionable, Sizeable {
-  // Pas Node pour éviter dépendance cyclique
-  public parent: INode;
+  type = "node";
+
+  public _parent: Node;
+
   protected abstract _internal: PIXI.Container;
 
   private readonly _position: Position;
@@ -48,9 +49,13 @@ export default abstract class INode extends Loadable implements Positionable, Si
     this.onSizeChange = this._size.onChange;
   }
 
+  public get parent(): Node {
+    return this._parent;
+  }
+
   // TODO : ajouter Skew
 
-  protected abstract create(): Promise<void>;
+  protected abstract _create(): Promise<void>;
 
   public get internal(): PIXI.Container {
     return this._internal;
@@ -130,9 +135,4 @@ export default abstract class INode extends Loadable implements Positionable, Si
     // TODO: implement
     return null as T;
   }
-
-  /**
-   * Détruit le noeud et libère ses ressources.
-   */
-  public abstract destroy(): void; // TODO: release ici ?
 }

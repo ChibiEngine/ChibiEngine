@@ -11,7 +11,7 @@ export default class Sprite extends INode {
     super(new Position(x, y));
   }
 
-  public async create(): Promise<void> {
+  public async _create(): Promise<void> {
     // Load Texture
     // TODO: syntaxe bizarre, on s'attendrait à juste faire `const image = await this.load(this.image)` sans le .loaded
     //
@@ -20,8 +20,8 @@ export default class Sprite extends INode {
     assignPosition(this._internal, this.position);
   }
 
-  public destroy(): void {
+  public async _destroy() {
     this._internal.destroy();
-    this.image.release();
+    // image auto release in Loadable
   }
 }

@@ -1,5 +1,8 @@
 import Event from "../event/Event";
 import Loadable from "../loader/Loadable";
+import ReferenceCounter from "./ReferenceCounter";
+import Logger from "../../Logger";
+import debug = Logger.debug;
 
 /**
  * PB : Si deux resources sont créées pour référencer la même chose :
@@ -16,11 +19,13 @@ import Loadable from "../loader/Loadable";
  */
 
 export default abstract class Resource extends Loadable {
-  private referenceCount: number = 0;
+  type = "resource";
+
+  private _reference: Resource;
+
+  private readonly referenceCounter = new ReferenceCounter();
   public readonly id: string;
   private readonly _path: string;
-
-  public parent: Loadable;
 
   public readonly onDestroy: Event<this> = new Event();
 
@@ -36,18 +41,24 @@ export default abstract class Resource extends Loadable {
   }
 
   public retain() {
-    this.referenceCount++;
+    this.referenceCounter.increment();
   }
 
-  public release() {
-    this.referenceCount--;
-    if (this.referenceCount <= 0) {
-      this.destroy();
+  public async destroy(): Promise<void> {
+    this.referenceCounter.decrement();
+    if (this.referenceCounter.isZero) {
+      await super.destroy();
+      debug(this.constructor.name, this.id, "cleaned up.");
       this.onDestroy.trigger(this);
     }
   }
 
-  protected abstract create(): Promise<void>;
-
-  protected abstract destroy(): void;
+  public set reference(reference: Resource) {
+    this._reference = reference;
+    Object.assign(this, reference);
+    if(reference.isLoaded) return;
+    reference.loaded.then(() => {
+      this.finishLoading();
+    });
+  }
 }

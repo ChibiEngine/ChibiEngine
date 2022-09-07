@@ -1,7 +1,7 @@
 import Resource from "./Resource";
 import * as PIXI from "pixi.js";
-import newImage from "../util/createImage";
-import HttpRequest from "../loader/HttpRequest";
+import Blob from "../loader/Blob";
+import {DomImage} from "../util/dom";
 
 export default class Image extends Resource {
   private _texture: PIXI.Texture;
@@ -20,11 +20,11 @@ export default class Image extends Resource {
     return this._texture;
   }
 
-  protected async create(): Promise<void> {
-    const blob = await this.load(new HttpRequest(this.path)).blob;
+  protected async _create(): Promise<void> {
+    const blob = await this.load(new Blob(this.path)).blob;
 
     // Create HTMLImageElement from blob
-    const image = newImage();
+    const image = new DomImage();
     image.src = URL.createObjectURL(blob);
 
     return new Promise((resolve, reject) => {
@@ -36,6 +36,7 @@ export default class Image extends Resource {
     });
   }
 
-  protected destroy(): void {
+  protected async _destroy() {
+    this._texture.destroy();
   }
 }

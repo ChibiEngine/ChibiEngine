@@ -1,5 +1,5 @@
 import Resource from "./Resource";
-import HttpRequest from "../loader/HttpRequest";
+import Blob from "../loader/Blob";
 
 export default class Text extends Resource {
     private _text: string;
@@ -16,13 +16,13 @@ export default class Text extends Resource {
         return this._text;
     }
 
-    protected async create(): Promise<void> {
-        const blob = await this.load(new HttpRequest(this.path)).blob;
+    protected async _create(): Promise<void> {
+        const blob = await this.load(new Blob(this.path)).blob;
 
         this._text = await blob.text();
     }
 
-    protected destroy(): void {
+    protected async _destroy() {
     }
     
 }

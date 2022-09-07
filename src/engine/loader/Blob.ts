@@ -1,19 +1,26 @@
 import Resource from "../resource/Resource";
+import {DomBlob} from "../util/dom";
 
-export default class HttpRequest extends Resource {
-    private _response: Blob;
+export default class Blob extends Resource {
+    type = "blob";
+
+    private _response: DomBlob;
+
+    private _bytesLoaded: number = 0;
+    private _bytesTotal: number = 0;
 
     public constructor(private readonly url: string) {
         super(url);
     }
 
-    public create(): Promise<void> {
+    public async _create() {
         return new Promise<void>((resolve, reject) => {
             const xhr = new XMLHttpRequest();
             xhr.addEventListener("progress", (event) => {
                 if (event.lengthComputable) {
-                    this.loaderInfo.bytesTotal = event.total;
-                    this.loaderInfo.bytesLoaded = event.loaded;
+                    this._bytesTotal = event.total;
+                    this._bytesLoaded = event.loaded;
+                    this.onProgress.trigger(this);
                 }
             });
 
@@ -35,18 +42,27 @@ export default class HttpRequest extends Resource {
         });
     }
 
-    protected destroy(): void {
-        throw new Error("Method not implemented.");
+
+    get bytesLoaded(): number {
+        return this._bytesLoaded;
     }
 
-    public get response(): Blob {
+    get bytesTotal(): number {
+        return this._bytesTotal;
+    }
+
+    public get response(): DomBlob {
         return this._response;
     }
 
-    public get blob(): Promise<Blob> {
+    public get blob(): Promise<DomBlob> {
         return new Promise(async (resolve, reject) => {
             await this.loaded;
             resolve(this._response);
         });
+    }
+
+    protected async _destroy() {
+        throw new Error("Method not implemented.");
     }
 }

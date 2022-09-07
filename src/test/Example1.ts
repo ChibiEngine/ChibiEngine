@@ -9,7 +9,8 @@ export default class Example1 extends Scene {
   private container: Node;
   private text: Text;
 
-  public async create() {
+  public async _create() {
+    this.onProgress.subscribe((me) => { console.log(me.bytesLoaded,"/",me.bytesTotal); });
     this.text = await this.load(new Text("/assets/paragraph.txt")).loaded;
     console.log("text:", this.text.content);
     // Create a container at the center
@@ -33,8 +34,11 @@ export default class Example1 extends Scene {
     // Center bunny sprite in local container coordinates
     // TODO
     // this.container.pivot(this.container.size.half);
-    console.log(this.loadableChildren);
-    console.log(this.game.loader.resources);
+    console.log(this.blobs);
+    // console.log(this.game.loader.resources);
+
+    await new Promise((resolve) => setTimeout(resolve, 3000));
+    console.log("3 seconds later");
   }
 
   /**
