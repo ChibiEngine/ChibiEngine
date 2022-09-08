@@ -1,6 +1,8 @@
 # Chibi Engine (WIP)
 
-L'objectif est de créer un moteur de jeu 2D Web afin de simplifier la création de jeux-vidéo. Il fait office de wrapper par dessus le moteur de rendu [PixiJS](https://github.com/pixijs/pixijs).
+L'objectif est de créer un moteur de jeu 2D Web afin de simplifier la création de jeux-vidéo.
+
+Il fait office de wrapper par dessus le moteur de rendu [PixiJS](https://github.com/pixijs/pixijs).
 
 ## Objectifs
 - API moderne, simple à prendre en main. Inspirée de [Flash](https://help.adobe.com/fr_FR/FlashPlatform/reference/actionscript/3/package-detail.html) et [Cocos2d-x](https://docs.cocos2d-x.org/api-ref/cplusplus/v4x/). 
