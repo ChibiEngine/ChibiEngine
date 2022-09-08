@@ -10,12 +10,12 @@ import type Resource from "../resource/Resource";
 export default abstract class Loadable {
     public abstract readonly type: string;
 
-    public _parent: Loadable;
     // TODO: pb si les sous-classes utilisent un LoaderInfoAggregate
     public readonly onProgress: Event<this> = new Event<this>();
     public readonly onLoaded: Event<this> = new Event<this>();
 
     public readonly dependencies: Loadable[] = [];
+    public readonly dependants: Loadable[] = [];
     public readonly blobs: Blob[] = [];
 
     private _isLoaded: boolean = false;
@@ -25,13 +25,16 @@ export default abstract class Loadable {
         this.onDependencyLoaded = this.onDependencyLoaded.bind(this);
     }
 
-    public addBlob(blob: Blob) {
-        for(const child of this.blobs) {
-            if(child.id === blob.id) return;
-        }
-        this.blobs.push(blob);
-        if(this._parent) {
-            this._parent.addBlob(blob);
+    public addBlob(...blobs: Blob[]) {
+        for(const blob of blobs) {
+            blob.onProgress.subscribe(() => this.onProgress.trigger(this));
+            for(const child of this.blobs) {
+                if(child.id === blob.id) return;
+            }
+            this.blobs.push(blob);
+            for (const dependant of this.dependants) {
+                dependant.addBlob(blob);
+            }
         }
     }
 
@@ -40,17 +43,18 @@ export default abstract class Loadable {
      * @param dependency
      */
     public load<T extends Loadable>(dependency: T): T {
-        dependency._parent = this;
         if(dependency.type === "resource") {
             // TODO: cast bizarre à revoir
-            Cache.load(dependency as any);
+            dependency = Cache.load(dependency as any);
+            dependency.dependants.push(this);
+            this.addBlob(...dependency.blobs);
         } else {
+            dependency.dependants.push(this);
             dependency.create();
         }
         if(dependency.type === "blob") {
             // Si c'est un blob, appeler addBlob
             this.addBlob(dependency as any);
-            dependency.onProgress.subscribe(() => this.onProgress.trigger(this));
         }
         this.dependencies.push(dependency);
         dependency.loaded.then(this.onDependencyLoaded);

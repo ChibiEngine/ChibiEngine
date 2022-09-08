@@ -1,6 +1,5 @@
 import Event from "../event/Event";
 import Loadable from "../loader/Loadable";
-import ReferenceCounter from "./ReferenceCounter";
 import Logger from "../../Logger";
 import debug = Logger.debug;
 
@@ -21,9 +20,7 @@ import debug = Logger.debug;
 export default abstract class Resource extends Loadable {
   type = "resource";
 
-  private _reference: Resource;
-
-  private readonly referenceCounter = new ReferenceCounter();
+  private referenceCount: number = 0;
   public readonly id: string;
   private readonly _path: string;
 
@@ -41,24 +38,15 @@ export default abstract class Resource extends Loadable {
   }
 
   public retain() {
-    this.referenceCounter.increment();
+    this.referenceCount++;
   }
 
   public async destroy(): Promise<void> {
-    this.referenceCounter.decrement();
-    if (this.referenceCounter.isZero) {
+    this.referenceCount--;
+    if (this.referenceCount <= 0) {
       await super.destroy();
       debug(this.constructor.name, this.id, "cleaned up.");
       this.onDestroy.trigger(this);
     }
-  }
-
-  public set reference(reference: Resource) {
-    this._reference = reference;
-    Object.assign(this, reference);
-    if(reference.isLoaded) return;
-    reference.loaded.then(() => {
-      this.finishLoading();
-    });
   }
 }

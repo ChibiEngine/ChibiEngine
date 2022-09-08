@@ -9,16 +9,17 @@ module Cache {
     resources.delete(resource.id);
   }
 
-  export function load<T extends Resource>(dependency: T) {
+  export function load<T extends Resource>(dependency: T): T {
     let existing = resources.get(dependency.id) as T;
     if (existing) {
       existing.retain();
-      dependency.reference = existing;
+      return existing;
     } else {
       resources.set(dependency.id, dependency);
       dependency.onDestroy.subscribe(onResourceDestroy);
       dependency.retain();
       dependency.create();
+      return dependency;
     }
   }
 }

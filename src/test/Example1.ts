@@ -34,7 +34,9 @@ export default class Example1 extends Scene {
     // Center bunny sprite in local container coordinates
     // TODO
     // this.container.pivot(this.container.size.half);
-    console.log(this.blobs);
+    console.log("blobs", this.blobs);
+    console.log("dependants", this.dependants);
+    console.log("dependencies", this.dependencies);
     // console.log(this.game.loader.resources);
 
     await new Promise((resolve) => setTimeout(resolve, 3000));
