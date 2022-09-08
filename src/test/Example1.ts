@@ -4,6 +4,7 @@ import Sprite from "../engine/node/Sprite";
 import Node from "../engine/node/Node";
 import Text from "../engine/resource/Text";
 import Scene from "../engine/game/Scene";
+import Cache from "../engine/loader/Cache";
 
 export default class Example1 extends Scene {
   private container: Node;
@@ -18,12 +19,12 @@ export default class Example1 extends Scene {
 
     // Create a 5x5 grid of bunnies
     for (let i = 0; i < 25; i++) {
-      const bunny = new Sprite(
+      this.container.add(new Sprite(
         new Image(bunnyURL),
         (i % 5) * 40,
         Math.floor(i / 5) * 40
-      );
-      this.container.add(bunny);
+      ));
+      await new Promise((resolve) => setTimeout(resolve, 300));
     }
 
     await this.container.loaded;
@@ -37,6 +38,7 @@ export default class Example1 extends Scene {
     console.log("blobs", this.blobs);
     console.log("dependants", this.dependants);
     console.log("dependencies", this.dependencies);
+    console.log("cache", Cache.resources);
     // console.log(this.game.loader.resources);
 
     await new Promise((resolve) => setTimeout(resolve, 3000));

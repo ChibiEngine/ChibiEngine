@@ -104,6 +104,9 @@ export default abstract class Loadable {
     }
 
     public get loaded(): Promise<this> {
+        if(this.isLoaded) {
+            return Promise.resolve(this);
+        }
         return this.onLoaded.promise;
     }
 
