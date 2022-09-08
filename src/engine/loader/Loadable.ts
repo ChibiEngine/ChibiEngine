@@ -1,7 +1,7 @@
 import Event from "../event/Event";
 import type Blob from "./Blob";
 import Cache from "./Cache";
-import type Resource from "../resource/Resource";
+import EventPromise from "../event/EventPromise";
 
 
 // Inspired by https://help.adobe.com/fr_FR/FlashPlatform/reference/actionscript/3/flash/display/LoaderInfo.html
@@ -12,7 +12,7 @@ export default abstract class Loadable {
 
     // TODO: pb si les sous-classes utilisent un LoaderInfoAggregate
     public readonly onProgress: Event<this> = new Event<this>();
-    public readonly onLoaded: Event<this> = new Event<this>();
+    public readonly onLoaded: EventPromise<this> = new EventPromise<this>();
 
     public readonly dependencies: Loadable[] = [];
     public readonly dependants: Loadable[] = [];
@@ -43,6 +43,7 @@ export default abstract class Loadable {
      * @param dependency
      */
     public load<T extends Loadable>(dependency: T): T {
+        this.onLoaded.restart();
         if(dependency.type === "resource") {
             // TODO: cast bizarre à revoir
             dependency = Cache.load(dependency as any);
@@ -104,9 +105,6 @@ export default abstract class Loadable {
     }
 
     public get loaded(): Promise<this> {
-        if(this.isLoaded) {
-            return Promise.resolve(this);
-        }
         return this.onLoaded.promise;
     }
 
