@@ -1,16 +1,17 @@
 import Resource from "../resource/Resource";
 import {DomBlob} from "../util/dom";
 
-export default class Blob extends Resource {
+export default class Blob extends Resource implements DomBlob {
     type = "blob";
 
-    private _response: DomBlob;
+    private _content: DomBlob;
+    private _url: string = null;
 
     private _bytesLoaded: number = 0;
     private _bytesTotal: number = 0;
 
-    public constructor(private readonly url: string) {
-        super(url);
+    public constructor(path: string) {
+        super(path);
     }
 
     public async _create() {
@@ -30,18 +31,17 @@ export default class Blob extends Resource {
 
             xhr.addEventListener("loadend", () => {
                 if(!(xhr.readyState === 4 && xhr.status === 200)){
-                    console.warn(`The HttpRequest(${this.url}) got readyState=${xhr.readyState} and status=${xhr.status}`);
+                    console.warn(`The HttpRequest(${this.path}) got readyState=${xhr.readyState} and status=${xhr.status}`);
                 }
-                this._response = xhr.response;
+                this._content = xhr.response;
                 resolve();
             });
 
             xhr.responseType = 'blob';
-            xhr.open("GET", this.url, true);
+            xhr.open("GET", this.path, true);
             xhr.send();
         });
     }
-
 
     get bytesLoaded(): number {
         return this._bytesLoaded;
@@ -51,15 +51,35 @@ export default class Blob extends Resource {
         return this._bytesTotal;
     }
 
-    public get response(): DomBlob {
-        return this._response;
+    public get content(): DomBlob {
+        return this._content;
     }
 
-    public get blob(): Promise<DomBlob> {
-        return new Promise(async (resolve, reject) => {
-            await this.loaded;
-            resolve(this._response);
-        });
+    public get url(): string {
+        if(this._url === null){
+            this._url = URL.createObjectURL(this._content);
+        }
+        return this._url;
+    }
+
+    public get size() {
+        return this._content.size;
+    }
+
+    public text(): Promise<string> {
+        return this._content.text();
+    }
+
+    public arrayBuffer(): Promise<ArrayBuffer> {
+        return this._content.arrayBuffer();
+    }
+
+    public stream(): ReadableStream<any> {
+        return this._content.stream();
+    }
+
+    public slice(start?: number, end?: number, contentType?: string): DomBlob {
+        return this._content.slice(start, end, contentType);
     }
 
     protected async _destroy() {

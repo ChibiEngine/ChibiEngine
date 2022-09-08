@@ -21,11 +21,11 @@ export default class Image extends Resource {
   }
 
   protected async _create(): Promise<void> {
-    const blob = await this.load(new Blob(this.path)).blob;
+    const blob = await this.load(new Blob(this.path)).loaded;
 
     // Create HTMLImageElement from blob
     const image = new DomImage();
-    image.src = URL.createObjectURL(blob);
+    image.src = blob.url;
 
     return new Promise((resolve, reject) => {
       image.onload = () => {
