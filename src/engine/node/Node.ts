@@ -29,6 +29,9 @@ export default class Node extends AbstractNode {
    * @param child
    */
   public add<T extends AbstractNode>(child: T): T {
+    if (child._parent) throw new Error("Child already has a parent");
+    child._parent = this;
+
     this.children.push(child);
     this.load(child);
 

@@ -17,6 +17,8 @@ export default class Example1 extends Scene {
     // Create a container at the center
     this.container = this.add(new Node(this.game.screen.center));
 
+    console.log("scene", this.container.scene);
+
     // Create a 5x5 grid of bunnies
     for (let i = 0; i < 25; i++) {
       this.container.add(new Sprite(
@@ -24,7 +26,7 @@ export default class Example1 extends Scene {
         (i % 5) * 40,
         Math.floor(i / 5) * 40
       ));
-      await new Promise((resolve) => setTimeout(resolve, 300));
+      await new Promise((resolve) => setTimeout(resolve, 100));
     }
 
     await this.container.finishLoading();
@@ -51,9 +53,7 @@ export default class Example1 extends Scene {
    */
 
   public update(dt: number) {
-    // rotate the container!
-    // use delta to create frame-independent transform
-    // TODO
-    // this.container.rotation -= 0.01 * dt;
+    console.log("fps",1000/dt);
+    this.container.internal.rotation -= 0.01 * dt;
   }
 }

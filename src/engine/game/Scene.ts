@@ -1,12 +1,25 @@
 import Camera from "../camera/Camera";
 import Node from "../node/Node";
 import Game from "./Game";
+import Updatable from "../node/Updatable";
 
-export default class Scene extends Node {
+export default class Scene extends Node implements Updatable {
   public game: Game;
   private camera: Camera;
 
-  public update(delta: number) {
+  private readonly updateList: Updatable[] = [];
 
+  public get scene() {
+    return this;
+  }
+
+  public update(delta: number) {
+    for (const updatable of this.updateList) {
+      updatable.update(delta);
+    }
+  }
+
+  public addUpdatable(param: Updatable) {
+    this.updateList.push(param);
   }
 }

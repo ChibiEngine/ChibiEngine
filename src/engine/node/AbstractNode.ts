@@ -10,6 +10,7 @@ import Loadable from "../loader/Loadable";
 import center from "./positioning/center";
 
 import type Node from "./Node";
+import type Scene from "../game/Scene";
 
 // Inspired by https://docs.cocos2d-x.org/api-ref/cplusplus/v4x/d3/d82/classcocos2d_1_1_node.html
 
@@ -54,6 +55,14 @@ export default abstract class AbstractNode extends Loadable implements Positiona
   }
 
   // TODO : ajouter Skew
+
+  public async create(): Promise<void> {
+    await super.create();
+    const scene = this.scene;
+    if("update" in this) {
+      scene.addUpdatable(this);
+    }
+  }
 
   protected abstract _create(): Promise<void>;
 
@@ -134,5 +143,9 @@ export default abstract class AbstractNode extends Loadable implements Positiona
   public getParent<T extends AbstractNode>(type: typeof AbstractNode): T {
     // TODO: implement
     return null as T;
+  }
+
+  public get scene(): Scene {
+    return this.parent.scene;
   }
 }

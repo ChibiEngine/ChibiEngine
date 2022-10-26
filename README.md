@@ -19,7 +19,7 @@ Il fait office de wrapper par dessus le moteur de rendu [PixiJS](https://github.
 - [ ] Comportements de Noeuds ⚒️
 - [ ] Scènes ⚒️
     - [ ] Transitions
-- [ ] GameLoop 
+- [ ] GameLoop ⚒️
 - [ ] Caméra (inspirée de [pixi-viewport](https://github.com/davidfig/pixi-viewport))
     - [ ] Parallaxe
     - [ ] Lerp

@@ -2,6 +2,7 @@ import * as PIXI from "pixi.js";
 import Scene from "./Scene";
 import Node from "../node/Node";
 import Rectangle from "../geom/rect/Rectangle";
+import GameLoop from "./GameLoop";
 
 interface GameConfig {
   width: number;
@@ -16,11 +17,14 @@ export default class Game extends Node {
   private readonly app: PIXI.Application;
   private readonly sceneStack: Scene[] = [];
 
+  private readonly gameLoop: GameLoop = new GameLoop();
+
   public constructor(config: GameConfig) {
     super();
     this.app = new PIXI.Application(config);
     document.body.appendChild(this.app.view);
     this._internal = this.app.stage;
+    this.app.ticker.add(this.updateScenes.bind(this));
   }
 
   public get screen(): Rectangle {
@@ -45,11 +49,14 @@ export default class Game extends Node {
   public addScene(scene: Scene) {
     scene.game = this;
     this.add(scene);
-    this.sceneStack.push(scene);
-    this.updateScene();
+    scene.finishLoading().then(() => {
+      this.sceneStack.push(scene);
+    });
   }
 
-  private updateScene() {
-    // TODO: implement
+  private updateScenes(dt: number) {
+    for (const scene of this.sceneStack) {
+      scene.update(dt);
+    }
   }
 }
