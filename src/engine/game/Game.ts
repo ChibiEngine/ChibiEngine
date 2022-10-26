@@ -24,7 +24,7 @@ export default class Game extends Node {
     this.app = new PIXI.Application(config);
     document.body.appendChild(this.app.view);
     this._internal = this.app.stage;
-    this.app.ticker.add(this.updateScenes.bind(this));
+    this.gameLoop.start(this.updateScenes.bind(this));
   }
 
   public get screen(): Rectangle {

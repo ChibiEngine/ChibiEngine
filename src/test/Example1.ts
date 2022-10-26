@@ -54,6 +54,6 @@ export default class Example1 extends Scene {
 
   public update(dt: number) {
     console.log("fps",1000/dt);
-    this.container.internal.rotation -= 0.01 * dt;
+    this.container.internal.rotation -= 0.0007 * dt;
   }
 }

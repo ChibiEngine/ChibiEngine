@@ -34,7 +34,6 @@ export default class GameLoop {
         }
 
         this._delta = time - this._lastTime;
-        console.log(this._delta);
         this._lastTime = time;
 
         this._update(this._delta);
