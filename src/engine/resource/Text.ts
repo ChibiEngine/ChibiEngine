@@ -1,5 +1,5 @@
 import Resource from "./Resource";
-import Blob from "../loader/Blob";
+import Blob from "./Blob";
 
 export default class Text extends Resource {
     private _text: string;
@@ -17,7 +17,7 @@ export default class Text extends Resource {
     }
 
     protected async _create(): Promise<void> {
-        const blob = await this.load(new Blob(this.path)).loaded;
+        const blob = await this.load(new Blob(this.path)).finishLoading();
 
         this._text = await blob.text();
     }

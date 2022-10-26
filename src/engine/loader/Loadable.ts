@@ -1,5 +1,5 @@
 import Event from "../event/Event";
-import type Blob from "./Blob";
+import type Blob from "../resource/Blob";
 import Cache from "./Cache";
 import EventPromise from "../event/EventPromise";
 
@@ -58,7 +58,7 @@ export default abstract class Loadable {
             this.addBlob(dependency as any);
         }
         this.dependencies.push(dependency);
-        dependency.loaded.then(this.onDependencyLoaded);
+        dependency.finishLoading().then(this.onDependencyLoaded);
         return dependency;
     }
 
@@ -70,9 +70,9 @@ export default abstract class Loadable {
 
     public async create() {
         // On set le parent de la dépendance comme ça lorsqu'il appellera this.load, il pourra faire remonter les appels
-        this.loading();
+        this.loadingStart();
         await this._create()
-        this.finishLoading();
+        this.loadingEnd();
     }
 
     protected abstract _create(): Promise<void>;
@@ -91,12 +91,12 @@ export default abstract class Loadable {
 
     protected abstract _destroy(): Promise<void>;
 
-    public loading() {
+    private loadingStart() {
         this._isLoading = true;
         this._isLoaded = false;
     }
 
-    public finishLoading() {
+    private loadingEnd() {
         this._isLoading = false;
         this._isLoaded = true;
         if(this.allDependenciesLoaded()) {
@@ -104,7 +104,7 @@ export default abstract class Loadable {
         }
     }
 
-    public get loaded(): Promise<this> {
+    public finishLoading(): Promise<this> {
         return this.onLoaded.promise;
     }
 

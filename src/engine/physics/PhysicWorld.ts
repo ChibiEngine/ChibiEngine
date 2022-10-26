@@ -1,11 +1,11 @@
 import Behavior from "../behavior/Behavior";
 import Updatable from "../behavior/Updatable";
-import INode from "../node/INode";
+import AbstractNode from "../node/AbstractNode";
 
-export default class PhysicWorld extends Behavior<INode> implements Updatable {
-    protected target: INode;
+export default class PhysicWorld extends Behavior<AbstractNode> implements Updatable {
+    protected target: AbstractNode;
     
-    public control(target: INode): void {
+    public control(target: AbstractNode): void {
         // Rien ?!
         throw new Error("Method not implemented.");
     }

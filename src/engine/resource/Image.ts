@@ -1,6 +1,6 @@
 import Resource from "./Resource";
 import * as PIXI from "pixi.js";
-import Blob from "../loader/Blob";
+import Blob from "./Blob";
 import {DomImage} from "../util/dom";
 
 export default class Image extends Resource {
@@ -21,7 +21,7 @@ export default class Image extends Resource {
   }
 
   protected async _create(): Promise<void> {
-    const blob = await this.load(new Blob(this.path)).loaded;
+    const blob = await this.load(new Blob(this.path)).finishLoading();
 
     // Create HTMLImageElement from blob
     const image = new DomImage();

@@ -1,11 +1,11 @@
-import INode from "../node/INode";
+import AbstractNode from "../node/AbstractNode";
 
 /**
  * Comment partager le behavior d'un parent à ses enfants ?
  * => Cas du PhysicWorld et PhysicBody
  * 
  */
-export default abstract class Behavior<T extends INode> {
+export default abstract class Behavior<T extends AbstractNode> {
     protected target: T;
 
     public abstract control(target: T): void;

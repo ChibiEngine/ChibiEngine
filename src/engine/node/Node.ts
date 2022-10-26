@@ -1,15 +1,15 @@
 import * as PIXI from "pixi.js";
 import Position from "../geom/position/Position";
-import INode from "./INode";
+import AbstractNode from "./AbstractNode";
 import {assignPosition} from "../geom/utils";
 
 /**
  * Noeud simple au sens conteneur PIXI : possède des enfants
  * Toute la hiérarchie d'une scène se base sur ces noeuds
  */
-export default class Node extends INode {
+export default class Node extends AbstractNode {
   public readonly _internal: PIXI.Container;
-  private children: INode[] = [];
+  private children: AbstractNode[] = [];
 
   public constructor(position: Position = Position.zero()) {
     super(position);
@@ -28,14 +28,14 @@ export default class Node extends INode {
    * Ajoute un enfant à ce noeud et charge ses dépendances si nécessaire (just-in-time loading)
    * @param child
    */
-  public add<T extends INode>(child: T): T {
+  public add<T extends AbstractNode>(child: T): T {
     this.children.push(child);
     this.load(child);
 
     if (child.internal) {
       this._internal.addChild(child.internal);
     } else {
-      child.loaded.then(node => {
+      child.finishLoading().then(node => {
         this._internal.addChild(node.internal)
       });
     }
@@ -48,7 +48,7 @@ export default class Node extends INode {
    * @param child
    * @returns true si l'enfant était présent
    */
-  public remove(child: INode): boolean {
+  public remove(child: AbstractNode): boolean {
     const index = this.children.indexOf(child);
     if (index === -1) return false;
     child._parent = null;

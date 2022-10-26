@@ -26,7 +26,7 @@ import type Node from "./Node";
  *   - Text
  */
 // TODO: Renommer INode en Leaf?
-export default abstract class INode extends Loadable implements Positionable, Sizeable {
+export default abstract class AbstractNode extends Loadable implements Positionable, Sizeable {
   type = "node";
 
   public _parent: Node;
@@ -131,7 +131,7 @@ export default abstract class INode extends Loadable implements Positionable, Si
     return null as T;
   }
   
-  public getParent<T extends INode>(type: typeof INode): T {
+  public getParent<T extends AbstractNode>(type: typeof AbstractNode): T {
     // TODO: implement
     return null as T;
   }
