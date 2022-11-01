@@ -10,7 +10,7 @@
     "start": "vite --open"
   },
   "dependencies": {
-    "pixi.js": "^6.5.2",
+    "pixi.js": "^6.5.8",
     "vite": "2.9.12"
   },
   "devDependencies": {
