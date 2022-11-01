@@ -59,7 +59,7 @@ export default abstract class AbstractNode extends Loadable implements Positiona
   public async create(): Promise<void> {
     await super.create();
     const scene = this.scene;
-    if("update" in this) {
+    if("update" in this && this !== scene) {
       scene.addUpdatable(this);
     }
   }
