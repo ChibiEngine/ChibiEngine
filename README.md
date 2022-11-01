@@ -15,11 +15,12 @@ Il fait office de wrapper par dessus le moteur de rendu [PixiJS](https://github.
 - [x] Chargement des ressources
 - [x] Noeuds
 - [x] Sprites
+- [ ] GameLoop ⚒️
 - [ ] Positionnement réactif ?
+    - Qu'est-ce-qui est réactif ?
 - [ ] Comportements de Noeuds ⚒️
 - [ ] Scènes ⚒️
     - [ ] Transitions
-- [ ] GameLoop ⚒️
 - [ ] Caméra (inspirée de [pixi-viewport](https://github.com/davidfig/pixi-viewport))
     - [ ] Parallaxe
     - [ ] Lerp
@@ -28,18 +29,26 @@ Il fait office de wrapper par dessus le moteur de rendu [PixiJS](https://github.
 - [ ] Tweens et séquences (inspiré de [Cocos2d-x](https://docs.cocos.com/cocos2d-x/manual/en/actions/getting_started.html))
   - [ ] Easing functions ([penner](https://github.com/bcherny/penner) / [phaser](https://github.com/photonstorm/phaser/tree/master/src/math/easing))
 - [ ] Moteur d'animation personnalisé
-  - [ ] Éditeur d'animations
-- [ ] Moteur physique ([planck.js](https://github.com/shakiba/planck.js/))
+  - [ ] Animations décrites en JSON
+  - [ ] Intégrer des éléments en frame par frame
+  - [ ] Éditeur d'animations 🔮
+- [ ] Moteur physique
+    - [ ] Wrapper autour de [planck.js](https://github.com/shakiba/planck.js/)
+    - [ ] Wrapper autour de [box2d-wasm](https://github.com/Birch-san/box2d-wasm) 🔮
 - [ ] Audio : SFX et Musiques avec gestion du volume
 - [ ] Tilemap
 - [ ] Filtres PIXI (shaders)
 - [ ] Masques
 - [ ] Meshes
-- [ ] Chargement dynamique de noeud
-- [ ] Optimisation par génération d'atlas au runtime
+- [ ] Chargement dynamique de noeud (prefab) ❓
+- [ ] Optimisation par génération d'atlas au runtime 🔮
     - [ ] Ou ahead-of-time au compile-time ? Ou avec un CLI ?
+- [ ] Support de la 3D avec [playcanvas](https://github.com/playcanvas/engine) 🔮
+- [ ] Version native Desktop/Android/iOS avec [cocos2d-x](https://github.com/cocos2d/cocos2d-x) 🔮
 
-⚒️ = Work in progress...
+⚒️ Work in progress...
+🔮 Fonctionnalité non essentielle qui arrivera dans un futur lointain
+❓ Fonctionnalité potentiellement non pertinente
 
 Chibiland - http://chibi.land/
 
