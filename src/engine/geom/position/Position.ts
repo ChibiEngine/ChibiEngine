@@ -17,6 +17,7 @@ export default class Position {
   public get x() {
     return this._x;
   }
+
   public get y() {
     return this._y;
   }
@@ -25,6 +26,7 @@ export default class Position {
     this._x = x;
     this.onChange.trigger(this);
   }
+
   public set y(y: number) {
     this._y = y;
     this.onChange.trigger(this);
@@ -38,5 +40,15 @@ export default class Position {
 
   public clone() {
     return new Position(this._x, this._y);
+  }
+
+  public addX(number: number): this {
+    this.set(this._x + number, this._y);
+    return this;
+  }
+
+  public addY(number: number): this {
+    this.set(this._x, this._y + number);
+    return this;
   }
 }
