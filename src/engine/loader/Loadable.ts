@@ -43,17 +43,19 @@ export default abstract class Loadable {
      * @param dependency
      */
     public load<T extends Loadable>(dependency: T): T {
+        // TODO : améliorer ce code moche
         this.onLoaded.restart();
         if(dependency.type === "resource") {
             // TODO: cast bizarre à revoir
             dependency = Cache.load(dependency as any);
             dependency.dependants.push(this);
             this.addBlob(...dependency.blobs);
-        } else {
+        } else if (dependency.type !== "blob") {
             dependency.dependants.push(this);
             dependency.create();
-        }
-        if(dependency.type === "blob") {
+        } else {
+            dependency = Cache.load(dependency as any);
+            dependency.dependants.push(this);
             // Si c'est un blob, appeler addBlob
             this.addBlob(dependency as any);
         }
