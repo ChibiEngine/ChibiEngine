@@ -5,22 +5,32 @@ import {DomImage} from "../util/dom";
 
 export default class Image extends Resource {
   private _texture: PIXI.Texture;
+  private baseImage: Image;
+  private readonly frame: PIXI.Rectangle;
 
-  public constructor(path: string) {
-    super(path);
+  public constructor(path: string, x: number = -1, y: number = -1, width: number = -1, height: number = -1) {
+    super(path, x, y, width, height);
+    if(x !== -1 && y !== -1 && width !== -1 && height !== -1) {
+      this.baseImage = new Image(path);
+      this.frame = new PIXI.Rectangle(x, y, width, height);
+    }
   }
 
-//   TODO : gérer le cropping : update texture's frame
-//   Multiple textures share same base texture
-//   public part(x: number, y: number, w: number, h: number): Image {
-//     return new Image(this.path, x, y, w, h);
-//   }
+  public part(x: number, y: number, width: number, height: number): Image {
+    return new Image(this.path, x, y, width, height);
+  }
 
   public get texture(): PIXI.Texture {
     return this._texture;
   }
 
   protected async _create(): Promise<void> {
+    if(this.baseImage) {
+      this.baseImage = await this.load(this.baseImage).finishLoading();
+      this._texture = new PIXI.Texture(this.baseImage.texture.baseTexture, this.frame);
+      return;
+    }
+
     const blob = await this.load(new Blob(this.path)).finishLoading();
 
     // Create HTMLImageElement from blob
@@ -30,6 +40,9 @@ export default class Image extends Resource {
     return new Promise((resolve, reject) => {
       image.onload = () => {
         this._texture = PIXI.Texture.from(image);
+        if(this.frame) {
+          this._texture.frame = this.frame;
+        }
         resolve();
       };
       image.onerror = reject;
