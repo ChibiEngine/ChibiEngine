@@ -12,7 +12,7 @@ export default class Example1 extends Scene {
 
   public async _create() {
     this.onProgress.subscribe((me) => { console.log(me.bytesLoaded,"/",me.bytesTotal); });
-    this.text = await this.load(new Text("/assets/paragraph.txt")).finishLoading();
+    this.text = await this.load(new Text("/assets/paragraph.txt"));
     console.log("text:", this.text.content);
     // Create a container at the center
     this.container = this.add(new Node(this.game.screen.center));
@@ -29,7 +29,7 @@ export default class Example1 extends Scene {
       await new Promise((resolve) => setTimeout(resolve, 100));
     }
 
-    await this.container.finishLoading();
+    await this.container;
 
     this.container.internal.pivot.x = this.container.internal.width / 2;
     this.container.internal.pivot.y = this.container.internal.height / 2;

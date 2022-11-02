@@ -15,7 +15,7 @@ export default class Sprite extends AbstractNode {
     // Load Texture
     // TODO: syntaxe bizarre, on s'attendrait à juste faire `const image = await this.load(this.image)` sans le .loaded
     //
-    const image = await this.load(this.image).finishLoading();
+    const image = await this.load(this.image);
     this._internal = new PixiSprite(image.texture);
     assignPosition(this._internal, this.position);
   }

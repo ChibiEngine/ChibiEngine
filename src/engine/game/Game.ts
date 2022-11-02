@@ -49,7 +49,7 @@ export default class Game extends Node {
   public addScene(scene: Scene) {
     scene.game = this;
     this.add(scene);
-    scene.finishLoading().then(() => {
+    scene.onLoaded.subscribeOnce(() => {
       this.sceneStack.push(scene);
     });
   }

@@ -38,7 +38,7 @@ export default class Node extends AbstractNode {
     if (child.internal) {
       this._internal.addChild(child.internal);
     } else {
-      child.finishLoading().then(node => {
+      child.onLoaded.subscribeOnce(node => {
         this._internal.addChild(node.internal)
       });
     }

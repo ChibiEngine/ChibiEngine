@@ -5,6 +5,14 @@ export default class Event<T> {
     this.listeners.push(listener);
   }
 
+  public subscribeOnce(listener: (value: T) => void) {
+    const once = (value: T) => {
+      this.unsubscribe(once);
+      listener(value);
+    };
+    this.subscribe(once);
+  }
+
   public unsubscribe(listener: (value: T) => void) {
     const index = this.listeners.indexOf(listener);
     if (index === -1) return false;
@@ -13,7 +21,8 @@ export default class Event<T> {
   }
 
   public trigger(value: T) {
-    for (const listener of this.listeners) {
+    const listeners = this.listeners.slice();
+    for (const listener of listeners) {
       listener(value);
     }
   }

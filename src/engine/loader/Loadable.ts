@@ -1,18 +1,20 @@
 import Event from "../event/Event";
 import type Blob from "../resource/Blob";
 import Cache from "./Cache";
-import EventPromise from "../event/EventPromise";
+import InstantEvent from "../event/InstantEvent";
 
 
 // Inspired by https://help.adobe.com/fr_FR/FlashPlatform/reference/actionscript/3/flash/display/LoaderInfo.html
 // https://help.adobe.com/fr_FR/FlashPlatform/reference/actionscript/3/flash/display/Loader.html
 
 export default abstract class Loadable {
+    // public then?: (resolve: any, reject: any) => void;
+
     public abstract readonly type: string;
 
     // TODO: pb si les sous-classes utilisent un LoaderInfoAggregate
     public readonly onProgress: Event<this> = new Event<this>();
-    public readonly onLoaded: EventPromise<this> = new EventPromise<this>();
+    public readonly onLoaded: Event<this> = new InstantEvent<this>();
 
     public readonly dependencies: Loadable[] = [];
     public readonly dependants: Loadable[] = [];
@@ -44,7 +46,6 @@ export default abstract class Loadable {
      */
     public load<T extends Loadable>(dependency: T): T {
         // TODO : améliorer ce code moche
-        this.onLoaded.restart();
         if(dependency.type === "resource") {
             // TODO: cast bizarre à revoir
             dependency = Cache.load(dependency as any);
@@ -60,7 +61,21 @@ export default abstract class Loadable {
             this.addBlob(dependency as any);
         }
         this.dependencies.push(dependency);
-        dependency.finishLoading().then(this.onDependencyLoaded);
+        dependency.onLoaded.subscribeOnce(this.onDependencyLoaded);
+
+
+        // For whatever reason, TypeScript doesn't like awaiting a Thenable
+        // TODO : fix this
+
+        //@ts-ignore
+        dependency.then = (resolve, _) => {
+            dependency.onLoaded.subscribeOnce(() => {
+                //@ts-ignore
+                delete dependency.then;
+                resolve(dependency);
+            });
+        }
+
         return dependency;
     }
 
@@ -104,10 +119,6 @@ export default abstract class Loadable {
         if(this.allDependenciesLoaded()) {
             this.onLoaded.trigger(this);
         }
-    }
-
-    public finishLoading(): Promise<this> {
-        return this.onLoaded.promise;
     }
 
     public get isLoaded() {

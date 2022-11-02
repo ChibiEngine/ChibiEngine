@@ -26,12 +26,12 @@ export default class Image extends Resource {
 
   protected async _create(): Promise<void> {
     if(this.baseImage) {
-      this.baseImage = await this.load(this.baseImage).finishLoading();
+      this.baseImage = await this.load(this.baseImage);
       this._texture = new PIXI.Texture(this.baseImage.texture.baseTexture, this.frame);
       return;
     }
 
-    const blob = await this.load(new Blob(this.path)).finishLoading();
+    const blob = await this.load(new Blob(this.path));
 
     // Create HTMLImageElement from blob
     const image = new DomImage();
