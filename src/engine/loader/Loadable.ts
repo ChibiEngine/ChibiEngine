@@ -70,9 +70,11 @@ export default abstract class Loadable {
         this.dependencies.push(dependency);
         dependency.onLoaded.subscribeOnce(this.onDependencyLoaded);
 
-
-        // For whatever reason, TypeScript doesn't like awaiting a Thenable
-        // TODO : fix this
+        // TypeScript doesn't like awaiting a Thenable :
+        // If a class has a then() method it must conform to a valid PromiseLike signature
+        // But if I do so, TypeScript complains because the PromiseLike resolves to itself (because we want: await this.load(dep) === dep)
+        // The solution is not to declare a then() method to make TypeScript think it's not a Promise, so it resolves "await dependency" to the dependency itself (await 5 === 5)
+        // and to delete the then() method once it is resolved to avoid cyclic resolving
 
         //@ts-ignore
         dependency.then = (resolve, _) => {
