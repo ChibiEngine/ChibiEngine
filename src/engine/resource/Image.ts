@@ -1,11 +1,11 @@
 import Resource from "./Resource";
 import * as PIXI from "pixi.js";
 import Blob from "./Blob";
-import {DomImage} from "../util/dom";
+import {DomImage} from "../utils/dom";
 
 export default class Image extends Resource {
   private _texture: PIXI.Texture;
-  private baseImage: Image;
+  private readonly baseImage: Image;
   private readonly frame: PIXI.Rectangle;
 
   public constructor(path: string, x: number = -1, y: number = -1, width: number = -1, height: number = -1) {
@@ -26,10 +26,7 @@ export default class Image extends Resource {
 
   protected async _create(): Promise<void> {
     if(this.baseImage) {
-      /* TODO : on voudrait juste avoir besoin de faire un await this.load(this.baseImage), sans réassignation
-                this.load(xxx) transforme son paramètre en proxy vers la ressource en cache ?
-       */
-      this.baseImage = await this.load(this.baseImage);
+      await this.load(this.baseImage);
       this._texture = new PIXI.Texture(this.baseImage.texture.baseTexture, this.frame);
       return;
     }

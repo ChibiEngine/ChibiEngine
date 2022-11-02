@@ -1,5 +1,5 @@
 import Resource from "./Resource";
-import {DomBlob} from "../util/dom";
+import {DomBlob} from "../utils/dom";
 
 export default class Blob extends Resource implements DomBlob {
     type = "blob";

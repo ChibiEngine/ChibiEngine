@@ -2,6 +2,7 @@ import Event from "../event/Event";
 import type Blob from "../resource/Blob";
 import Cache from "./Cache";
 import InstantEvent from "../event/InstantEvent";
+import makeProxy from "../utils/proxy";
 
 
 // Inspired by https://help.adobe.com/fr_FR/FlashPlatform/reference/actionscript/3/flash/display/LoaderInfo.html
@@ -47,16 +48,21 @@ export default abstract class Loadable {
     public load<T extends Loadable>(dependency: T): T {
         // TODO : améliorer ce code moche
         if(dependency.type === "resource") {
-            // TODO : tranformer dependency en proxy vers la ressource en cache ?
             // TODO: cast bizarre à revoir
-            dependency = Cache.load(dependency as any);
+            const fromCache = Cache.load(dependency as any);
+            if(fromCache !== dependency) {
+                makeProxy(dependency, fromCache);
+            }
             dependency.dependants.push(this);
             this.addBlob(...dependency.blobs);
         } else if (dependency.type !== "blob") {
             dependency.dependants.push(this);
             dependency.create();
         } else {
-            dependency = Cache.load(dependency as any);
+            const fromCache = Cache.load(dependency as any);
+            if(fromCache !== dependency) {
+                makeProxy(dependency, fromCache);
+            }
             dependency.dependants.push(this);
             // Si c'est un blob, appeler addBlob
             this.addBlob(dependency as any);
