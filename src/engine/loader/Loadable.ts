@@ -47,6 +47,7 @@ export default abstract class Loadable {
     public load<T extends Loadable>(dependency: T): T {
         // TODO : améliorer ce code moche
         if(dependency.type === "resource") {
+            // TODO : tranformer dependency en proxy vers la ressource en cache ?
             // TODO: cast bizarre à revoir
             dependency = Cache.load(dependency as any);
             dependency.dependants.push(this);

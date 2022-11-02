@@ -26,6 +26,9 @@ export default class Image extends Resource {
 
   protected async _create(): Promise<void> {
     if(this.baseImage) {
+      /* TODO : on voudrait juste avoir besoin de faire un await this.load(this.baseImage), sans réassignation
+                this.load(xxx) transforme son paramètre en proxy vers la ressource en cache ?
+       */
       this.baseImage = await this.load(this.baseImage);
       this._texture = new PIXI.Texture(this.baseImage.texture.baseTexture, this.frame);
       return;
