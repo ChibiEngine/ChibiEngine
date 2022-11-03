@@ -52,7 +52,7 @@ export default class Example1 extends Scene {
    * Promise.all(children => child.ready);
    */
 
-  public update(dt: number) {
+  public _update(dt: number) {
     console.log("fps",1000/dt);
     this.container.internal.rotation -= 0.0007 * dt;
   }

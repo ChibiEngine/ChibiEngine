@@ -3,7 +3,7 @@ import Node from "../node/Node";
 import Game from "./Game";
 import Updatable from "../node/Updatable";
 
-export default class Scene extends Node implements Updatable {
+export default abstract class Scene extends Node implements Updatable {
   public game: Game;
   private camera: Camera;
 
@@ -17,7 +17,10 @@ export default class Scene extends Node implements Updatable {
     for (const updatable of this.updateList) {
       updatable.update(delta);
     }
+    this._update(delta);
   }
+
+  protected abstract _update(delta: number): void;
 
   public addUpdatable(param: Updatable) {
     this.updateList.push(param);

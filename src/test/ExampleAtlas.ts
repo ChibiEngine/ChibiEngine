@@ -5,7 +5,7 @@ import Image from "../engine/resource/Image";
 import Cache from "../engine/loader/Cache";
 
 export default class ExampleAtlas extends Scene {
-  public async _create() {
+  protected async _create() {
     const image = new Image(BUNNIES_ATLAS_URL);
 
     this.add(new Sprite(image.part(0, 0, 26, 37)))
@@ -15,5 +15,8 @@ export default class ExampleAtlas extends Scene {
         .setPosition(this.game.screen.center.addX(13));
 
     console.log(Cache.resources)
+  }
+
+  protected _update(delta: number): void {
   }
 }
