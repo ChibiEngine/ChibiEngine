@@ -26,9 +26,10 @@ export default class Node extends AbstractNode {
 
   /**
    * Ajoute un enfant à ce noeud et charge ses dépendances si nécessaire (just-in-time loading)
+   * This method is asynchronous and resolves when the dependency is loaded.
    * @param child
    */
-  public add<T extends AbstractNode>(child: T): T {
+  public add<T extends AbstractNode>(child: T): T & PromiseLike<T>{
     if (child._parent) throw new Error("Child already has a parent");
     child._parent = this;
 
@@ -43,6 +44,7 @@ export default class Node extends AbstractNode {
       });
     }
 
+    // @ts-ignore
     return child;
   }
 

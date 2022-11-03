@@ -43,9 +43,10 @@ export default abstract class Loadable {
 
     /**
      * Charge une dépendance (explicit loading)
+     * This method is asynchronous and resolves when the dependency is loaded.
      * @param dependency
      */
-    public load<T extends Loadable>(dependency: T): T {
+    public load<T extends Loadable>(dependency: T): T & PromiseLike<T> {
         // TODO : améliorer ce code moche
         if(dependency.type === "resource") {
             // TODO: cast bizarre à revoir
@@ -85,6 +86,7 @@ export default abstract class Loadable {
             });
         }
 
+        //@ts-ignore
         return dependency;
     }
 
