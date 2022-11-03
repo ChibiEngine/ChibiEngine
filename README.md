@@ -18,6 +18,8 @@ Il fait office de wrapper par dessus le moteur de rendu [PixiJS](https://github.
 - [ ] GameLoop ⚒️
 - [ ] Positionnement réactif ?
     - Qu'est-ce-qui est réactif ?
+- [ ] Traduction en anglais
+- [ ] Documentation
 - [ ] Comportements de Noeuds ⚒️
 - [ ] Scènes ⚒️
     - [ ] Transitions
@@ -43,7 +45,7 @@ Il fait office de wrapper par dessus le moteur de rendu [PixiJS](https://github.
 - [ ] Chargement dynamique de noeud (prefab) ❓
 - [ ] Optimisation par génération d'atlas au runtime 🔮
     - [ ] Ou ahead-of-time au compile-time ? Ou avec un CLI ?
-- [ ] Support de la 3D avec [playcanvas](https://github.com/playcanvas/engine) 🔮
+- [ ] Support de la 3D avec [three.js](https://github.com/mrdoob/three.js) 🔮
 - [ ] Version native Desktop/Android/iOS avec [cocos2d-x](https://github.com/cocos2d/cocos2d-x) 🔮
 
 ⚒️ Work in progress...
