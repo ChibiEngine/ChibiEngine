@@ -15,6 +15,13 @@ export default class GameLoop {
         this._requestId = 0;
 
         this._update = () => {};
+        document.addEventListener("visibilitychange", () => {
+            if (document.hidden) {
+                this.pause();
+            } else {
+                this.unpause();
+            }
+        });
     }
 
     public start(update: (delta: number) => void) {
@@ -23,9 +30,15 @@ export default class GameLoop {
         this._requestId = requestAnimationFrame(this._tick);
     }
 
-    public stop() {
+    public pause() {
         this._running = false;
         cancelAnimationFrame(this._requestId);
+    }
+
+    public unpause() {
+        this._running = true;
+        this._lastTime = performance.now();
+        this._requestId = requestAnimationFrame(this._tick);
     }
 
     private _tick = (time: number) => {
