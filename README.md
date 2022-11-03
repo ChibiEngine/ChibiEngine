@@ -15,9 +15,9 @@ Il fait office de wrapper par dessus le moteur de rendu [PixiJS](https://github.
 - [x] Chargement des ressources
 - [x] Noeuds
 - [x] Sprites
+- [x] Positionnement réactif ?
 - [ ] GameLoop ⚒️
-- [ ] Positionnement réactif ?
-    - Qu'est-ce-qui est réactif ?
+- [ ] Implémenter tous [les attributs de transformation](https://pixijs.download/dev/docs/PIXI.Container.html)..
 - [ ] Traduction en anglais
 - [ ] Documentation
 - [ ] Comportements de Noeuds ⚒️
@@ -49,7 +49,9 @@ Il fait office de wrapper par dessus le moteur de rendu [PixiJS](https://github.
 - [ ] Version native Desktop/Android/iOS avec [cocos2d-x](https://github.com/cocos2d/cocos2d-x) 🔮
 
 ⚒️ Work in progress...
+
 🔮 Fonctionnalité non essentielle qui arrivera dans un futur lointain
+
 ❓ Fonctionnalité potentiellement non pertinente
 
 Chibiland - http://chibi.land/
