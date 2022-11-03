@@ -5,8 +5,8 @@ export default class Position {
     return new Position(0, 0);
   }
 
-  private _x: number;
-  private _y: number;
+  protected _x: number;
+  protected _y: number;
   public readonly onChange: Event<Position> = new Event();
 
   public constructor(x: number = 0, y: number = 0) {
@@ -50,5 +50,26 @@ export default class Position {
   public addY(number: number): this {
     this.set(this._x, this._y + number);
     return this;
+  }
+
+  /*
+  * TODO : "with" ou "then" seraient peut-être plus appropriés
+  *       bunny2.position = (bunny1.position.with(pos => pos.x = 10)
+  *       bunny2.position = (bunny1.position.then(pos => pos.x = 10)
+   */
+  public derive(update: (position: Position) => void) {
+    return new ReactivePosition(this, update);
+  }
+}
+
+export class ReactivePosition extends Position {
+  public constructor(reference: Position, update: (position: Position) => void) {
+    super(reference.x, reference.y);
+
+    reference.onChange.subscribe(() => {
+      this._x = reference.x;
+      this._y = reference.y;
+      update(this);
+    });
   }
 }

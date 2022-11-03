@@ -2,6 +2,7 @@ import Game from "../engine/game/Game";
 import Example1 from "./Example1";
 import "./pixi";
 import ExampleAtlas from "./ExampleAtlas";
+import ExampleReactivePositioning from "./ExampleReactivePositioning";
 
 const game = new Game({
     width: 800,
@@ -13,4 +14,5 @@ const game = new Game({
 });
 
 // game.addScene(new Example1());
-game.addScene(new ExampleAtlas());
+// game.addScene(new ExampleAtlas());
+game.addScene(new ExampleReactivePositioning());

@@ -11,6 +11,7 @@ import center from "./positioning/center";
 
 import type Node from "./Node";
 import type Scene from "../game/Scene";
+import {assignPosition} from "../geom/utils";
 
 // Inspired by https://docs.cocos2d-x.org/api-ref/cplusplus/v4x/d3/d82/classcocos2d_1_1_node.html
 
@@ -34,20 +35,22 @@ export default abstract class AbstractNode extends Loadable implements Positiona
 
   protected abstract _internal: PIXI.Container;
 
-  private readonly _position: Position;
-  public readonly onPositionChange: Event<Position>;
+  private _position: Position;
+  public get onPositionChange(): Event<Position> {
+    return this._position.onChange;
+  }
 
   private readonly _size: Size;
-  public readonly onSizeChange: Event<Size>;
+  public get onSizeChange(): Event<Size> {
+    return this._size.onChange;
+  }
 
   private behaviors: Behavior<this>[] = [];
 
   protected constructor(position: Position = Position.zero()) {
     super();
-    this._position = position;
+    this.setPosition(position);
     this._size = Size.zero();
-    this.onPositionChange = this._position.onChange;
-    this.onSizeChange = this._size.onChange;
   }
 
   public get parent(): Node {
@@ -75,7 +78,8 @@ export default abstract class AbstractNode extends Loadable implements Positiona
   }
 
   public setPosition(position: Position): this {
-    this.position.set(position.x, position.y);
+    this._position = position;
+    assignPosition(this._internal, this.position);
     return this;
   }
 
