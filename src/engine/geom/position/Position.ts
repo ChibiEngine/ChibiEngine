@@ -52,14 +52,43 @@ export default class Position {
     return this;
   }
 
-  /*
-  * TODO : "with" ou "then" seraient peut-être plus appropriés
-  *       bunny2.position = (bunny1.position.with(pos => pos.x = 10)
-  *       bunny2.position = (bunny1.position.then(pos => pos.x = 10)
+  /**
+   * Create a new position derived from this position.
+   * update will be called on each change of this position.
+   *
+   * Example:
+   * <code>
+   *   const position = Position.zero();
+   *   const derived = position.derive(pos => pos.x += 10);
+   *   console.log(derived.x); // 10
+   *   position.x = 10;
+   *   console.log(derived.x); // 20
+   * </code>
+   * @param update
    */
   public derive(update: (position: Position) => void) {
     return new ReactivePosition(this, update);
   }
+
+  /**
+   * Alias for Position#derive
+   * Create a new position derived from this position.
+   * update will be called on each change of this position.
+   *
+   * Example:
+   * <code>
+   *   const position = Position.zero();
+   *   const derived = position.with(pos => pos.x += 10);
+   *   console.log(derived.x); // 10
+   *   position.x = 10;
+   *   console.log(derived.x); // 20
+   * </code>
+   * @param update
+   */
+  public with(update: (position: Position) => void) {
+    return new ReactivePosition(this, update);
+  }
+
 }
 
 export class ReactivePosition extends Position {
