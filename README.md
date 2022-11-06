@@ -34,10 +34,10 @@ Il fait office de wrapper par dessus le moteur de rendu [PixiJS](https://github.
   - [ ] Animations décrites en JSON
   - [ ] Intégrer des éléments en frame par frame
   - [ ] Éditeur d'animations 🔮
+- [ ] Audio : SFX et Musiques avec gestion du volume
 - [ ] Moteur physique
     - [ ] Wrapper autour de [planck.js](https://github.com/shakiba/planck.js/)
     - [ ] Wrapper autour de [box2d-wasm](https://github.com/Birch-san/box2d-wasm) 🔮
-- [ ] Audio : SFX et Musiques avec gestion du volume
 - [ ] Tilemap
 - [ ] Filtres PIXI (shaders)
 - [ ] Masques
