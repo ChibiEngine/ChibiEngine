@@ -5,7 +5,7 @@ import AbstractNode from "../node/AbstractNode";
 export default class PhysicWorld extends Behavior<AbstractNode> implements Updatable {
     protected target: AbstractNode;
     
-    public control(target: AbstractNode): void {
+    public setTarget(target: AbstractNode): void {
         // Rien ?!
         throw new Error("Method not implemented.");
     }
