@@ -13,7 +13,7 @@ export default class ExampleReactivePositioning extends Scene {
     const image = new Image(BUNNY_URL);
 
     this.bunny1 = this.add(new Sprite(image)).setPosition(this.game.screen.center)
-    this.bunny2 = this.add(new Sprite(image)).setPosition(this.bunny1.position.derive(pos => pos.addY(36)));
+    this.bunny2 = this.add(new Sprite(image)).setPosition(this.bunny1.position.then(pos => pos.addY(Math.sin(pos.x/100)*60)));
   }
 
   protected _update(delta: number): void {
@@ -23,7 +23,6 @@ export default class ExampleReactivePositioning extends Scene {
       this.bunny1.x -= 0.2 * delta;
     }
 
-    console.log(this.game.screen.width);
     if (this.bunny1.x >= this.game.screen.width) {
       this.direction = "left";
     } else if (this.bunny1.x <= 0) {

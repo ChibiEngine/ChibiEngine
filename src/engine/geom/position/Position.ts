@@ -78,14 +78,14 @@ export default class Position {
    * Example:
    * <code>
    *   const position = Position.zero();
-   *   const derived = position.with(pos => pos.x += 10);
+   *   const derived = position.then(pos => pos.x += 10);
    *   console.log(derived.x); // 10
    *   position.x = 10;
    *   console.log(derived.x); // 20
    * </code>
    * @param update
    */
-  public with(update: (position: Position) => void) {
+  public then(update: (position: Position) => void) {
     return new ReactivePosition(this, update);
   }
 
