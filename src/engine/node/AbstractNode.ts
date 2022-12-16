@@ -12,6 +12,7 @@ import center from "./positioning/center";
 import type Node from "./Node";
 import type Scene from "../game/Scene";
 import {assignPosition} from "../geom/utils";
+import Action from "../tween/Action";
 
 // Inspired by https://docs.cocos2d-x.org/api-ref/cplusplus/v4x/d3/d82/classcocos2d_1_1_node.html
 
@@ -130,7 +131,15 @@ export default abstract class AbstractNode extends Loadable implements Positiona
 
   public addBehavior(behavior: Behavior<this>) {
     this.behaviors.push(behavior);
-    behavior.control(this);
+    behavior.setTarget(this);
+    this.scene.addUpdatable(behavior);
+  }
+
+  public play<T extends AbstractNode>(action: Action<T>) {
+    // TODO : ugly but don't know how to do better
+    // NOTE : doesn't prevent calling a specific action on a node that doesn't support it e.g. calling Tint on a Node
+    this.addBehavior(action as any as Behavior<this>);
+    action.run(this as any as T);
   }
 
   public removeBehavior(behavior: Behavior<this>) {
