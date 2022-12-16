@@ -19,16 +19,18 @@ export default class Game extends Node {
 
   private readonly gameLoop: GameLoop = new GameLoop();
 
+  public readonly screen: Rectangle;
+
   public constructor(config: GameConfig) {
     super();
     this.app = new PIXI.Application(config);
     document.body.appendChild(this.app.view);
     this._internal = this.app.stage;
     this.gameLoop.start(this.updateScenes.bind(this));
-  }
-
-  public get screen(): Rectangle {
-    return new Rectangle(this.app.screen.x, this.app.screen.y, this.app.screen.width, this.app.screen.height);
+    this.screen = new Rectangle(this.app.screen.x, this.app.screen.y, this.app.screen.width, this.app.screen.height);
+    this.app.renderer.on("resize", () => {
+      this.screen.set(this.app.screen.x, this.app.screen.y, this.app.screen.width, this.app.screen.height);
+    });
   }
 
   /**

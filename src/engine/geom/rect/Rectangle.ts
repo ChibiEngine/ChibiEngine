@@ -19,6 +19,11 @@ export default class Rectangle implements Sizeable, Positionable {
         this.onSizeChange = this.size.onChange;
     }
 
+    public set(x: number, y: number, width: number, height: number) {
+        this.position.set(x, y);
+        this.size.set(width, height);
+    }
+
     public get center() {
         return center(this);
     }
