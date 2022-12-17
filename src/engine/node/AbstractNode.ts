@@ -146,6 +146,7 @@ export default abstract class AbstractNode extends Loadable implements Positiona
     const index = this.behaviors.indexOf(behavior);
     if (index === -1) return false;
     this.behaviors.splice(index, 1);
+    this.scene.removeUpdatable(behavior);
   }
 
   public getParentBehavior<T extends Behavior<any>>(type: typeof Behavior): T {
