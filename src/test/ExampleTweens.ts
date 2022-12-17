@@ -6,19 +6,19 @@ import {MoveBy} from "../engine/tween/Move";
 import Easing from "../engine/math/easing/Easing";
 import Sequence from "../engine/tween/Sequence";
 import Callback from "../engine/tween/Callback";
-import Delay from "../engine/tween/Delay";
 
 export default class ExampleTweens extends Scene {
   protected async _create() {
     const sprite = await this.add(new Sprite(new Image(bunnyURL))).setPosition(this.game.screen.center);
     sprite.play(new Sequence(
+            new Callback(() => {console.log("Before MoveBy1")}),
             new MoveBy(0, 200).easing(Easing.bounceOut).duration(2000),
-            new Callback(() => {console.log("callback")}),
-            new Delay(3000),
-            new Callback(() => {console.log("Delay expired")}),
+            new Callback(() => {console.log("After MoveBy1")}),
+            new Callback(() => {console.log("Before MoveBy2")}),
             new MoveBy(0, -200).easing(Easing.bounceOut).duration(2000),
+            new Callback(() => {console.log("After MoveBy2")}),
             new Callback(() => {console.log("Finished")})
-        )
+        ).loop(2)
     );
   }
 

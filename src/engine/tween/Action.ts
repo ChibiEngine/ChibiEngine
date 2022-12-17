@@ -9,7 +9,6 @@ export default abstract class Action<T extends AbstractNode> extends Behavior<T>
 
   protected _elapsed = 0;
   public _duration = 1000;
-  protected loopCount = 0;
   protected _easing: EasingFunction = Easing.linear;
 
   public onFinish: Event<null> = new Event();
@@ -21,14 +20,6 @@ export default abstract class Action<T extends AbstractNode> extends Behavior<T>
 
   public easing(easing: EasingFunction) {
     this._easing = easing;
-    return this;
-  }
-
-  /**
-   -1 = forever
-   **/
-  public loop(count: number = -1) {
-    this.loopCount = count;
     return this;
   }
 
@@ -55,6 +46,7 @@ export default abstract class Action<T extends AbstractNode> extends Behavior<T>
   }
 
   protected finish() {
+    this._elapsed = 0;
     this.target.removeBehavior(this);
     this.onFinish.trigger(null);
   }
