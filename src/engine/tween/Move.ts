@@ -25,15 +25,16 @@ class MoveAction extends Action<AbstractNode> {
     this.target.x = this.startX * (1-offset) + this.endX * offset;
     this.target.y = this.startY * (1-offset) + this.endY * offset;
   }
+}
 
-  public static to(x: number, y: number): MoveAction {
-    return new MoveAction(x, y);
-  }
-
-  public static by(x: number, y: number): MoveAction {
-    return new MoveAction(x, y, true);
+export class MoveBy extends MoveAction {
+  public constructor(x: number, y: number) {
+    super(x, y, true);
   }
 }
 
-const Move = MoveAction;
-export default Move;
+export class MoveTo extends MoveAction {
+  public constructor(x: number, y: number) {
+    super(x, y, false);
+  }
+}
