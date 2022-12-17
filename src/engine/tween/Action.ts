@@ -1,14 +1,18 @@
 import Behavior from "../behavior/Behavior";
 import AbstractNode from "../node/AbstractNode";
-import EasingFunction, {Easing} from "../math/easing/EasingFunction";
+import EasingFunction from "../math/easing/EasingFunction";
+import Easing from "../math/easing/Easing";
+import Event from "../event/Event";
 
 export default abstract class Action<T extends AbstractNode> extends Behavior<T> {
   protected target: T;
 
   protected _elapsed = 0;
-  protected _duration = 1000;
+  public _duration = 1000;
   protected loopCount = 0;
-  protected _easing: EasingFunction = new Easing.Linear();
+  protected _easing: EasingFunction = Easing.linear;
+
+  public onFinish: Event<null> = new Event();
 
   public duration(duration: number) {
     this._duration = duration;
@@ -46,8 +50,13 @@ export default abstract class Action<T extends AbstractNode> extends Behavior<T>
     const offset = this._easing.apply(Math.min(this._elapsed / this._duration, 1));
     this._update(offset);
     if(this._elapsed >= this._duration) {
-      this.target.removeBehavior(this);
+      this.finish();
     }
+  }
+
+  protected finish() {
+    this.target.removeBehavior(this);
+    this.onFinish.trigger(null);
   }
 
   public abstract _run(target: T): void;
