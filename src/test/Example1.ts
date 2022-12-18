@@ -1,13 +1,13 @@
 import bunnyURL from "./assets/bunny.png?url";
 import Image from "../engine/resource/Image";
-import Sprite from "../engine/node/Sprite";
-import Node from "../engine/node/Node";
+import Sprite from "../engine/gameobjects/Sprite";
+import Container from "../engine/gameobjects/Container";
 import Text from "../engine/resource/Text";
 import Scene from "../engine/game/Scene";
 import Cache from "../engine/loader/Cache";
 
 export default class Example1 extends Scene {
-  private container: Node;
+  private container: Container;
   private text: Text;
 
   public async _create() {
@@ -15,7 +15,7 @@ export default class Example1 extends Scene {
     this.text = await this.load(new Text("/assets/paragraph.txt"));
     console.log("text:", this.text.content);
     // Create a container at the center
-    this.container = this.add(new Node(this.game.screen.center));
+    this.container = this.add(new Container(this.game.screen.center));
 
     console.log("scene", this.container.scene);
 

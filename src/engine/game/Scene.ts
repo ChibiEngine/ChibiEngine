@@ -1,9 +1,9 @@
 import Camera from "../camera/Camera";
-import Node from "../node/Node";
+import Container from "../gameobjects/Container";
 import Game from "./Game";
-import Updatable from "../node/Updatable";
+import Updatable from "../gameobjects/Updatable";
 
-export default abstract class Scene extends Node implements Updatable {
+export default abstract class Scene extends Container implements Updatable {
   public game: Game;
   private camera: Camera;
 

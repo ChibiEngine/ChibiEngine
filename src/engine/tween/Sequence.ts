@@ -1,20 +1,20 @@
 import Action from "./Action";
-import AbstractNode from "../node/AbstractNode";
+import GameObject from "../gameobjects/GameObject";
 
-export default class Sequence extends Action<AbstractNode> {
-  private readonly actions: Action<AbstractNode>[] = [];
-  private runningActions: Action<AbstractNode>[];
+export default class Sequence extends Action<GameObject> {
+  private readonly actions: Action<GameObject>[] = [];
+  private runningActions: Action<GameObject>[];
 
   private _loopCount: number = 1;
   private _currentLoop: number = 1;
 
-  public constructor(...actions: Action<AbstractNode>[]) {
+  public constructor(...actions: Action<GameObject>[]) {
     super();
     this.actions = actions;
     this.runningActions = actions.slice();
   }
 
-  public _run(target: AbstractNode) {
+  public _run(target: GameObject) {
     this.runNextAction();
   }
 

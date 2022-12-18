@@ -1,8 +1,8 @@
 import Action from "./Action";
-import AbstractNode from "../node/AbstractNode";
+import GameObject from "../gameobjects/GameObject";
 
-class MoveAction extends Action<AbstractNode> {
-  protected target: AbstractNode;
+class MoveAction extends Action<GameObject> {
+  protected target: GameObject;
 
   private startX: number;
   private startY: number;
@@ -14,7 +14,7 @@ class MoveAction extends Action<AbstractNode> {
     super();
   }
 
-  public _run(target: AbstractNode) {
+  public _run(target: GameObject) {
     this.startX = target.x;
     this.startY = target.y;
     this.endX = this.relative ? this.startX + this.x : this.x;

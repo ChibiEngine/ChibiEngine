@@ -1,15 +1,16 @@
 import * as PIXI from "pixi.js";
 import Position from "../geom/position/Position";
-import AbstractNode from "./AbstractNode";
+import GameObject from "./GameObject";
 import {assignPosition} from "../geom/utils";
 
 /**
  * Noeud simple au sens conteneur PIXI : possède des enfants
  * Toute la hiérarchie d'une scène se base sur ces noeuds
  */
-export default class Node extends AbstractNode {
+// TODO : renommer en Container?
+export default class Container extends GameObject {
   public readonly _internal: PIXI.Container;
-  private children: AbstractNode[] = [];
+  private children: GameObject[] = [];
 
   public constructor(position: Position = Position.zero()) {
     super(position);
@@ -29,7 +30,7 @@ export default class Node extends AbstractNode {
    * This method is asynchronous and resolves when the dependency is loaded.
    * @param child
    */
-  public add<T extends AbstractNode>(child: T): T & PromiseLike<T>{
+  public add<T extends GameObject>(child: T): T & PromiseLike<T>{
     if (child._parent) throw new Error("Child already has a parent");
     child._parent = this;
 
@@ -53,7 +54,7 @@ export default class Node extends AbstractNode {
    * @param child
    * @returns true si l'enfant était présent
    */
-  public remove(child: AbstractNode): boolean {
+  public remove(child: GameObject): boolean {
     const index = this.children.indexOf(child);
     if (index === -1) return false;
     child._parent = null;

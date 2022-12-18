@@ -1,12 +1,12 @@
-import AbstractNode from "../node/AbstractNode";
-import Updatable from "../node/Updatable";
+import GameObject from "../gameobjects/GameObject";
+import Updatable from "../gameobjects/Updatable";
 
 /**
  * Comment partager le behavior d'un parent à ses enfants ?
  * => Cas du PhysicWorld et PhysicBody
  * 
  */
-export default abstract class Behavior<T extends AbstractNode> implements Updatable {
+export default abstract class Behavior<T extends GameObject> implements Updatable {
     protected target: T;
 
     public setTarget(target: T) {

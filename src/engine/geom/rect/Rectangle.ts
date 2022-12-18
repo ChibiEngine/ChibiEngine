@@ -3,7 +3,7 @@ import Positionable from "../position/Positionable";
 import Event from "../../event/Event";
 import Size from "../size/Size";
 import Position from "../position/Position";
-import center from "../../node/positioning/center";
+import center from "../../gameobjects/positioning/center";
 
 export default class Rectangle implements Sizeable, Positionable {
     public readonly position: Position;

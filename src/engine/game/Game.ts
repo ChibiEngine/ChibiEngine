@@ -1,6 +1,6 @@
 import * as PIXI from "pixi.js";
 import Scene from "./Scene";
-import Node from "../node/Node";
+import Container from "../gameobjects/Container";
 import Rectangle from "../geom/rect/Rectangle";
 import GameLoop from "./GameLoop";
 
@@ -11,7 +11,7 @@ interface GameConfig {
   resolution: number;
 }
 
-export default class Game extends Node {
+export default class Game extends Container {
   public readonly _internal: PIXI.Container = null;
 
   private readonly app: PIXI.Application;

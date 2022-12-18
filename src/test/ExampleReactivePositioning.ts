@@ -1,6 +1,6 @@
 import BUNNY_URL from "./assets/bunny.png?url";
 import Scene from "../engine/game/Scene";
-import Sprite from "../engine/node/Sprite";
+import Sprite from "../engine/gameobjects/Sprite";
 import Image from "../engine/resource/Image";
 
 export default class ExampleReactivePositioning extends Scene {

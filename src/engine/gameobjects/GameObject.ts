@@ -9,7 +9,7 @@ import Sizeable from "../geom/size/Sizeable";
 import Loadable from "../loader/Loadable";
 import center from "./positioning/center";
 
-import type Node from "./Node";
+import type Container from "./Container";
 import type Scene from "../game/Scene";
 import {assignPosition} from "../geom/utils";
 import Action from "../tween/Action";
@@ -28,11 +28,11 @@ import Action from "../tween/Action";
  * - Sprite
  *   - Text
  */
-// TODO: Renommer INode en Leaf?
-export default abstract class AbstractNode extends Loadable implements Positionable, Sizeable {
+// TODO: Renommer AbstractNode en Leaf? ou GameObject?
+export default abstract class GameObject extends Loadable implements Positionable, Sizeable {
   type = "node";
 
-  public _parent: Node;
+  public _parent: Container;
 
   protected abstract _internal: PIXI.Container;
 
@@ -54,7 +54,7 @@ export default abstract class AbstractNode extends Loadable implements Positiona
     this._size = Size.zero();
   }
 
-  public get parent(): Node {
+  public get parent(): Container {
     return this._parent;
   }
 
@@ -135,7 +135,7 @@ export default abstract class AbstractNode extends Loadable implements Positiona
     this.scene.addUpdatable(behavior);
   }
 
-  public play<T extends AbstractNode>(action: Action<T>) {
+  public play<T extends GameObject>(action: Action<T>) {
     // TODO : ugly but don't know how to do better
     // NOTE : doesn't prevent calling a specific action on a node that doesn't support it e.g. calling Tint on a Node
     this.addBehavior(action as any as Behavior<this>);
@@ -154,7 +154,7 @@ export default abstract class AbstractNode extends Loadable implements Positiona
     return null as T;
   }
   
-  public getParent<T extends AbstractNode>(type: typeof AbstractNode): T {
+  public getParent<T extends GameObject>(type: typeof GameObject): T {
     // TODO: implement
     return null as T;
   }

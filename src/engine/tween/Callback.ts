@@ -1,12 +1,12 @@
 import Action from "./Action";
-import AbstractNode from "../node/AbstractNode";
+import GameObject from "../gameobjects/GameObject";
 
-export default class Callback extends Action<AbstractNode> {
+export default class Callback extends Action<GameObject> {
   public constructor(private readonly callback: () => void) {
     super();
   }
 
-  public _run(target: AbstractNode): void {
+  public _run(target: GameObject): void {
     this.callback();
     this.finish();
   }

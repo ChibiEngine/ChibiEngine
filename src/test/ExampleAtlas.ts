@@ -1,6 +1,6 @@
 import BUNNIES_ATLAS_URL from "./assets/bunnies.png?url";
 import Scene from "../engine/game/Scene";
-import Sprite from "../engine/node/Sprite";
+import Sprite from "../engine/gameobjects/Sprite";
 import Image from "../engine/resource/Image";
 import Cache from "../engine/loader/Cache";
 

@@ -1,6 +1,6 @@
 import bunnyURL from "./assets/bunny.png?url";
 import Scene from "../engine/game/Scene";
-import Sprite from "../engine/node/Sprite";
+import Sprite from "../engine/gameobjects/Sprite";
 import Image from "../engine/resource/Image";
 import {MoveBy} from "../engine/tween/Move";
 import Easing from "../engine/math/easing/Easing";
@@ -18,7 +18,7 @@ export default class ExampleTweens extends Scene {
             new MoveBy(0, -200).easing(Easing.bounceOut).duration(2000),
             new Callback(() => {console.log("After MoveBy2")}),
             new Callback(() => {console.log("Finished")})
-        ).loop(2)
+        ).loopIndefinitely()
     );
   }
 

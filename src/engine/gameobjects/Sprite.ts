@@ -1,10 +1,10 @@
 import { Sprite as PixiSprite } from "pixi.js";
 import Image from "../resource/Image";
-import AbstractNode from "./AbstractNode";
+import GameObject from "./GameObject";
 import Position from "../geom/position/Position";
 import {assignPosition} from "../geom/utils";
 
-export default class Sprite extends AbstractNode {
+export default class Sprite extends GameObject {
   public _internal: PixiSprite;
 
   public constructor(private readonly image: Image, x: number = 0, y: number = 0) {

@@ -1,10 +1,10 @@
 import Behavior from "../behavior/Behavior";
-import AbstractNode from "../node/AbstractNode";
+import GameObject from "../gameobjects/GameObject";
 import EasingFunction from "../math/easing/EasingFunction";
 import Easing from "../math/easing/Easing";
 import Event from "../event/Event";
 
-export default abstract class Action<T extends AbstractNode> extends Behavior<T> {
+export default abstract class Action<T extends GameObject> extends Behavior<T> {
   protected target: T;
 
   protected _elapsed = 0;
