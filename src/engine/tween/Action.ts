@@ -4,8 +4,8 @@ import EasingFunction from "../math/easing/EasingFunction";
 import Easing from "../math/easing/Easing";
 import Event from "../event/Event";
 
-export default abstract class Action<T extends GameObject> extends Behavior<T> {
-  protected target: T;
+export default abstract class Action extends Behavior {
+  protected target: GameObject;
 
   protected _elapsed = 0;
   public _duration = 1000;

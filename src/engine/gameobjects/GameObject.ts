@@ -13,6 +13,7 @@ import type Container from "./Container";
 import type Scene from "../game/Scene";
 import {assignPosition} from "../geom/utils";
 import Action from "../tween/Action";
+import {assertTypesMatch, Class, ClassFull} from "../utils/Typed";
 
 // Inspired by https://docs.cocos2d-x.org/api-ref/cplusplus/v4x/d3/d82/classcocos2d_1_1_node.html
 
@@ -46,7 +47,7 @@ export default abstract class GameObject extends Loadable implements Positionabl
     return this._size.onChange;
   }
 
-  private behaviors: Behavior<this>[] = [];
+  private behaviors: Behavior[] = [];
 
   protected constructor(position: Position = Position.zero()) {
     super();
@@ -129,34 +130,40 @@ export default abstract class GameObject extends Loadable implements Positionabl
     return center(this);
   }
 
-  public addBehavior(behavior: Behavior<this>) {
+  public addBehavior(behavior: Behavior) {
     this.behaviors.push(behavior);
     behavior.setTarget(this);
     this.scene.addUpdatable(behavior);
   }
 
-  public play<T extends GameObject>(action: Action<T>) {
-    // TODO : ugly but don't know how to do better
-    // NOTE : doesn't prevent calling a specific action on a node that doesn't support it e.g. calling Tint on a Node
-    this.addBehavior(action as any as Behavior<this>);
-    action.run(this as any as T);
-  }
-
-  public removeBehavior(behavior: Behavior<this>) {
+  public removeBehavior(behavior: Behavior) {
     const index = this.behaviors.indexOf(behavior);
     if (index === -1) return false;
     this.behaviors.splice(index, 1);
     this.scene.removeUpdatable(behavior);
   }
 
-  public getParentBehavior<T extends Behavior<any>>(type: typeof Behavior): T {
-    // TODO: implement
-    return null as T;
+  public getBehavior<O extends GameObject, T extends Behavior>(type: Class<T>): T {
+    for (const behavior of this.behaviors) {
+      if (behavior instanceof type) {
+        return behavior as T;
+      }
+    }
+  }
+
+  public play<T extends GameObject>(action: Action) {
+    assertTypesMatch(this, action);
+
+    this.addBehavior(action);
+    action.run(this as any as T);
   }
   
-  public getParent<T extends GameObject>(type: typeof GameObject): T {
-    // TODO: implement
-    return null as T;
+  public getParent<T extends GameObject>(type: ClassFull<T>): T {
+    if(this.parent instanceof type) {
+      return this.parent as T;
+    } else{
+      return this.parent.getParent(type);
+    }
   }
 
   public get scene(): Scene {

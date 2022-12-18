@@ -1,20 +1,24 @@
 import GameObject from "../gameobjects/GameObject";
 import Updatable from "../gameobjects/Updatable";
+import {Class, Typed} from "../utils/Typed";
 
 /**
  * Comment partager le behavior d'un parent à ses enfants ?
  * => Cas du PhysicWorld et PhysicBody
  * 
  */
-export default abstract class Behavior<T extends GameObject> implements Updatable {
-    protected target: T;
+export default abstract class Behavior implements Updatable, Typed<GameObject> {
+    public abstract readonly targetType: Class<GameObject>;
+    protected target: GameObject;
 
-    public setTarget(target: T) {
+    public setTarget(target: GameObject) {
         this.target = target;
     }
 
     abstract update(dt: number): void;
-    
+
+
+
     // public abstract control(target: T, requirements: (typeof Behavior)[]): void;
     // 
     // public abstract require(): (typeof Behavior)[];

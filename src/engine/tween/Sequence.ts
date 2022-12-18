@@ -1,14 +1,15 @@
 import Action from "./Action";
 import GameObject from "../gameobjects/GameObject";
 
-export default class Sequence extends Action<GameObject> {
-  private readonly actions: Action<GameObject>[] = [];
-  private runningActions: Action<GameObject>[];
+export default class Sequence extends Action {
+  public targetType = GameObject;
+  private readonly actions: Action[] = [];
+  private runningActions: Action[];
 
   private _loopCount: number = 1;
   private _currentLoop: number = 1;
 
-  public constructor(...actions: Action<GameObject>[]) {
+  public constructor(...actions: Action[]) {
     super();
     this.actions = actions;
     this.runningActions = actions.slice();

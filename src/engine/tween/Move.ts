@@ -1,7 +1,8 @@
 import Action from "./Action";
 import GameObject from "../gameobjects/GameObject";
 
-class MoveAction extends Action<GameObject> {
+class MoveAction extends Action {
+  readonly targetType = GameObject;
   protected target: GameObject;
 
   private startX: number;
