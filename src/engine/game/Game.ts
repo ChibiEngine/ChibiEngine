@@ -50,8 +50,7 @@ export default class Game extends Container {
 
   public addScene(scene: Scene) {
     scene.game = this;
-    this.add(scene);
-    scene.onLoaded.subscribeOnce(() => {
+    this.add(scene).then(() => {
       this.sceneStack.push(scene);
     });
   }
