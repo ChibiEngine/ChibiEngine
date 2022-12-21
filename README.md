@@ -15,12 +15,12 @@ Il fait office de wrapper par dessus le moteur de rendu [PixiJS](https://github.
 - [x] Chargement des ressources
 - [x] Noeuds
 - [x] Sprites
-- [x] Positionnement réactif ?
+- [x] Positionnement réactif
+- [ ] Système général de composants ⚒️
 - [ ] GameLoop ⚒️
 - [ ] Implémenter tous [les attributs de transformation](https://pixijs.download/dev/docs/PIXI.Container.html)..
 - [ ] Traduction en anglais
 - [ ] Documentation
-- [ ] Comportements de Noeuds ⚒️
 - [ ] Scènes ⚒️
     - [ ] Transitions
 - [ ] Caméra (inspirée de [pixi-viewport](https://github.com/davidfig/pixi-viewport))
