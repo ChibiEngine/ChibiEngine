@@ -1,11 +1,12 @@
-import bunnyURL from "./assets/bunny.png?url";
-import Scene from "../engine/game/Scene";
-import Sprite from "../engine/gameobjects/Sprite";
-import Image from "../engine/resource/Image";
-import {MoveBy} from "../engine/tween/Move";
-import Easing from "../engine/math/easing/Easing";
-import Sequence from "../engine/tween/Sequence";
-import Callback from "../engine/tween/Callback";
+//@ts-ignore
+import bunnyURL from "../assets/bunny.png?url";
+import Scene from "../../engine/game/Scene";
+import Sprite from "../../engine/gameobjects/Sprite";
+import Image from "../../engine/resource/Image";
+import {MoveBy} from "../../engine/tween/Move";
+import Easing from "../../engine/math/easing/Easing";
+import Sequence from "../../engine/tween/Sequence";
+import Callback from "../../engine/tween/Callback";
 
 export default class ExampleTweens extends Scene {
   protected async _create() {

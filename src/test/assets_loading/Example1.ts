@@ -1,10 +1,11 @@
-import bunnyURL from "./assets/bunny.png?url";
-import Image from "../engine/resource/Image";
-import Sprite from "../engine/gameobjects/Sprite";
-import Container from "../engine/gameobjects/Container";
-import Text from "../engine/resource/Text";
-import Scene from "../engine/game/Scene";
-import Cache from "../engine/loader/Cache";
+//@ts-ignore
+import bunnyURL from "../assets/bunny.png?url";
+import Image from "../../engine/resource/Image";
+import Sprite from "../../engine/gameobjects/Sprite";
+import Container from "../../engine/gameobjects/Container";
+import Text from "../../engine/resource/Text";
+import Scene from "../../engine/game/Scene";
+import Cache from "../../engine/loader/Cache";
 
 export default class Example1 extends Scene {
   private container: Container;

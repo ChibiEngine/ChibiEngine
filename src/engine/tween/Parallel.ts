@@ -2,6 +2,8 @@ import Action from "./Action";
 import GameObject from "../gameobjects/GameObject";
 
 export class Parallel extends Action<GameObject> {
+  targetType = GameObject;
+
   private readonly actions: Action<GameObject>[] = [];
 
   public constructor(...actions: Action<GameObject>[]) {

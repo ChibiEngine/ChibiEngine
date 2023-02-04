@@ -1,11 +1,11 @@
-import Behavior from "../behavior/Behavior";
 import GameObject from "../gameobjects/GameObject";
 import EasingFunction from "../math/easing/EasingFunction";
 import Easing from "../math/easing/Easing";
 import Event from "../event/Event";
+import Behavior from "../component/Behavior";
 
-export default abstract class Action extends Behavior {
-  protected target: GameObject;
+export default abstract class Action<T extends GameObject> extends Behavior<T> {
+  protected target: T;
 
   protected _elapsed = 0;
   public _duration = 1000;
@@ -31,7 +31,7 @@ export default abstract class Action extends Behavior {
 
   }
 
-  public run(target: T) {
+  public apply(target: T) {
     this.target = target;
     this._run(target);
   }
@@ -47,7 +47,7 @@ export default abstract class Action extends Behavior {
 
   protected finish() {
     this._elapsed = 0;
-    this.target.removeBehavior(this);
+    this.target.removeComponent(this);
     this.onFinish.trigger(null);
   }
 

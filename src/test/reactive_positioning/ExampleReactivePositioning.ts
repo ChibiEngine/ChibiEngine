@@ -1,7 +1,8 @@
-import BUNNY_URL from "./assets/bunny.png?url";
-import Scene from "../engine/game/Scene";
-import Sprite from "../engine/gameobjects/Sprite";
-import Image from "../engine/resource/Image";
+//@ts-ignore
+import BUNNY_URL from "../assets/bunny.png?url";
+import Scene from "../../engine/game/Scene";
+import Sprite from "../../engine/gameobjects/Sprite";
+import Image from "../../engine/resource/Image";
 
 export default class ExampleReactivePositioning extends Scene {
   private bunny1: Sprite;

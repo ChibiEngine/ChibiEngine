@@ -1,9 +1,9 @@
 import Game from "../engine/game/Game";
-import Example1 from "./Example1";
-import "./pixi";
-import ExampleAtlas from "./ExampleAtlas";
-import ExampleReactivePositioning from "./ExampleReactivePositioning";
-import ExampleTweens from "./ExampleTweens";
+import Example1 from "./assets_loading/Example1";
+// import "./pixi";
+import ExampleAtlas from "./atlas/ExampleAtlas";
+import ExampleReactivePositioning from "./reactive_positioning/ExampleReactivePositioning";
+import ExampleTweens from "./tweens/ExampleTweens";
 
 const game = new Game({
     width: 800,

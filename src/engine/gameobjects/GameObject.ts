@@ -1,5 +1,5 @@
 import * as PIXI from "pixi.js";
-import Behavior from "../behavior/Behavior";
+import Component from "../component/Component";
 import Event from "../event/Event";
 import Position from "../geom/position/Position";
 
@@ -14,6 +14,7 @@ import type Scene from "../game/Scene";
 import {assignPosition} from "../geom/utils";
 import Action from "../tween/Action";
 import {assertTypesMatch, Class, ClassFull} from "../utils/Typed";
+import {isUpdatable} from "./Updatable";
 
 // Inspired by https://docs.cocos2d-x.org/api-ref/cplusplus/v4x/d3/d82/classcocos2d_1_1_node.html
 
@@ -47,7 +48,7 @@ export default abstract class GameObject extends Loadable implements Positionabl
     return this._size.onChange;
   }
 
-  private behaviors: Behavior[] = [];
+  private components: Component<GameObject>[] = [];
 
   protected constructor(position: Position = Position.zero()) {
     super();
@@ -130,32 +131,36 @@ export default abstract class GameObject extends Loadable implements Positionabl
     return center(this);
   }
 
-  public addBehavior(behavior: Behavior) {
-    this.behaviors.push(behavior);
-    behavior.setTarget(this);
-    this.scene.addUpdatable(behavior);
+  public addComponent<T extends Component<GameObject>>(component: T): T {
+    this.components.push(component);
+    component.apply(this);
+    if(isUpdatable(component)) {
+      this.scene.addUpdatable(component);
+    }
+    return component;
   }
 
-  public removeBehavior(behavior: Behavior) {
-    const index = this.behaviors.indexOf(behavior);
+  public removeComponent(component: Component<GameObject>) {
+    const index = this.components.indexOf(component);
     if (index === -1) return false;
-    this.behaviors.splice(index, 1);
-    this.scene.removeUpdatable(behavior);
-  }
-
-  public getBehavior<O extends GameObject, T extends Behavior>(type: Class<T>): T {
-    for (const behavior of this.behaviors) {
-      if (behavior instanceof type) {
-        return behavior as T;
-      }
+    this.components.splice(index, 1);
+    if(isUpdatable(component)) {
+      this.scene.removeUpdatable(component);
     }
   }
 
-  public play<T extends GameObject>(action: Action) {
-    assertTypesMatch(this, action);
+  public getComponent<T extends Component<GameObject>>(type: Class<T>): T {
+    for (const component of this.components) {
+      if (component instanceof type) {
+        return component as T;
+      }
+    }
+    return null;
+  }
 
-    this.addBehavior(action);
-    action.run(this as any as T);
+  public play<T extends GameObject>(action: Action<GameObject>) {
+    assertTypesMatch(this, action);
+    this.addComponent(action);
   }
   
   public getParent<T extends GameObject>(type: ClassFull<T>): T {

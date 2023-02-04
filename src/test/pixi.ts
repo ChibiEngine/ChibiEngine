@@ -1,3 +1,4 @@
+//@ts-ignore
 import bunnyURL from "./assets/bunny.png?url";
 import * as PIXI from "pixi.js";
 
