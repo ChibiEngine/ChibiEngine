@@ -9,8 +9,4 @@ export default class Enemy extends Container {
     super(new Position(x, y));
     this.damageable = this.addComponent(new Damageable());
   }
-
-  public damage(amount: number) {
-    this.damageable.damage(amount);
-  }
 }
