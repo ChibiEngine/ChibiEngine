@@ -11,6 +11,8 @@ export default class ExampleReactivePositioning extends Scene {
   private direction: "left" | "right" = "right";
 
   public async _create() {
+    console.log("==== ExampleReactivePositioning ====");
+
     const image = new Image(BUNNY_URL);
 
     this.bunny1 = this.add(new Sprite(image)).setPosition(this.game.screen.center)

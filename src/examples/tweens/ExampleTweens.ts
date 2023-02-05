@@ -10,6 +10,8 @@ import Callback from "../../engine/tween/Callback";
 
 export default class ExampleTweens extends Scene {
   protected async _create() {
+    console.log("==== ExampleTweens ====");
+
     const sprite = await this.add(new Sprite(new Image(bunnyURL))).setPosition(this.game.screen.center);
     sprite.play(new Sequence(
             new Callback(() => {console.log("Before MoveBy1")}),

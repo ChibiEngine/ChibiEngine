@@ -12,6 +12,8 @@ export default class Example1 extends Scene {
   private text: Text;
 
   public async _create() {
+    console.log("==== Example1 ====");
+
     this.onProgress.subscribe((me) => { console.log(me.bytesLoaded,"/",me.bytesTotal); });
     this.text = await this.load(new Text("/assets/paragraph.txt"));
     console.log("text:", this.text.content);

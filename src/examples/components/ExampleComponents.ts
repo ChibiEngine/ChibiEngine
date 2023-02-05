@@ -10,6 +10,8 @@ import Enemy from "./Enemy";
  */
 export default class ExampleComponents extends Scene {
   protected async _create() {
+    console.log("==== ExampleComponents ====");
+
     const enemy = this.add(new Enemy(100, 100));
     enemy.damageable.health = 20;
     enemy.damageable.damage(5);

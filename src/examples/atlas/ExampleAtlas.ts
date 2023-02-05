@@ -7,6 +7,8 @@ import Cache from "../../engine/loader/Cache";
 
 export default class ExampleAtlas extends Scene {
   protected async _create() {
+    console.log("==== ExampleAtlas ====");
+
     const image = new Image(BUNNIES_ATLAS_URL);
 
     this.add(new Sprite(image.part(0, 0, 26, 37)))
