@@ -13,17 +13,19 @@ export default class InstantEvent<T> extends Event<T> {
     this.value = value;
   }
 
-  public subscribeOnce(listener: (value: T) => void) {
-    super.subscribeOnce(listener);
+  public subscribeOnce(callback: (value: T) => void) {
+    const listener = super.subscribeOnce(callback);
     if(this.loaded) {
-      listener(this.value);
+      listener.callback(this.value);
     }
+    return listener;
   }
 
-  public subscribe(listener: (value: T) => void) {
-    super.subscribe(listener);
+  public subscribe(callback: (value: T) => void) {
+    const listener = super.subscribe(callback);
     if(this.loaded) {
-      listener(this.value);
+      listener.callback(this.value);
     }
+    return listener;
   }
 }

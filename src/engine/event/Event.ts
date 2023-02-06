@@ -1,19 +1,23 @@
 export default class Event<T> {
-  private listeners: (<K extends T>(value: K) => void)[] = [];
+  private listeners: EventListener<T>[] = [];
 
-  public subscribe(listener: (value: T) => void) {
+  public subscribe(callback: (value: T) => void): EventListener<T> {
+    const listener = new EventListener(this, callback);
     this.listeners.push(listener);
+    return listener;
   }
 
-  public subscribeOnce(listener: (value: T) => void) {
+  public subscribeOnce(callback: (value: T) => void) {
     const once = (value: T) => {
-      this.unsubscribe(once);
-      listener(value);
+      this.unsubscribe(listener);
+      callback(value);
     };
-    this.subscribe(once);
+    const listener = new EventListener<T>(this, once);
+    this.listeners.push(listener);
+    return listener;
   }
 
-  public unsubscribe(listener: (value: T) => void) {
+  public unsubscribe(listener: EventListener<T>) {
     const index = this.listeners.indexOf(listener);
     if (index === -1) return false;
     this.listeners.splice(index, 1);
@@ -23,7 +27,16 @@ export default class Event<T> {
   public trigger(value: T) {
     const listeners = this.listeners.slice();
     for (const listener of listeners) {
-      listener(value);
+      listener.callback(value);
     }
+  }
+}
+
+class EventListener<T> {
+  constructor(private readonly event: Event<T>, public readonly callback: (value: any) => void) {
+  }
+
+  public unsubscribe() {
+    this.event.unsubscribe(this);
   }
 }
