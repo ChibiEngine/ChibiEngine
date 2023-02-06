@@ -38,8 +38,14 @@ export default class Position {
     this.onChange.trigger(this);
   }
 
-  public clone() {
-    return new Position(this._x, this._y);
+  public setX(x: number) {
+    this._x = x;
+    this.onChange.trigger(this);
+  }
+
+  public setY(y: number) {
+    this._y = y;
+    this.onChange.trigger(this);
   }
 
   public addX(number: number): this {
@@ -52,53 +58,15 @@ export default class Position {
     return this;
   }
 
-  /**
-   * Create a new position derived from this position.
-   * update will be called on each change of this position.
-   *
-   * Example:
-   * <code>
-   *   const position = Position.zero();
-   *   const derived = position.derive(pos => pos.x += 10);
-   *   console.log(derived.x); // 10
-   *   position.x = 10;
-   *   console.log(derived.x); // 20
-   * </code>
-   * @param update
-   */
-  public derive(update: (position: Position) => void) {
-    return new ReactivePosition(this, update);
+  public clone() {
+    return new Position(this._x, this._y);
   }
 
-  /**
-   * Alias for Position#derive
-   * Create a new position derived from this position.
-   * update will be called on each change of this position.
-   *
-   * Example:
-   * <code>
-   *   const position = Position.zero();
-   *   const derived = position.then(pos => pos.x += 10);
-   *   console.log(derived.x); // 10
-   *   position.x = 10;
-   *   console.log(derived.x); // 20
-   * </code>
-   * @param update
-   */
-  public then(update: (position: Position) => void) {
-    return new ReactivePosition(this, update);
+  public plusY(dy: number): Position {
+    return new Position(this.x, this.y + dy);
   }
 
-}
-
-export class ReactivePosition extends Position {
-  public constructor(reference: Position, update: (position: Position) => void) {
-    super(reference.x, reference.y);
-
-    reference.onChange.subscribe(() => {
-      this._x = reference.x;
-      this._y = reference.y;
-      update(this);
-    });
+  public plusX(dx: number): Position {
+    return new Position(this.x + dx, this.y);
   }
 }
