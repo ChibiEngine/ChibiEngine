@@ -15,7 +15,7 @@ Il fait office de wrapper par dessus le moteur de rendu [PixiJS](https://github.
 - [x] Chargement des ressources
 - [x] Noeuds
 - [x] Sprites
-- [x] Positionnement réactif
+- [ ] Réactivité générale ️⚒️
 - [ ] Système général de composants ⚒️
 - [ ] GameLoop ⚒️
 - [ ] Implémenter tous [les attributs de transformation](https://pixijs.download/dev/docs/PIXI.Container.html)..
