@@ -16,6 +16,8 @@ import {assertTypesMatch, Class, ClassFull} from "../utils/Typed";
 import {isUpdatable} from "./Updatable";
 import assignPosition from "../geom/position/assignPosition";
 import assignSize from "../geom/size/assignSize";
+import Rotation from "../geom/rotation/Rotation";
+import assignRotation from "../geom/rotation/assignRotation";
 
 // Inspired by https://docs.cocos2d-x.org/api-ref/cplusplus/v4x/d3/d82/classcocos2d_1_1_node.html
 
@@ -40,6 +42,7 @@ export default abstract class GameObject extends Loadable implements Positionabl
 
   private _position: Position;
   private _size: Size;
+  private _rotation: Rotation;
 
   private components: Component<GameObject>[] = [];
 
@@ -47,6 +50,7 @@ export default abstract class GameObject extends Loadable implements Positionabl
     super();
     this.setPosition(position);
     this.setSize(Size.zero());
+    this.setRotation(Rotation.zero());
   }
 
   public async create(): Promise<void> {
@@ -146,11 +150,16 @@ export default abstract class GameObject extends Loadable implements Positionabl
   //// ROTATION ////
 
   public get rotation() {
-    return this._internal.rotation;
+    return this._rotation;
   }
 
-  public set rotation(rotation: number) {
-    this._internal.rotation = rotation;
+  public setRotation(rotation: Rotation) {
+    this._rotation = rotation;
+    assignRotation(this._internal, this.rotation);
+  }
+
+  public get onRotationChange(): Event<Rotation> {
+    return this._rotation.onChange;
   }
 
   //////////////////////
