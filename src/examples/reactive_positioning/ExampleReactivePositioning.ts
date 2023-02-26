@@ -10,7 +10,7 @@ export default class ExampleReactivePositioning extends Scene {
 
   private direction: "left" | "right" = "right";
 
-  public async _create() {
+  protected async _create() {
     console.log("==== ExampleReactivePositioning ====");
 
     const image = new Image(BUNNY_URL);

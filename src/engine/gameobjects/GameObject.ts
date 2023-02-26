@@ -11,10 +11,11 @@ import center from "./positioning/center";
 
 import type Container from "./Container";
 import type Scene from "../game/Scene";
-import {assignPosition} from "../geom/utils";
 import Action from "../tween/Action";
 import {assertTypesMatch, Class, ClassFull} from "../utils/Typed";
 import {isUpdatable} from "./Updatable";
+import assignPosition from "../geom/position/assignPosition";
+import assignSize from "../geom/size/assignSize";
 
 // Inspired by https://docs.cocos2d-x.org/api-ref/cplusplus/v4x/d3/d82/classcocos2d_1_1_node.html
 
@@ -30,37 +31,23 @@ import {isUpdatable} from "./Updatable";
  * - Sprite
  *   - Text
  */
-// TODO: Renommer AbstractNode en Leaf? ou GameObject?
 export default abstract class GameObject extends Loadable implements Positionable, Sizeable {
-  type = "node";
+  type = "gameobject";
 
   public _parent: Container;
 
   protected abstract _internal: PIXI.Container;
 
   private _position: Position;
-  public get onPositionChange(): Event<Position> {
-    return this._position.onChange;
-  }
-
-  private readonly _size: Size;
-  public get onSizeChange(): Event<Size> {
-    return this._size.onChange;
-  }
+  private _size: Size;
 
   private components: Component<GameObject>[] = [];
 
   protected constructor(position: Position = Position.zero()) {
     super();
     this.setPosition(position);
-    this._size = Size.zero();
+    this.setSize(Size.zero());
   }
-
-  public get parent(): Container {
-    return this._parent;
-  }
-
-  // TODO : ajouter Skew
 
   public async create(): Promise<void> {
     await super.create();
@@ -70,11 +57,21 @@ export default abstract class GameObject extends Loadable implements Positionabl
     }
   }
 
+  //// LIFE CYCLE ////
+
   protected abstract _create(): Promise<void>;
+
+  // _update() can be implemented when needed
+
+  protected abstract _destroy(): Promise<void>;
+
+  //////////////////////
 
   public get internal(): PIXI.Container {
     return this._internal;
   }
+
+  //// POSITION ////
 
   public get position() {
     return this._position;
@@ -84,6 +81,10 @@ export default abstract class GameObject extends Loadable implements Positionabl
     this._position = position;
     assignPosition(this._internal, this.position);
     return this;
+  }
+
+  public get onPositionChange(): Event<Position> {
+    return this._position.onChange;
   }
 
   public get x() {
@@ -102,13 +103,26 @@ export default abstract class GameObject extends Loadable implements Positionabl
     this._position.y = y;
   }
 
+  public get center() {
+    return center(this);
+  }
+
+  //////////////////////
+
+  //// SIZE ////
+
   public get size() {
     return this._size;
   }
 
   public setSize(size: Size): this {
-    this._size.set(size.width, size.height);
+    this._size = size;
+    assignSize(this._internal, this.size);
     return this;
+  }
+
+  public get onSizeChange(): Event<Size> {
+    return this._size.onChange;
   }
 
   public get width() {
@@ -127,9 +141,21 @@ export default abstract class GameObject extends Loadable implements Positionabl
     this._size.height = height;
   }
 
-  public get center() {
-    return center(this);
+  //////////////////////
+
+  //// ROTATION ////
+
+  public get rotation() {
+    return this._internal.rotation;
   }
+
+  public set rotation(rotation: number) {
+    this._internal.rotation = rotation;
+  }
+
+  //////////////////////
+
+  //// COMPONENTS ////
 
   public addComponent<T extends Component<GameObject>>(component: T): T {
     this.components.push(component);
@@ -162,7 +188,19 @@ export default abstract class GameObject extends Loadable implements Positionabl
     assertTypesMatch(this, action);
     this.addComponent(action);
   }
-  
+
+  //////////////////////
+
+  //// UTILS ////
+
+  public get parent(): Container {
+    return this._parent;
+  }
+
+  public get scene(): Scene {
+    return this.parent.scene;
+  }
+
   public getParent<T extends GameObject>(type: ClassFull<T>): T {
     if(this.parent instanceof type) {
       return this.parent as T;
@@ -171,7 +209,5 @@ export default abstract class GameObject extends Loadable implements Positionabl
     }
   }
 
-  public get scene(): Scene {
-    return this.parent.scene;
-  }
+  //////////////////////
 }

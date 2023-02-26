@@ -1,5 +1,4 @@
 import Event from "../../event/Event";
-import half from "./half";
 
 export default class Size {
   public static zero() {
@@ -40,7 +39,7 @@ export default class Size {
   }
 
   public get half() {
-    return half(this);
+    return new Size(this._width / 2, this._height / 2);
   }
 
   public clone() {

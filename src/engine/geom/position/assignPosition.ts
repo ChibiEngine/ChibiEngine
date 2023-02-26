@@ -1,6 +1,6 @@
-import Position from "./position/Position";
+import Position from "./Position";
 
-export function assignPosition(obj: {x: number, y: number}, position: Position) {
+export default function assignPosition(obj: {x: number, y: number}, position: Position) {
     if(!obj) {
         return;
     }
