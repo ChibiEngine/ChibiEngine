@@ -8,6 +8,7 @@ export default class Position {
   protected _x: number;
   protected _y: number;
   public readonly onChange: Event<Position> = new Event();
+  // TODO : create custom constructor to make Event type of Function<Callback> so we can use it like position.onChange(() => { ... })
 
   public constructor(x: number = 0, y: number = 0) {
     this._x = x;
