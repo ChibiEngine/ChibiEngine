@@ -8,6 +8,8 @@ import {Class, Typed} from "../utils/Typed";
  * 
  */
 export default abstract class Component<T extends GameObject> implements Typed<T> {
+    public abstract readonly name: string;
+
     public abstract readonly targetType: Class<T>;
     protected target: T;
 

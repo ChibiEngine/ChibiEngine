@@ -15,7 +15,6 @@ Il fait office de wrapper par dessus le moteur de rendu [PixiJS](https://github.
 - [x] Chargement des ressources
 - [x] Noeuds
 - [x] Sprites
-- [ ] Réactivité générale ️⚒️
 - [ ] Système général de composants ⚒️
 - [ ] GameLoop ⚒️
 - [ ] Implémenter tous [les attributs de transformation](https://pixijs.download/dev/docs/PIXI.Container.html)..
@@ -53,6 +52,16 @@ Il fait office de wrapper par dessus le moteur de rendu [PixiJS](https://github.
 🔮 Fonctionnalité non essentielle qui arrivera dans un futur lointain
 
 ❓ Fonctionnalité potentiellement non pertinente
+
+## Standby
+- [ ] Réactivité générale
+    1. Trop d’overhead induit par le mécanisme.
+    2. Source de bugs et irrégularités.
+        1. Toutes les propriétés sont redéfinies, pareil pour les méthodes.
+        2. Utilise des hacks de JS.
+    3. Trop compliqué pour les néophytes.
+
+----
 
 Chibiland - http://chibi.land/
 

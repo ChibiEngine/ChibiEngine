@@ -18,6 +18,9 @@ import assignPosition from "../geom/position/assignPosition";
 import assignSize from "../geom/size/assignSize";
 import Rotation from "../geom/rotation/Rotation";
 import assignRotation from "../geom/rotation/assignRotation";
+import AssignComponent from "./operations/AssignComponent";
+import ComponentProperty from "./operations/ComponentProperty";
+import Mixin from "../mixin/Mixin";
 
 // Inspired by https://docs.cocos2d-x.org/api-ref/cplusplus/v4x/d3/d82/classcocos2d_1_1_node.html
 
@@ -56,7 +59,7 @@ export default abstract class GameObject extends Loadable implements Positionabl
   public async create(): Promise<void> {
     await super.create();
     const scene = this.scene;
-    if("update" in this && this !== scene) {
+    if ("update" in this && this !== scene) {
       scene.addUpdatable(this);
     }
   }
@@ -166,20 +169,20 @@ export default abstract class GameObject extends Loadable implements Positionabl
 
   //// COMPONENTS ////
 
-  public addComponent<T extends Component<GameObject>>(component: T): T {
+  public addComponent<C extends Component<GameObject>>(component: C): this & Omit<C, "name"> & ComponentProperty<C> {
     this.components.push(component);
     component.apply(this);
-    if(isUpdatable(component)) {
+    if (isUpdatable(component)) {
       this.scene.addUpdatable(component);
     }
-    return component;
+    return AssignComponent(this, component);
   }
 
   public removeComponent(component: Component<GameObject>) {
     const index = this.components.indexOf(component);
     if (index === -1) return false;
     this.components.splice(index, 1);
-    if(isUpdatable(component)) {
+    if (isUpdatable(component)) {
       this.scene.removeUpdatable(component);
     }
   }
@@ -211,12 +214,18 @@ export default abstract class GameObject extends Loadable implements Positionabl
   }
 
   public getParent<T extends GameObject>(type: ClassFull<T>): T {
-    if(this.parent instanceof type) {
+    if (this.parent instanceof type) {
       return this.parent as T;
-    } else{
+    } else {
       return this.parent.getParent(type);
     }
   }
 
   //////////////////////
+
+  public static With<T, A extends Component<any>, B extends Component<any>, C extends Component<any>, D extends Component<any>, E extends Component<any>, F extends Component<any>, G extends Component<any>, H extends Component<any>, I extends Component<any>, J extends Component<any>>(this: ClassFull<T>, a: ClassFull<A>, b?: ClassFull<B>, c?: ClassFull<C>, d?: ClassFull<D>, e?: ClassFull<E>, f?: ClassFull<F>, g?: ClassFull<G>, h?: ClassFull<H>, i?: ClassFull<I>, j?: ClassFull<J>):
+      ClassFull<T & A & B & C & D & E & F & G & H & I & J
+          & ComponentProperty<A> & ComponentProperty<B> & ComponentProperty<C> & ComponentProperty<D> & ComponentProperty<E> & ComponentProperty<F> & ComponentProperty<G> & ComponentProperty<H> & ComponentProperty<I> & ComponentProperty<J>> {
+    return Mixin(this, a, b, c, d, e, f, g, h, i, j);
+  }
 }

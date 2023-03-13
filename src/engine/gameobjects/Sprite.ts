@@ -2,7 +2,7 @@ import { Sprite as PixiSprite } from "pixi.js";
 import Image from "../resource/Image";
 import GameObject from "./GameObject";
 import Position from "../geom/position/Position";
-import {assignPosition} from "../geom/utils";
+import assignPosition from "../geom/position/assignPosition";
 
 export default class Sprite extends GameObject {
   public _internal: PixiSprite;

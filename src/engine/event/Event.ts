@@ -32,7 +32,7 @@ export default class Event<T> {
   }
 }
 
-class EventListener<T> {
+export class EventListener<T> {
   constructor(private readonly event: Event<T>, public readonly callback: (value: any) => void) {
   }
 
