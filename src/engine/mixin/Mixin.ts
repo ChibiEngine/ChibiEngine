@@ -6,12 +6,14 @@ export class Mixin_ {
     for (const method of getMethods(target)) {
       if (method === "constructor") continue;
       Object.defineProperty(this, method, {
-        get: () => target[method]
+        get: () => target[method],
+        configurable: true
       });
     }
     for (const key in target) {
       Object.defineProperty(this, key, {
-        value: target[key]
+        value: target[key],
+        configurable: true
       });
     }
     return target as any;
