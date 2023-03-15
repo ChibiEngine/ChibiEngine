@@ -9,7 +9,12 @@ export default class Damageable extends Component<GameObject> {
 
   public readonly onDeath = new Event<void>();
 
-  private _health: number = 10;
+  private _health: number;
+
+  constructor(health: number = 10) {
+    super();
+    this._health = health;
+  }
 
   public get health(): number {
     return this._health;
