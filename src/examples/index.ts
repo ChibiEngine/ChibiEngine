@@ -5,6 +5,7 @@ import ExampleAtlas from "./atlas/ExampleAtlas";
 import ExampleReactivePositioning from "./reactive_positioning/ExampleReactivePositioning";
 import ExampleTweens from "./tweens/ExampleTweens";
 import ExampleComponents from "./components/ExampleComponents";
+import ExampleReactive from "./reactive/ExampleReactive";
 
 const game = new Game({
     width: 800,
@@ -19,3 +20,4 @@ const game = new Game({
 // game.addScene(new ExampleAtlas());
 // game.addScene(new ExampleTweens());
 game.addScene(new ExampleComponents());
+// game.addScene(new ExampleReactive());

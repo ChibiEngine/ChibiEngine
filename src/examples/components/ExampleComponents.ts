@@ -13,9 +13,13 @@ export default class ExampleComponents extends Scene {
     console.log("==== ExampleComponents ====");
 
     const enemy = this.add(new Enemy(100, 100));
+    console.log(enemy.health, "PV");
+    enemy.damage(3);
+    console.log(enemy.damageable.health, "PV");
     enemy.damageable.health = 20;
     enemy.damageable.damage(5);
     console.log(enemy.damageable.health, "PV");
+    console.log(enemy.health, "PV");
     // TODO : sucre syntaxique pour virer ce .damageable -> Mixin
   }
 
