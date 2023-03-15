@@ -18,8 +18,8 @@ import assignPosition from "../geom/position/assignPosition";
 import assignSize from "../geom/size/assignSize";
 import Rotation from "../geom/rotation/Rotation";
 import assignRotation from "../geom/rotation/assignRotation";
-import AssignComponent from "./operations/AssignComponent";
-import ComponentProperty from "./operations/ComponentProperty";
+import assignComponent from "./operations/assignComponent";
+import ComponentProperty from "../component/types/ComponentProperty";
 import Mixin, {Mixin_} from "../mixin/Mixin";
 
 // Inspired by https://docs.cocos2d-x.org/api-ref/cplusplus/v4x/d3/d82/classcocos2d_1_1_node.html
@@ -169,13 +169,13 @@ export default abstract class GameObject extends Loadable implements Positionabl
 
   //// COMPONENTS ////
 
-  public addComponent<C extends Component<GameObject>>(component: C): this & Omit<C, "name"> & ComponentProperty<C> {
+  public addComponent<C extends Component<GameObject>>(component: C) {
     this.components.push(component);
     component.apply(this);
     if (isUpdatable(component)) {
       this.scene.addUpdatable(component);
     }
-    return AssignComponent(this, component);
+    return assignComponent(this, component);
   }
 
   public removeComponent(component: Component<GameObject>) {

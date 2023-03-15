@@ -1,9 +1,9 @@
 import GameObject from "../GameObject";
 import Component from "../../component/Component";
-import ComponentProperty from "./ComponentProperty";
 import getMethods from "../../utils/getMethods";
+import ComponentProperty from "../../component/types/ComponentProperty";
 
-export default function AssignComponent<O extends GameObject, C extends Component<any>>(target: O, component: C): O & Omit<C, "name"> & ComponentProperty<C> {
+export default function assignComponent<O extends GameObject, C extends Component<any>>(target: O, component: C): O & Omit<C, "name"> & ComponentProperty<C> {
   for(const key of getMethods(component)) {
     if(key === "constructor") continue;
     Object.defineProperty(target, key, {
