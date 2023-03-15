@@ -1,4 +1,6 @@
 class EventImpl<T> extends Function {
+  public readonly dontProxyFunction: boolean = true;
+
   private listeners: EventListener<T>[] = [];
 
   constructor() {

@@ -10,7 +10,7 @@ export default function makeProxy<T extends Resource>(proxy: T, reference: T) {
   proxy["!PROXY"] = true;
   // transform proxy into a proxy of reference
   for(const i in reference) {
-    if(typeof reference[i] === "function") {
+    if(typeof reference[i] === "function" && !reference[i]["dontProxyFunction"]) {
       proxy[i] = reference[i].bind(reference);
     } else {
       Object.defineProperty(proxy, i, {
