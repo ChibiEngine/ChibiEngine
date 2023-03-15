@@ -21,6 +21,7 @@ export class Mixin_ {
 }
 
 export default function Mixin<A, B, C, D, E, F, G, H, I, J, K>(base: Class<A>, b: ClassFull<B>, c?: ClassFull<C>, d?: ClassFull<D>, e?: ClassFull<E>, f?: ClassFull<F>, g?: ClassFull<G>, h?: ClassFull<H>, i?: ClassFull<I>, j?: ClassFull<J>, k?: ClassFull<K>): ClassFull<A & B & C & D & E & F & G & H & I & J & K & Mixin_> {
+  // @ts-ignore
   class MixClass extends base {
     constructor(...args: any[]) {
       super(...args);
