@@ -17,7 +17,7 @@ export default class ExampleReactivePositioning extends Scene {
 
     this.bunny1 = this.add(new Sprite(image)).setPosition(this.game.screen.center)
     this.bunny2 = this.add(new Sprite(image));
-    this.bunny1.position.onChange.subscribe(pos => {
+    this.bunny1.position.onChange(pos => {
       this.bunny2.position.set(pos.x, pos.y + Math.sin(pos.x/100)*60);
     });
   }
