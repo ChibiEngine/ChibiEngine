@@ -3,15 +3,16 @@ import BUNNY_URL from "../assets/bunny.png?url";
 import Scene from "../../engine/game/Scene";
 import Sprite from "../../engine/gameobjects/Sprite";
 import Image from "../../engine/resource/Image";
+import RenderLoopListener from "../../engine/gameobjects/RenderLoopListener";
 
-export default class ExampleReactivePositioning extends Scene {
+export default class ExampleReactivePositioning extends Scene implements RenderLoopListener {
   private bunny1: Sprite;
   private bunny2: Sprite;
 
   private direction: "left" | "right" = "right";
 
   protected async _create() {
-    console.log("==== ExampleReactivePositioning ====");
+    console.log("==== ExampleUpdateLoop ====");
 
     const image = new Image(BUNNY_URL);
 
@@ -22,7 +23,7 @@ export default class ExampleReactivePositioning extends Scene {
     });
   }
 
-  protected _update(delta: number): void {
+  public render(delta: number): void {
     if (this.direction === "right") {
       this.bunny1.x += 0.2 * delta;
     } else {

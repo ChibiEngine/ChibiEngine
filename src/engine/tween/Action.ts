@@ -2,9 +2,10 @@ import GameObject from "../gameobjects/GameObject";
 import EasingFunction from "../math/easing/EasingFunction";
 import Easing from "../math/easing/Easing";
 import Event from "../event/Event";
-import Behavior from "../component/Behavior";
+import Component from "../component/Component";
+import RenderLoopListener from "../gameobjects/RenderLoopListener";
 
-export default abstract class Action<T extends GameObject> extends Behavior<T> {
+export default abstract class Action<T extends GameObject> extends Component<T> implements RenderLoopListener {
   protected target: T;
 
   protected _elapsed = 0;
@@ -36,7 +37,7 @@ export default abstract class Action<T extends GameObject> extends Behavior<T> {
     this._run(target);
   }
 
-  public update(dt: number) {
+  public render(dt: number) {
     this._elapsed += dt;
     const offset = this._easing.apply(Math.min(this._elapsed / this._duration, 1));
     this._update(offset);

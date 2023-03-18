@@ -13,7 +13,8 @@ import type Container from "./Container";
 import type Scene from "../game/Scene";
 import Action from "../tween/Action";
 import {assertTypesMatch, Class, ClassFull} from "../utils/Typed";
-import {isUpdatable} from "./Updatable";
+import {isUpdateLoopListener} from "./UpdateLoopListener";
+import {isRenderLoopListener} from "./RenderLoopListener";
 import assignPosition from "../geom/position/assignPosition";
 import assignSize from "../geom/size/assignSize";
 import Rotation from "../geom/rotation/Rotation";
@@ -59,8 +60,11 @@ export default abstract class GameObject extends Loadable implements Positionabl
   public async create(): Promise<void> {
     await super.create();
     const scene = this.scene;
-    if ("update" in this && this !== scene) {
+    if (isUpdateLoopListener(this)) {
       scene.addUpdatable(this);
+    }
+    if(isRenderLoopListener(this)) {
+      scene.addRenderable(this);
     }
   }
 
@@ -169,21 +173,27 @@ export default abstract class GameObject extends Loadable implements Positionabl
 
   //// COMPONENTS ////
 
-  public addComponent<C extends Component<GameObject>>(component: C) {
+  public addComponent<C extends Component<GameObject>>(component: C, assign: boolean = true) {
     this.components.push(component);
     component.apply(this);
-    if (isUpdatable(component)) {
+    if (isUpdateLoopListener(component)) {
       this.scene.addUpdatable(component);
     }
-    return assignComponent(this, component);
+    if(isRenderLoopListener(component)) {
+      this.scene.addRenderable(component);
+    }
+    return assign && assignComponent(this, component);
   }
 
   public removeComponent(component: Component<GameObject>) {
     const index = this.components.indexOf(component);
     if (index === -1) return false;
     this.components.splice(index, 1);
-    if (isUpdatable(component)) {
+    if (isUpdateLoopListener(component)) {
       this.scene.removeUpdatable(component);
+    }
+    if(isRenderLoopListener(component)) {
+      this.scene.removeRenderable(component);
     }
   }
 
@@ -198,7 +208,7 @@ export default abstract class GameObject extends Loadable implements Positionabl
 
   public play<T extends GameObject>(action: Action<GameObject>) {
     assertTypesMatch(this, action);
-    this.addComponent(action);
+    this.addComponent(action, false);
   }
 
   //////////////////////

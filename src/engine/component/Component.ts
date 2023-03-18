@@ -1,5 +1,4 @@
 import GameObject from "../gameobjects/GameObject";
-import Updatable from "../gameobjects/Updatable";
 import {Class, Typed} from "../utils/Typed";
 
 /**

@@ -55,9 +55,9 @@ export default class Game extends Container {
     });
   }
 
-  private updateScenes(dt: number) {
+  private updateScenes(time: number, dt: number) {
     for (const scene of this.sceneStack) {
-      scene.update(dt);
+      scene.updateScene(time, dt);
     }
   }
 }

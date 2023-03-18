@@ -22,7 +22,4 @@ export default class ExampleComponents extends Scene {
     console.log(enemy.health, "PV");
     // TODO : sucre syntaxique pour virer ce .damageable -> Mixin
   }
-
-  protected _update(delta: number): void {
-  }
 }

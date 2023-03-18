@@ -24,7 +24,4 @@ export default class ExampleTweens extends Scene {
         ).loopIndefinitely()
     );
   }
-
-  protected _update(delta: number): void {
-  }
 }

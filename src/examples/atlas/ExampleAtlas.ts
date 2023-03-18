@@ -19,7 +19,4 @@ export default class ExampleAtlas extends Scene {
 
     console.log(Cache.resources)
   }
-
-  protected _update(delta: number): void {
-  }
 }

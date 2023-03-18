@@ -6,6 +6,7 @@ import ExampleReactivePositioning from "./reactive_positioning/ExampleReactivePo
 import ExampleTweens from "./tweens/ExampleTweens";
 import ExampleComponents from "./components/ExampleComponents";
 import ExampleReactive from "./reactive/ExampleReactive";
+import ExampleUpdateLoop from "./gameloop/ExampleUpdateLoop";
 
 const game = new Game({
     width: 800,
@@ -18,7 +19,8 @@ const game = new Game({
 
 // game.addScene(new Example1());
 // game.addScene(new ExampleAtlas());
+game.addScene(new ExampleUpdateLoop());
 // game.addScene(new ExampleTweens());
-game.addScene(new ExampleReactivePositioning());
+// game.addScene(new ExampleReactivePositioning());
 // game.addScene(new ExampleComponents());
 // game.addScene(new ExampleReactive());

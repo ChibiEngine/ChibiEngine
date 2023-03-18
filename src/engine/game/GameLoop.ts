@@ -5,7 +5,7 @@ export default class GameLoop {
     private _running: boolean;
     private _requestId: number;
 
-    private _update: (delta: number) => void;
+    private _update: (time: number, delta: number) => void;
 
     public constructor() {
         this._lastTime = 0;
@@ -24,7 +24,7 @@ export default class GameLoop {
         });
     }
 
-    public start(update: (delta: number) => void) {
+    public start(update: (time: number, delta: number) => void) {
         this._update = update;
         this._running = true;
         this._requestId = requestAnimationFrame(this._tick);
@@ -45,11 +45,11 @@ export default class GameLoop {
         if (!this._running) {
             return;
         }
+        this._requestId = requestAnimationFrame(this._tick);
 
         this._delta = time - this._lastTime;
         this._lastTime = time;
 
-        this._update(this._delta);
-        this._requestId = requestAnimationFrame(this._tick);
+        this._update(time, this._delta);
     };
 }

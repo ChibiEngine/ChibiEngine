@@ -6,8 +6,9 @@ import Container from "../../engine/gameobjects/Container";
 import Text from "../../engine/resource/Text";
 import Scene from "../../engine/game/Scene";
 import Cache from "../../engine/loader/Cache";
+import RenderLoopListener from "../../engine/gameobjects/RenderLoopListener";
 
-export default class Example1 extends Scene {
+export default class Example1 extends Scene implements RenderLoopListener {
   private container: Container;
   private text: Text;
 
@@ -55,7 +56,7 @@ export default class Example1 extends Scene {
    * Promise.all(children => child.ready);
    */
 
-  public _update(dt: number) {
+  public render(dt: number) {
     console.log("fps",1000/dt);
     this.container.internal.rotation -= 0.0007 * dt;
   }

@@ -1,10 +1,12 @@
 import GameObject from "../gameobjects/GameObject";
 import Component from "./Component";
 import {Class} from "../utils/Typed";
-import Updatable from "../gameobjects/Updatable";
+import UpdateLoopListener from "../gameobjects/UpdateLoopListener";
 
-export default abstract class Behavior<T extends GameObject> extends Component<T> implements Updatable {
+export default abstract class Behavior<T extends GameObject> extends Component<T> implements UpdateLoopListener {
   public abstract readonly targetType: Class<T>;
 
-  abstract update(dt: number): void;
+  public abstract updateRate: number;
+
+  abstract update(): void;
 }
