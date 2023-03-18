@@ -15,20 +15,24 @@ Il fait office de wrapper par dessus le moteur de rendu [PixiJS](https://github.
 - [x] Chargement des ressources
 - [x] Noeuds
 - [x] Sprites
-- [ ] Système général de composants ⚒️
-- [ ] GameLoop ⚒️
+- [x] GameLoop
+  - [x] Update loop
+  - [x] Render loop
+- [x] Entity Component System (ECS)
+- [ ] Scènes ⚒️
+  - [x] Basic implementation
+  - [ ] Transitions
 - [ ] Implémenter tous [les attributs de transformation](https://pixijs.download/dev/docs/PIXI.Container.html)..
 - [ ] Traduction en anglais
 - [ ] Documentation
-- [ ] Scènes ⚒️
-    - [ ] Transitions
 - [ ] Caméra (inspirée de [pixi-viewport](https://github.com/davidfig/pixi-viewport))
     - [ ] Parallaxe
     - [ ] Lerp
     - [ ] Contraintes
     - [ ] Effets
-- [ ] Tweens et séquences (inspiré de [Cocos2d-x](https://docs.cocos.com/cocos2d-x/manual/en/actions/getting_started.html))
-  - [ ] Easing functions ([penner](https://github.com/bcherny/penner) / [phaser](https://github.com/photonstorm/phaser/tree/master/src/math/easing))
+- [x] Tweens et séquences (inspiré de [Cocos2d-x](https://docs.cocos.com/cocos2d-x/manual/en/actions/getting_started.html))
+  - [x] Easing functions ([penner](https://github.com/bcherny/penner) / [phaser](https://github.com/photonstorm/phaser/tree/master/src/math/easing))
+  - [ ] Implement missing actions
 - [ ] Moteur d'animation personnalisé
   - [ ] Animations décrites en JSON
   - [ ] Intégrer des éléments en frame par frame
