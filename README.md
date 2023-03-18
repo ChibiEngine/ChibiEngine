@@ -1,72 +1,64 @@
 # Chibi Engine (WIP)
 
-L'objectif est de créer un moteur de jeu 2D Web afin de simplifier la création de jeux-vidéo.
+The goal is to create a 2D Web game engine to simplify game development.
 
-Il fait office de wrapper par dessus le moteur de rendu [PixiJS](https://github.com/pixijs/pixijs).
+It acts as a wrapper on top of the rendering engine [PixiJS](https://github.com/pixijs/pixijs).
 
-## Objectifs
-- API moderne, simple à prendre en main. Inspirée de [Flash](https://help.adobe.com/fr_FR/FlashPlatform/reference/actionscript/3/package-detail.html) et [Cocos2d-x](https://docs.cocos2d-x.org/api-ref/cplusplus/v4x/). 
-- Axé sur la Programmation Orientée Objet de part un système de noeuds extensibles.
-- Chargements des assets de manière transparente et dynamique.
+## Objectives
+- Modern API, easy to use. Inspired by [Flash](https://help.adobe.com/fr_FR/FlashPlatform/reference/actionscript/3/package-detail.html) and [Cocos2d-x](https://docs.cocos2d-x.org/api-ref/cplusplus/v4x/). 
+- Focused on Object-Oriented Programming through an extensible node and component system.
+- Implicit dynamic assets loading.
 
 ## Roadmap
 
-- [x] Système d'évènements
-- [x] Chargement des ressources
-- [x] Noeuds
+- [x] Event system
+- [x] Transparent resource loading
+- [x] Nodes
 - [x] Sprites
-- [x] GameLoop
+- [x] Game loops
   - [x] Update loop
   - [x] Render loop
 - [x] Entity Component System (ECS)
-- [ ] Scènes ⚒️
+- [ ] Scenes ⚒️
   - [x] Basic implementation
-  - [ ] Transitions
-- [ ] Implémenter tous [les attributs de transformation](https://pixijs.download/dev/docs/PIXI.Container.html)..
-- [ ] Traduction en anglais
+  - [ ] Transitions between scenes
+- [ ] Implement missing [transformation attributes](https://pixijs.download/dev/docs/PIXI.Container.html)..
+- [ ] English translation ⚒️
 - [ ] Documentation
-- [ ] Caméra (inspirée de [pixi-viewport](https://github.com/davidfig/pixi-viewport))
-    - [ ] Parallaxe
+  - [ ] API Reference
+  - [ ] Getting Started
+- [ ] Camera (inspired by [pixi-viewport](https://github.com/davidfig/pixi-viewport))
+    - [ ] Parallax
     - [ ] Lerp
-    - [ ] Contraintes
-    - [ ] Effets
-- [x] Tweens et séquences (inspiré de [Cocos2d-x](https://docs.cocos.com/cocos2d-x/manual/en/actions/getting_started.html))
+    - [ ] Constraints
+    - [ ] Effects
+- [x] Tweens and sequences (inspired by [Cocos2d-x](https://docs.cocos.com/cocos2d-x/manual/en/actions/getting_started.html))
   - [x] Easing functions ([penner](https://github.com/bcherny/penner) / [phaser](https://github.com/photonstorm/phaser/tree/master/src/math/easing))
   - [ ] Implement missing actions
-- [ ] Moteur d'animation personnalisé
-  - [ ] Animations décrites en JSON
-  - [ ] Intégrer des éléments en frame par frame
-  - [ ] Éditeur d'animations 🔮
-- [ ] Audio : SFX et Musiques avec gestion du volume
-- [ ] Moteur physique
-    - [ ] Wrapper autour de [planck.js](https://github.com/shakiba/planck.js/)
-    - [ ] Wrapper autour de [box2d-wasm](https://github.com/Birch-san/box2d-wasm) 🔮
+- [ ] Custom animation engine
+  - [ ] JSON Animation format
+  - [ ] Frame-by-frame element integration
+  - [ ] Animation editor 🔮
+- [ ] Audio: SFX and Music with volume control
+- [ ] Physics engine
+    - [ ] Wrapper of [planck.js](https://github.com/shakiba/planck.js/)
+    - [ ] Wrapper of [box2d-wasm](https://github.com/Birch-san/box2d-wasm) 🔮
 - [ ] Tilemap
-- [ ] Filtres PIXI (shaders)
-- [ ] Masques
+- [ ] PIXI filters (shaders)
+- [ ] Masks
 - [ ] Meshes
-- [ ] Chargement dynamique de noeud (prefab) ❓
-- [ ] Optimisation par génération d'atlas au runtime 🔮
-    - [ ] Ou ahead-of-time au compile-time ? Ou avec un CLI ?
-- [ ] Support de la 3D avec [three.js](https://github.com/mrdoob/three.js) 🔮
-- [ ] Version native Desktop/Android/iOS avec [cocos2d-x](https://github.com/cocos2d/cocos2d-x) 🔮
+- [ ] Dynamic node loading (prefab) ❓
+- [ ] Atlas generation at runtime (for optimization) 🔮
+    - [ ] Or ahead-of-time at compile-time? Or with a CLI?
+- [ ] 3D support with [three.js](https://github.com/mrdoob/three.js) 🔮
+- [ ] Native Desktop/Android/iOS version with [cocos2d-x](https://github.com/cocos2d/cocos2d-x) 🔮
 
 ⚒️ Work in progress...
 
-🔮 Fonctionnalité non essentielle qui arrivera dans un futur lointain
+🔮 Non-essential feature that will arrive in the distant future
 
-❓ Fonctionnalité potentiellement non pertinente
-
-## Standby
-- [ ] Réactivité générale
-    1. Trop d’overhead induit par le mécanisme.
-    2. Source de bugs et irrégularités.
-        1. Toutes les propriétés sont redéfinies, pareil pour les méthodes.
-        2. Utilise des hacks de JS.
-    3. Trop compliqué pour les néophytes.
+❓ Potentially irrelevant feature
 
 ----
 
-Chibiland - http://chibi.land/
-
-Feavy 2022 - https://feavy.fr/
+Chibiland - http://chibi.land/  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  • &nbsp;&nbsp;&nbsp;&nbsp;Feavy 2023 - https://feavy.fr/
