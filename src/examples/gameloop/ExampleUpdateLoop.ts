@@ -16,7 +16,15 @@ export default class ExampleUpdateLoop extends Scene implements FixedUpdatable {
 
     const image = new Image(BUNNY_URL);
 
-    this.bunny = this.add(new Sprite(image)).setPosition(this.game.screen.center)
+    const {x,y} = this.game.screen.center;
+
+    this.bunny = this.add(new Sprite(image, x, y));
+    const bunny2 = this.add(new Sprite(image, x, y));
+    bunny2.interpolation = false;
+    this.bunny.onPositionChange(() => {
+      const {x,y} = this.bunny.position;
+      bunny2.position.set(x, y+50);
+    });
   }
 
   public update(): void {

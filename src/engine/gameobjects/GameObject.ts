@@ -13,7 +13,7 @@ import type Container from "./Container";
 import type Scene from "../game/Scene";
 import Action from "../tween/Action";
 import {assertTypesMatch, Class, ClassFull} from "../utils/Typed";
-import {isUpdatable} from "./Updatable";
+import {isUpdatable, VariableUpdatable} from "./Updatable";
 import assignPosition from "../geom/position/assignPosition";
 import assignSize from "../geom/size/assignSize";
 import Rotation from "../geom/rotation/Rotation";
@@ -36,7 +36,7 @@ import Mixin, {Mixin_} from "../mixin/Mixin";
  * - Sprite
  *   - Text
  */
-export default abstract class GameObject extends Loadable implements Positionable, Sizeable {
+export default abstract class GameObject extends Loadable implements Positionable, Sizeable, VariableUpdatable {
   type = "gameobject";
 
   public _parent: Container;
@@ -46,6 +46,8 @@ export default abstract class GameObject extends Loadable implements Positionabl
   private _position: Position;
   private _size: Size;
   private _rotation: Rotation;
+
+  public interpolation = true;
 
   private components: Component<GameObject>[] = [];
 
@@ -87,7 +89,16 @@ export default abstract class GameObject extends Loadable implements Positionabl
   public setPosition(position: Position): this {
     this._position = position;
     assignPosition(this._internal, this.position);
+    this.onPositionChange(() => {
+      console.log("position changed");
+    })
     return this;
+  }
+
+  public variableUpdate(dt: number): void {
+    if(!this.interpolation) return;
+    const vec2 = this.position.interpolateDt(dt);
+    this._internal.position.set(vec2.x, vec2.y);
   }
 
   public get onPositionChange(): Event<Position> {

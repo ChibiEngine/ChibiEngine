@@ -6,6 +6,11 @@ export default class Position {
     return new Position(0, 0);
   }
 
+  protected currentDt: number = 0;
+
+  protected lastTime: number;
+  protected lastUpdateDt: number;
+
   protected last: Vec2;
   protected current: Vec2;
 
@@ -14,6 +19,14 @@ export default class Position {
 
   public constructor(x: number = 0, y: number = 0) {
     this.current = { x, y };
+    this.last = { x, y };
+    this.lastTime = performance.now();
+    this.lastUpdateDt = 1;
+    this.onChange(() => {
+      this.currentDt = 0;
+      this.lastUpdateDt = performance.now() - this.lastTime;
+      this.lastTime = performance.now();
+    });
   }
 
   public get x() {
@@ -74,6 +87,16 @@ export default class Position {
 
   public plusX(dx: number): Position {
     return new Position(this.x + dx, this.y);
+  }
+
+  public interpolateDt(dt: number): Vec2 {
+    this.currentDt += dt;
+    // while(this.currentDt > this.lastUpdateDt) {
+    //   this.currentDt -= this.lastUpdateDt;
+    // }
+    const alpha = this.currentDt / this.lastUpdateDt;
+    console.log("alpha", alpha)
+    return this.interpolate(alpha);
   }
 
   public interpolate(alpha: number): Vec2 {
