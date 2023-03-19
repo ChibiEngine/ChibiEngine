@@ -5,7 +5,6 @@ import ExampleAtlas from "./atlas/ExampleAtlas";
 import ExampleReactivePositioning from "./reactive_positioning/ExampleReactivePositioning";
 import ExampleTweens from "./tweens/ExampleTweens";
 import ExampleComponents from "./components/ExampleComponents";
-import ExampleReactive from "./reactive/ExampleReactive";
 import ExampleUpdateLoop from "./gameloop/ExampleUpdateLoop";
 
 const game = new Game({

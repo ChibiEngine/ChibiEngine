@@ -1,9 +1,9 @@
 import GameObject from "../gameobjects/GameObject";
-import UpdateLoopListener from "../gameobjects/UpdateLoopListener";
+import {FixedUpdatable} from "../gameobjects/Updatable";
 import Component from "../component/Component";
 import {Class} from "../utils/Typed";
 
-export default class PhysicBody extends Component<GameObject> implements UpdateLoopListener {
+export default class PhysicBody extends Component<GameObject> implements FixedUpdatable {
     readonly name = "body";
     readonly targetType: Class<GameObject>;
 

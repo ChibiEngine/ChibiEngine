@@ -3,9 +3,9 @@ import EasingFunction from "../math/easing/EasingFunction";
 import Easing from "../math/easing/Easing";
 import Event from "../event/Event";
 import Component from "../component/Component";
-import RenderLoopListener from "../gameobjects/RenderLoopListener";
+import {VariableUpdatable} from "../gameobjects/Updatable";
 
-export default abstract class Action<T extends GameObject> extends Component<T> implements RenderLoopListener {
+export default abstract class Action<T extends GameObject> extends Component<T> implements VariableUpdatable {
   protected target: T;
 
   protected _elapsed = 0;
@@ -37,7 +37,7 @@ export default abstract class Action<T extends GameObject> extends Component<T> 
     this._run(target);
   }
 
-  public render(dt: number) {
+  public variableUpdate(dt: number) {
     this._elapsed += dt;
     const offset = this._easing.apply(Math.min(this._elapsed / this._duration, 1));
     this._update(offset);

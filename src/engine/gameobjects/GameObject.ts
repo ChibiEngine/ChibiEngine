@@ -13,8 +13,7 @@ import type Container from "./Container";
 import type Scene from "../game/Scene";
 import Action from "../tween/Action";
 import {assertTypesMatch, Class, ClassFull} from "../utils/Typed";
-import {isUpdateLoopListener} from "./UpdateLoopListener";
-import {isRenderLoopListener} from "./RenderLoopListener";
+import {isUpdatable} from "./Updatable";
 import assignPosition from "../geom/position/assignPosition";
 import assignSize from "../geom/size/assignSize";
 import Rotation from "../geom/rotation/Rotation";
@@ -60,11 +59,8 @@ export default abstract class GameObject extends Loadable implements Positionabl
   public async create(): Promise<void> {
     await super.create();
     const scene = this.scene;
-    if (isUpdateLoopListener(this)) {
+    if (isUpdatable(this)) {
       scene.addUpdatable(this);
-    }
-    if(isRenderLoopListener(this)) {
-      scene.addRenderable(this);
     }
   }
 
@@ -176,11 +172,8 @@ export default abstract class GameObject extends Loadable implements Positionabl
   public addComponent<C extends Component<GameObject>>(component: C, assign: boolean = true) {
     this.components.push(component);
     component.apply(this);
-    if (isUpdateLoopListener(component)) {
+    if (isUpdatable(component)) {
       this.scene.addUpdatable(component);
-    }
-    if(isRenderLoopListener(component)) {
-      this.scene.addRenderable(component);
     }
     return assign && assignComponent(this, component);
   }
@@ -189,11 +182,8 @@ export default abstract class GameObject extends Loadable implements Positionabl
     const index = this.components.indexOf(component);
     if (index === -1) return false;
     this.components.splice(index, 1);
-    if (isUpdateLoopListener(component)) {
+    if (isUpdatable(component)) {
       this.scene.removeUpdatable(component);
-    }
-    if(isRenderLoopListener(component)) {
-      this.scene.removeRenderable(component);
     }
   }
 

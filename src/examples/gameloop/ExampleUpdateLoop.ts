@@ -3,9 +3,9 @@ import BUNNY_URL from "../assets/bunny.png?url";
 import Scene from "../../engine/game/Scene";
 import Sprite from "../../engine/gameobjects/Sprite";
 import Image from "../../engine/resource/Image";
-import UpdateLoopListener from "../../engine/gameobjects/UpdateLoopListener";
+import {FixedUpdatable} from "../../engine/gameobjects/Updatable";
 
-export default class ExampleUpdateLoop extends Scene implements UpdateLoopListener {
+export default class ExampleUpdateLoop extends Scene implements FixedUpdatable {
   updateRate = 1;
   private bunny: Sprite;
 

@@ -1,24 +1,19 @@
 import Camera from "../camera/Camera";
 import Container from "../gameobjects/Container";
 import Game from "./Game";
-import UpdateLoopListener, {isUpdateLoopListener} from "../gameobjects/UpdateLoopListener";
-import RenderLoopListener, {isRenderLoopListener} from "../gameobjects/RenderLoopListener";
+import Updatable, {FixedUpdatable, isFixedUpdatable, isUpdatable, VariableUpdatable} from "../gameobjects/Updatable";
 
 export default abstract class Scene extends Container {
-  public lastUpdateTime: number = performance.now();
   public game: Game;
   private camera: Camera;
 
-  private readonly updateSet: Set<UpdateLoopListener> = new Set();
-  private readonly renderableSet: Set<RenderLoopListener> = new Set();
+  private readonly fixedUpdatableSet: Set<FixedUpdatable> = new Set();
+  private readonly variableUpdatableSet: Set<VariableUpdatable> = new Set();
 
   constructor() {
     super();
-    if(isUpdateLoopListener(this)) {
+    if(isUpdatable(this)) {
       this.addUpdatable(this);
-    }
-    if(isRenderLoopListener(this)) {
-      this.addRenderable(this);
     }
   }
 
@@ -27,15 +22,15 @@ export default abstract class Scene extends Container {
   }
 
   public updateScene(time: number, dt: number) {
-    for (let updatable of this.updateSet) {
-      this.updateUpdatable(updatable, time, dt);
+    for (let updatable of this.fixedUpdatableSet) {
+      this.fixedUpdate(updatable, time);
     }
-    for (let renderable of this.renderableSet) {
-      renderable.render(dt);
+    for (let updatable of this.variableUpdatableSet) {
+      updatable.variableUpdate(dt);
     }
   }
 
-  private updateUpdatable(updatable: UpdateLoopListener, time: number, dt: number) {
+  private fixedUpdate(updatable: FixedUpdatable, time: number) {
     const t1 = performance.now();
     const updateDt = 1000/updatable.updateRate;
     let interval = time - updatable.lastUpdateTime;
@@ -47,20 +42,23 @@ export default abstract class Scene extends Container {
     updatable.lastUpdateTime += performance.now()-t1; // balancing
   }
 
-  public addUpdatable(param: UpdateLoopListener) {
-    this.updateSet.add(param);
-    param.lastUpdateTime = performance.now();
+  public addUpdatable(param: Updatable) {
+    if(isFixedUpdatable(param)) {
+      if(param.updateRate === undefined) {
+        param.updateRate = 50;
+      }
+      param.lastUpdateTime = performance.now();
+      this.fixedUpdatableSet.add(param);
+    } else {
+      this.variableUpdatableSet.add(param);
+    }
   }
 
-  public removeUpdatable(param: UpdateLoopListener) {
-    this.updateSet.delete(param);
-  }
-
-  public addRenderable(param: RenderLoopListener) {
-    this.renderableSet.add(param);
-  }
-
-  public removeRenderable(param: RenderLoopListener) {
-    this.renderableSet.delete(param);
+  public removeUpdatable(param: Updatable) {
+    if(isFixedUpdatable(param)) {
+      this.fixedUpdatableSet.delete(param);
+    } else {
+      this.variableUpdatableSet.delete(param);
+    }
   }
 }
