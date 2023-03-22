@@ -12,7 +12,7 @@ import center from "./positioning/center";
 import type Container from "./Container";
 import type Scene from "../game/Scene";
 import Action from "../tween/Action";
-import {assertTypesMatch, Class, ClassFull} from "../utils/Typed";
+import {assertTypesMatch, Class, ClassFull, ComponentClass} from "../utils/Typed";
 import {isUpdatable, VariableUpdatable} from "./Updatable";
 import assignPosition from "../geom/position/assignPosition";
 import assignSize from "../geom/size/assignSize";
@@ -20,7 +20,7 @@ import Rotation from "../geom/rotation/Rotation";
 import assignRotation from "../geom/rotation/assignRotation";
 import assignComponent from "./operations/assignComponent";
 import ComponentProperty from "../component/types/ComponentProperty";
-import Mixin, {Mixin_} from "../mixin/Mixin";
+import Mixin, {Mixed} from "../mixin/Mixin";
 
 // Inspired by https://docs.cocos2d-x.org/api-ref/cplusplus/v4x/d3/d82/classcocos2d_1_1_node.html
 
@@ -51,7 +51,7 @@ export default abstract class GameObject extends Loadable implements Positionabl
 
   private components: Component<GameObject>[] = [];
 
-  protected constructor(position: Position = Position.zero()) {
+  public constructor(position: Position = Position.zero()) {
     super();
     this.setPosition(position);
     this.setSize(Size.zero());
@@ -234,8 +234,8 @@ export default abstract class GameObject extends Loadable implements Positionabl
 
   //////////////////////
 
-  public static With<T, A extends Component<any>, B extends Component<any>, C extends Component<any>, D extends Component<any>, E extends Component<any>, F extends Component<any>, G extends Component<any>, H extends Component<any>, I extends Component<any>, J extends Component<any>>(this: ClassFull<T>, a: ClassFull<A>, b?: ClassFull<B>, c?: ClassFull<C>, d?: ClassFull<D>, e?: ClassFull<E>, f?: ClassFull<F>, g?: ClassFull<G>, h?: ClassFull<H>, i?: ClassFull<I>, j?: ClassFull<J>):
-      ClassFull<T & A & B & C & D & E & F & G & H & I & J & Mixin_
+  public static With<T extends abstract new (...args: any) => any, A extends Component<any>, B extends Component<any>|unknown = unknown, C extends Component<any>|unknown = unknown, D extends Component<any>|unknown = unknown, E extends Component<any>|unknown = unknown, F extends Component<any>|unknown = unknown, G extends Component<any>|unknown = unknown, H extends Component<any>|unknown = unknown, I extends Component<any>|unknown = unknown, J extends Component<any>|unknown = unknown>(this: T, a: ClassFull<A>, b?: ClassFull<B>, c?: ClassFull<C>, d?: ClassFull<D>, e?: ClassFull<E>, f?: ClassFull<F>, g?: ClassFull<G>, h?: ClassFull<H>, i?: ClassFull<I>, j?: ClassFull<J>):
+      ComponentClass<T, InstanceType<T> & A & B & C & D & E & F & G & H & I & J & Mixed
           & ComponentProperty<A> & ComponentProperty<B> & ComponentProperty<C> & ComponentProperty<D> & ComponentProperty<E> & ComponentProperty<F> & ComponentProperty<G> & ComponentProperty<H> & ComponentProperty<I> & ComponentProperty<J>> {
     return Mixin(this, a, b, c, d, e, f, g, h, i, j);
   }
