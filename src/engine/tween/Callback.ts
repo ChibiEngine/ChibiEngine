@@ -1,8 +1,7 @@
 import Action from "./Action";
 import GameObject from "../gameobjects/GameObject";
 
-export default class Callback extends Action<GameObject> {
-  readonly targetType = GameObject;
+export default class Callback extends Action {
 
   public constructor(private readonly callback: () => void) {
     super();

@@ -5,7 +5,9 @@ import Event from "../event/Event";
 import Component from "../component/Component";
 import {VariableUpdatable} from "../gameobjects/Updatable";
 
-export default abstract class Action<T extends GameObject> extends Component<T> implements VariableUpdatable {
+export default abstract class Action<T extends GameObject = GameObject> extends Component<"_action", T> implements VariableUpdatable {
+  public readonly name = "_action";
+
   protected target: T;
 
   protected _elapsed = 0;

@@ -1,11 +1,8 @@
 import Component from "../../engine/component/Component";
-import GameObject from "../../engine/gameobjects/GameObject";
 import Event from "../../engine/event/Event";
 
-export default class Damageable extends Component<GameObject> {
+export default class Damageable extends Component<"damageable"> {
   public readonly name = "damageable";
-
-  targetType = GameObject;
 
   public readonly onDeath = new Event<void>();
 

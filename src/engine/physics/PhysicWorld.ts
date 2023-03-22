@@ -2,7 +2,7 @@ import GameObject from "../gameobjects/GameObject";
 import {FixedUpdatable} from "../gameobjects/Updatable";
 import Component from "../component/Component";
 
-export default class PhysicWorld extends Component<GameObject> implements FixedUpdatable {
+export default class PhysicWorld extends Component<"world"> implements FixedUpdatable {
     readonly name = "world";
 
     readonly targetType = GameObject;

@@ -49,7 +49,7 @@ export default abstract class GameObject extends Loadable implements Positionabl
 
   public interpolation = true;
 
-  private components: Component<GameObject>[] = [];
+  private components: Component<string, GameObject>[] = [];
 
   public constructor(position: Position = Position.zero()) {
     super();
@@ -180,7 +180,7 @@ export default abstract class GameObject extends Loadable implements Positionabl
 
   //// COMPONENTS ////
 
-  public addComponent<C extends Component<GameObject>>(component: C, assign: boolean = true) {
+  public addComponent<C extends Component<string, GameObject>>(component: C, assign: boolean = true) {
     this.components.push(component);
     component.apply(this);
     if (isUpdatable(component)) {
@@ -189,7 +189,7 @@ export default abstract class GameObject extends Loadable implements Positionabl
     return assign && assignComponent(this, component);
   }
 
-  public removeComponent(component: Component<GameObject>) {
+  public removeComponent(component: Component<string, GameObject>) {
     const index = this.components.indexOf(component);
     if (index === -1) return false;
     this.components.splice(index, 1);
@@ -198,7 +198,7 @@ export default abstract class GameObject extends Loadable implements Positionabl
     }
   }
 
-  public getComponent<T extends Component<GameObject>>(type: Class<T>): T {
+  public getComponent<T extends Component<string, GameObject>>(type: Class<T>): T {
     for (const component of this.components) {
       if (component instanceof type) {
         return component as T;

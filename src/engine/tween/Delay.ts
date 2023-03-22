@@ -1,9 +1,7 @@
 import Action from "./Action";
 import GameObject from "../gameobjects/GameObject";
 
-export default class Delay extends Action<GameObject> {
-  targetType = GameObject;
-
+export default class Delay extends Action {
   public constructor(duration: number) {
     super();
     this.duration(duration);

@@ -4,12 +4,12 @@ import {Class, Typed} from "../utils/Typed";
 /**
  * Comment partager le behavior d'un parent à ses enfants ?
  * => Cas du PhysicWorld et PhysicBody
- * 
  */
-export default abstract class Component<T extends GameObject> implements Typed<T> {
-    public abstract readonly name: string;
+export default abstract class Component<Name extends string, T extends GameObject = GameObject> implements Typed<T> {
+    public abstract readonly name: Name;
 
-    public abstract readonly targetType: Class<T>;
+    public targetType: Class<T>|null = null;
+
     protected target: T;
 
     public apply(target: T) {

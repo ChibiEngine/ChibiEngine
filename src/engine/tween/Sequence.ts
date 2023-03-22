@@ -1,9 +1,7 @@
 import Action from "./Action";
 import GameObject from "../gameobjects/GameObject";
-import {assertTypesMatch} from "../utils/Typed";
 
-export default class Sequence extends Action<GameObject> {
-  targetType = GameObject;
+export default class Sequence extends Action {
 
   private readonly actions: Action<GameObject>[] = [];
   private runningActions: Action<GameObject>[];
