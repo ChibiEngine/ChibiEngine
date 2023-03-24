@@ -1,2 +1,2 @@
-export type DomBlob = Blob;
+export interface DomBlob extends Blob {}
 export const DomImage = Image;

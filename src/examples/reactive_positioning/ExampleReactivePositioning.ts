@@ -3,9 +3,9 @@ import BUNNY_URL from "../assets/bunny.png?url";
 import Scene from "../../engine/game/Scene";
 import Sprite from "../../engine/gameobjects/Sprite";
 import Image from "../../engine/resource/Image";
-import RenderLoopListener from "../../engine/gameobjects/RenderLoopListener";
+import {VariableUpdatable} from "../../engine/gameobjects/Updatable";
 
-export default class ExampleReactivePositioning extends Scene implements RenderLoopListener {
+export default class ExampleReactivePositioning extends Scene implements VariableUpdatable {
   private bunny1: Sprite;
   private bunny2: Sprite;
 

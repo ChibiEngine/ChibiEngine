@@ -6,9 +6,9 @@ import Container from "../../engine/gameobjects/Container";
 import Text from "../../engine/resource/Text";
 import Scene from "../../engine/game/Scene";
 import Cache from "../../engine/loader/Cache";
-import RenderLoopListener from "../../engine/gameobjects/RenderLoopListener";
+import {VariableUpdatable} from "../../engine/gameobjects/Updatable";
 
-export default class Example1 extends Scene implements RenderLoopListener {
+export default class Example1 extends Scene implements VariableUpdatable {
   private container: Container;
   private text: Text;
 

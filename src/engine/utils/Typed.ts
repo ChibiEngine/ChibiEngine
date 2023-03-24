@@ -1,6 +1,7 @@
 export type Class<T> = Function & { prototype: T };
 export type ClassFull<T> = new (...args: any[]) => T;
 export type ComponentClass<Base extends abstract new (...args: any[]) => any, T> = abstract new (...args: ConstructorParameters<Base>) => T;
+export type NoInfer<T> = [T][T extends T ? 0 : never];
 
 export interface Typed<T> {
   readonly targetType: Class<T>;
