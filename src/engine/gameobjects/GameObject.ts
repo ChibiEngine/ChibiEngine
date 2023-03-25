@@ -180,17 +180,16 @@ export default abstract class GameObject extends Loadable implements Positionabl
 
   //// COMPONENTS ////
 
-  public addComponent<C extends Component<string>, Target = C extends Component<string, infer K> ? K : never>(this: NoInfer<Target>, component: C, assign: boolean = true) {
-    const self = this as GameObject;
-    self.components.push(component);
-    component.apply(self);
+  public addComponent<C extends Component<string, this>>(component: C, assign: boolean = true) {
+    this.components.push(component);
+    component.apply(this);
     if (isUpdatable(component)) {
-      self.scene.addUpdatable(component);
+      this.scene.addUpdatable(component);
     }
-    return assign && assignComponent(self, component);
+    return assign && assignComponent(this, component);
   }
 
-  public removeComponent(component: Component<string>) {
+  public removeComponent(component: Component<string, this>) {
     const index = this.components.indexOf(component);
     if (index === -1) return false;
     this.components.splice(index, 1);
@@ -235,9 +234,9 @@ export default abstract class GameObject extends Loadable implements Positionabl
 
   //////////////////////
 
-  public static With<T extends abstract new (...args: any) => any, A extends Component<any>, B extends Component<any>|unknown = unknown, C extends Component<any>|unknown = unknown, D extends Component<any>|unknown = unknown, E extends Component<any>|unknown = unknown, F extends Component<any>|unknown = unknown, G extends Component<any>|unknown = unknown, H extends Component<any>|unknown = unknown, I extends Component<any>|unknown = unknown, J extends Component<any>|unknown = unknown>(this: T, a: ClassFull<A>, b?: ClassFull<B>, c?: ClassFull<C>, d?: ClassFull<D>, e?: ClassFull<E>, f?: ClassFull<F>, g?: ClassFull<G>, h?: ClassFull<H>, i?: ClassFull<I>, j?: ClassFull<J>):
+  public static With<T extends abstract new (...args: any) => any, A extends Component<string, InstanceType<T>>, B extends Component<string, InstanceType<T>>|unknown = unknown, C extends Component<string, InstanceType<T>>|unknown = unknown, D extends Component<string, InstanceType<T>>|unknown = unknown, E extends Component<string, InstanceType<T>>|unknown = unknown, F extends Component<string, InstanceType<T>>|unknown = unknown, G extends Component<string, InstanceType<T>>|unknown = unknown, H extends Component<string, InstanceType<T>>|unknown = unknown, I extends Component<string, InstanceType<T>>|unknown = unknown, J extends Component<string, InstanceType<T>>|unknown = unknown>(this: T, a: ClassFull<A>, b?: ClassFull<B>, c?: ClassFull<C>, d?: ClassFull<D>, e?: ClassFull<E>, f?: ClassFull<F>, g?: ClassFull<G>, h?: ClassFull<H>, i?: ClassFull<I>, j?: ClassFull<J>):
       ComponentClass<T, InstanceType<T> & A & B & C & D & E & F & G & H & I & J & Mixed
-          & ComponentProperty<A> & ComponentProperty<B> & ComponentProperty<C> & ComponentProperty<D> & ComponentProperty<E> & ComponentProperty<F> & ComponentProperty<G> & ComponentProperty<H> & ComponentProperty<I> & ComponentProperty<J>> {
+          & ComponentProperty<A> & ComponentProperty<B> & ComponentProperty<C> & ComponentProperty<D> & ComponentProperty<E> & ComponentProperty<F> & ComponentProperty<G> & ComponentProperty<H> & ComponentProperty<I> & ComponentProperty<J>> & { With: typeof GameObject.With } {
     return Mixin(this, a, b, c, d, e, f, g, h, i, j) as any;
   }
 }
