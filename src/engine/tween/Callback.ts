@@ -12,6 +12,6 @@ export default class Callback extends Action {
     this.finish();
   }
 
-  public _update(offset: number): void {
+  public _update(offset: number, target: GameObject): void {
   }
 }

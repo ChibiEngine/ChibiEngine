@@ -7,12 +7,37 @@ import {MoveBy} from "../../engine/tween/Move";
 import Easing from "../../engine/math/easing/Easing";
 import Sequence from "../../engine/tween/Sequence";
 import Callback from "../../engine/tween/Callback";
+import ContainerSpecific from "../../engine/tween/ContainerSpecific";
+import GameObject from "../../engine/gameobjects/GameObject";
+import Container from "../../engine/gameobjects/Container";
 
 export default class ExampleTweens extends Scene {
   protected async _create() {
     console.log("==== ExampleTweens ====");
 
     const sprite = await this.add(new Sprite(new Image(bunnyURL))).setPosition(this.game.screen.center);
+    sprite.play(new Sequence()
+        .add(new Callback(() => {console.log("Before MoveBy1")}))
+        .add(new MoveBy(0, 200).easing(Easing.bounceOut).duration(2000))
+        .add(new Callback(() => {console.log("After MoveBy1")}))
+        .add(new Callback(() => {console.log("Before MoveBy2")}))
+        .add(new MoveBy(0, -200).easing(Easing.bounceOut).duration(2000))
+        .add(new Callback(() => {console.log("After MoveBy2")}))
+        .add(new Callback(() => {console.log("Finished")}))
+        .loopIndefinitely()
+    );
+
+    type UnionToIntersection<U> =
+        (U extends any ? (k: U)=>void : never) extends ((k: infer I)=>void) ? I : never
+
+    type ArrayType<T> = T extends Array<infer U> ? U : never;
+    const arr = [new Sprite(null), new Container()];
+
+    type A = ArrayType<typeof arr>;
+    type B = UnionToIntersection<A>;
+
+    const seq = new Sequence(new Callback(() => {console.log("Before MoveBy1")}), new ContainerSpecific());
+
     sprite.play(new Sequence(
             new Callback(() => {console.log("Before MoveBy1")}),
             new MoveBy(0, 200).easing(Easing.bounceOut).duration(2000),

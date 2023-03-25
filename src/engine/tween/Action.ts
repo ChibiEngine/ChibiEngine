@@ -5,10 +5,10 @@ import Event from "../event/Event";
 import Component from "../component/Component";
 import {VariableUpdatable} from "../gameobjects/Updatable";
 
-export default abstract class Action<T extends GameObject = GameObject> extends Component<"_action", T> implements VariableUpdatable {
+export default abstract class Action<in T extends GameObject = GameObject> extends Component<"_action", T> implements VariableUpdatable {
   public readonly name = "_action";
 
-  protected target: T;
+  protected target: T & any;
 
   protected _elapsed = 0;
   public _duration = 1000;
@@ -42,7 +42,7 @@ export default abstract class Action<T extends GameObject = GameObject> extends 
   public variableUpdate(dt: number) {
     this._elapsed += dt;
     const offset = this._easing.apply(Math.min(this._elapsed / this._duration, 1));
-    this._update(offset);
+    this._update(offset, this.target as T);
     if(this._elapsed >= this._duration) {
       this.finish();
     }
@@ -55,5 +55,5 @@ export default abstract class Action<T extends GameObject = GameObject> extends 
   }
 
   public abstract _run(target: T): void;
-  public abstract _update(offset: number): void;
+  public abstract _update(offset: number, target: T): void;
 }

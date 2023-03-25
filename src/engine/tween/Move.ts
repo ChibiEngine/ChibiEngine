@@ -19,9 +19,9 @@ class MoveAction extends Action {
     this.endY = this.relative ? this.startY + this.y : this.y;
   }
 
-  public _update(offset: number) {
-    this.target.x = this.startX * (1-offset) + this.endX * offset;
-    this.target.y = this.startY * (1-offset) + this.endY * offset;
+  public _update(offset: number, target: GameObject) {
+    target.x = this.startX * (1-offset) + this.endX * offset;
+    target.y = this.startY * (1-offset) + this.endY * offset;
   }
 }
 

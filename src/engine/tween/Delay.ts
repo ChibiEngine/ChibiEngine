@@ -10,6 +10,6 @@ export default class Delay extends Action {
   public _run(target: GameObject): void {
   }
 
-  public _update(offset: number): void {
+  public _update(offset: number, target: GameObject): void {
   }
 }

@@ -207,7 +207,7 @@ export default abstract class GameObject extends Loadable implements Positionabl
     return null;
   }
 
-  public play<A extends Action, Target = A extends Action<infer K> ? K : never>(this: NoInfer<Target>, action: A) {
+  public play(action: Action<this>) {
     //@ts-ignore
     this.addComponent(action, false);
   }
