@@ -12,15 +12,16 @@ import center from "./positioning/center";
 import type Container from "./Container";
 import type Scene from "../game/Scene";
 import Action from "../tween/Action";
-import {assertTypesMatch, Class, ClassFull, ComponentClass, NoInfer} from "../utils/Typed";
+import {Class, ClassFull, ComponentClass} from "../utils/Typed";
 import {isUpdatable, VariableUpdatable} from "./Updatable";
 import assignPosition from "../geom/position/assignPosition";
 import assignSize from "../geom/size/assignSize";
 import Rotation from "../geom/rotation/Rotation";
 import assignRotation from "../geom/rotation/assignRotation";
 import assignComponent from "./operations/assignComponent";
-import ComponentProperty from "../component/types/ComponentProperty";
-import Mixin, {Mixed} from "../mixin/Mixin";
+import {ComponentProperties} from "../component/types/ComponentProperty";
+import Mixin, {ClassArrayType, Mixed} from "../mixin/Mixin";
+import {UnionToIntersection} from "../utils/type_utils";
 
 // Inspired by https://docs.cocos2d-x.org/api-ref/cplusplus/v4x/d3/d82/classcocos2d_1_1_node.html
 
@@ -234,9 +235,8 @@ export default abstract class GameObject extends Loadable implements Positionabl
 
   //////////////////////
 
-  public static With<T extends abstract new (...args: any) => any, A extends Component<string, InstanceType<T>>, B extends Component<string, InstanceType<T>>|unknown = unknown, C extends Component<string, InstanceType<T>>|unknown = unknown, D extends Component<string, InstanceType<T>>|unknown = unknown, E extends Component<string, InstanceType<T>>|unknown = unknown, F extends Component<string, InstanceType<T>>|unknown = unknown, G extends Component<string, InstanceType<T>>|unknown = unknown, H extends Component<string, InstanceType<T>>|unknown = unknown, I extends Component<string, InstanceType<T>>|unknown = unknown, J extends Component<string, InstanceType<T>>|unknown = unknown>(this: T, a: ClassFull<A>, b?: ClassFull<B>, c?: ClassFull<C>, d?: ClassFull<D>, e?: ClassFull<E>, f?: ClassFull<F>, g?: ClassFull<G>, h?: ClassFull<H>, i?: ClassFull<I>, j?: ClassFull<J>):
-      ComponentClass<T, InstanceType<T> & A & B & C & D & E & F & G & H & I & J & Mixed
-          & ComponentProperty<A> & ComponentProperty<B> & ComponentProperty<C> & ComponentProperty<D> & ComponentProperty<E> & ComponentProperty<F> & ComponentProperty<G> & ComponentProperty<H> & ComponentProperty<I> & ComponentProperty<J>> & { With: typeof GameObject.With } {
-    return Mixin(this, a, b, c, d, e, f, g, h, i, j) as any;
+  public static With<T extends abstract new (...args: any) => any, A extends Array<ClassFull<Component<string, InstanceType<T>>>>>(this: T, ...classes: A):
+      ComponentClass<T, InstanceType<T> & UnionToIntersection<ClassArrayType<A>> & ComponentProperties<A> & Mixed> {
+    return Mixin(this, ...classes) as any;
   }
 }
