@@ -1,5 +1,4 @@
 import Action from "./Action";
-import Sprite from "../gameobjects/Sprite";
 import Container from "../gameobjects/Container";
 
 export default class ContainerSpecific extends Action<Container> {

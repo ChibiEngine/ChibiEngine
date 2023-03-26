@@ -1,5 +1,4 @@
 import GameObject from "../gameobjects/GameObject";
-import {Class, Typed} from "../utils/Typed";
 
 /*
     Component<GameObject> is assignable to Component<Sprite>

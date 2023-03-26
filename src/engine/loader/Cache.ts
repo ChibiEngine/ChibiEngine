@@ -1,5 +1,4 @@
 import Resource from "../resource/Resource";
-import Loadable from "./Loadable";
 
 module Cache {
   // Resource by path

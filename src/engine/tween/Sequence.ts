@@ -1,6 +1,5 @@
 import Action from "./Action";
 import GameObject from "../gameobjects/GameObject";
-import Game from "../game/Game";
 import {ActionArrayType, UnionToIntersection} from "../utils/type_utils";
 
 export class SequenceImpl<T extends GameObject = GameObject> extends Action<T> {
