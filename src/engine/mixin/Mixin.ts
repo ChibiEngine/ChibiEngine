@@ -1,4 +1,4 @@
-import {ClassFull} from "../utils/Typed";
+import {Class} from "../utils/Typed";
 import getMethods from "../utils/getMethods";
 import {UnionToIntersection} from "../utils/type_utils";
 
@@ -22,9 +22,9 @@ export class Mixed {
 }
 
 
-export type ClassArrayType<T> = T extends Array<ClassFull<infer U>> ? U : never;
+export type ClassArrayType<T> = T extends Array<Class<infer U>> ? U : never;
 
-export default function Mixin<Base extends abstract new (...args: any) => any, A extends Array<ClassFull<any>>>(Base: Base, ...classes: A): ClassFull<InstanceType<Base> & UnionToIntersection<ClassArrayType<A>> & Mixed> {
+export default function Mixin<Base extends abstract new (...args: any) => any, A extends Array<Class<any>>>(Base: Base, ...classes: A): Class<InstanceType<Base> & UnionToIntersection<ClassArrayType<A>> & Mixed> {
   abstract class MixClass extends Base {
     constructor(...args: any[]) {
       super(...args);

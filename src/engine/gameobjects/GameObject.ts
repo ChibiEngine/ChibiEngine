@@ -12,7 +12,7 @@ import center from "./positioning/center";
 import type Container from "./Container";
 import type Scene from "../game/Scene";
 import Action from "../tween/Action";
-import {Class, ClassFull, ComponentClass} from "../utils/Typed";
+import {Class, ComponentClass} from "../utils/Typed";
 import {isUpdatable, VariableUpdatable} from "./Updatable";
 import assignPosition from "../geom/position/assignPosition";
 import assignSize from "../geom/size/assignSize";
@@ -225,7 +225,7 @@ export default abstract class GameObject extends Loadable implements Positionabl
     return this.parent.scene;
   }
 
-  public getParent<T extends GameObject>(type: ClassFull<T>): T {
+  public getParent<T extends GameObject>(type: Class<T>): T {
     if (this.parent instanceof type) {
       return this.parent as T;
     } else {
@@ -235,7 +235,7 @@ export default abstract class GameObject extends Loadable implements Positionabl
 
   //////////////////////
 
-  public static With<T extends abstract new (...args: any) => any, A extends Array<ClassFull<Component<string, InstanceType<T>>>>>(this: T, ...classes: A):
+  public static With<T extends abstract new (...args: any) => any, A extends Array<Class<Component<string, InstanceType<T>>>>>(this: T, ...classes: A):
       ComponentClass<T, InstanceType<T> & UnionToIntersection<ClassArrayType<A>> & ComponentProperties<A> & Mixed> {
     return Mixin(this, ...classes) as any;
   }
