@@ -1,6 +1,6 @@
 import GameObject from "../gameobjects/GameObject";
 import Component from "./Component";
-import {Class} from "../utils/Typed";
+import {Class} from "../utils/type_utils";
 import {FixedUpdatable} from "../gameobjects/Updatable";
 
 export default abstract class Behavior<Name extends string, T extends GameObject = GameObject> extends Component<Name, T> implements FixedUpdatable {

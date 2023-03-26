@@ -1,4 +1,4 @@
-import {Class} from "../utils/Typed";
+import {Class} from "../utils/type_utils";
 import getMethods from "../utils/getMethods";
 import {UnionToIntersection} from "../utils/type_utils";
 

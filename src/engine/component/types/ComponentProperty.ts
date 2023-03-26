@@ -1,6 +1,5 @@
 import Component from "../../component/Component";
-import {MergeIntersection} from "../../utils/type_utils";
-import {Class} from "../../utils/Typed";
+import {MergeIntersection, Class} from "../../utils/type_utils";
 
 type ComponentProperty<T> = T extends Component<any> ? {
   [key in T["name"]]: T

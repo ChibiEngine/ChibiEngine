@@ -12,7 +12,6 @@ import center from "./positioning/center";
 import type Container from "./Container";
 import type Scene from "../game/Scene";
 import Action from "../tween/Action";
-import {Class, ComponentClass} from "../utils/Typed";
 import {isUpdatable, VariableUpdatable} from "./Updatable";
 import assignPosition from "../geom/position/assignPosition";
 import assignSize from "../geom/size/assignSize";
@@ -21,7 +20,7 @@ import assignRotation from "../geom/rotation/assignRotation";
 import assignComponent from "./operations/assignComponent";
 import {ComponentProperties} from "../component/types/ComponentProperty";
 import Mixin, {ClassArrayType, Mixed} from "../mixin/Mixin";
-import {UnionToIntersection} from "../utils/type_utils";
+import {Class, ComponentClass, UnionToIntersection} from "../utils/type_utils";
 
 // Inspired by https://docs.cocos2d-x.org/api-ref/cplusplus/v4x/d3/d82/classcocos2d_1_1_node.html
 
@@ -202,7 +201,7 @@ export default abstract class GameObject extends Loadable implements Positionabl
   public getComponent<T extends Component<string>>(type: Class<T>): T {
     for (const component of this.components) {
       if (component instanceof type) {
-        return component as T;
+        return component;
       }
     }
     return null;
