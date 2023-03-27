@@ -6,6 +6,7 @@ import ExampleReactivePositioning from "./reactive_positioning/ExampleReactivePo
 import ExampleTweens from "./tweens/ExampleTweens";
 import ExampleComponents from "./components/ExampleComponents";
 import ExampleUpdateLoop from "./gameloop/ExampleUpdateLoop";
+import ExampleKeyboard from "./keyboard/ExampleKeyboard";
 
 const game = new Game({
     width: 800,
@@ -16,9 +17,10 @@ const game = new Game({
     // autoResize: true,
 });
 
-// game.addScene(new Example1());
+// game.addScene(new ExampleKeyboard());
 // game.addScene(new ExampleAtlas());
-game.addScene(new ExampleUpdateLoop());
+// game.addScene(new ExampleUpdateLoop());
+game.addScene(new ExampleKeyboard());
 // game.addScene(new ExampleTweens());
 // game.addScene(new ExampleReactivePositioning());
 // game.addScene(new ExampleComponents());

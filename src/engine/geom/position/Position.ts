@@ -14,6 +14,8 @@ export default class Position {
   protected last: Vec2;
   protected current: Vec2;
 
+  protected isNewPosition: boolean = false;
+
   public readonly onChange: Event<Position> = new Event();
   // TODO : create custom constructor to make Event type of Function<Callback> so we can use it like position.onChange(() => { ... })
 
@@ -23,6 +25,10 @@ export default class Position {
     this.lastTime = performance.now();
     this.lastUpdateDt = 1;
     this.onChange(() => {
+      if(!this.isNewPosition) {
+        return;
+      }
+      console.log("onChange")
       this.currentDt = 0;
       this.lastUpdateDt = performance.now() - this.lastTime;
       this.lastTime = performance.now();
@@ -38,15 +44,25 @@ export default class Position {
   }
 
   public set x(x: number) {
-    this.last.x = this.current.x;
+    if(this.isNewPosition) {
+      this.last = { ...this.current }
+    } else {
+      this.last.x = this.current.x;
+    }
     this.current.x = x;
     this.onChange.trigger(this);
+    this.isNewPosition = false;
   }
 
   public set y(y: number) {
-    this.last.y = this.current.y;
+    if(this.isNewPosition) {
+      this.last = { ...this.current }
+    } else {
+      this.last.y = this.current.y;
+    }
     this.current.y = y;
     this.onChange.trigger(this);
+    this.isNewPosition = false;
   }
 
   public set(x: number, y: number) {
@@ -56,15 +72,11 @@ export default class Position {
   }
 
   public setX(x: number) {
-    this.last.x = this.current.x;
-    this.current.x = x;
-    this.onChange.trigger(this);
+    this.x = x;
   }
 
   public setY(y: number) {
-    this.last.y = this.current.y;
-    this.current.y = y;
-    this.onChange.trigger(this);
+    this.y = y;
   }
 
   public addX(number: number): this {
@@ -91,11 +103,16 @@ export default class Position {
 
   public interpolateDt(dt: number): Vec2 {
     this.currentDt += dt;
+    const alpha = Math.min(1, this.currentDt / this.lastUpdateDt);
+    this.isNewPosition = true;
+    if(alpha === 1) {
+      console.log("alpha === 1")
+      return this.current;
+    }
     // while(this.currentDt > this.lastUpdateDt) {
     //   this.currentDt -= this.lastUpdateDt;
     // }
-    const alpha = this.currentDt / this.lastUpdateDt;
-    console.log("alpha", alpha)
+    console.log("alpha", alpha, this.last, this.current)
     return this.interpolate(alpha);
   }
 

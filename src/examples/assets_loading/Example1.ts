@@ -13,7 +13,7 @@ export default class Example1 extends Scene implements VariableUpdatable {
   private text: Text;
 
   public async _create() {
-    console.log("==== Example1 ====");
+    console.log("==== ExampleKeyboard ====");
 
     this.onProgress.subscribe((me) => { console.log(me.bytesLoaded,"/",me.bytesTotal); });
     this.text = await this.load(new Text("/assets/paragraph.txt"));
