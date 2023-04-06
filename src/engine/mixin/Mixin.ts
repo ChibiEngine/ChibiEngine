@@ -23,6 +23,7 @@ export class Mixed {
 
 
 export type ClassArrayType<T> = T extends Array<Class<infer U>> ? U : never;
+export type ClassArrayTypeOmit<T, toOmit extends string> = T extends Array<Class<infer U>> ? Omit<U, toOmit> : never;
 
 export default function Mixin<Base extends abstract new (...args: any) => any, A extends Array<Class<any>>>(Base: Base, ...classes: A): Class<InstanceType<Base> & UnionToIntersection<ClassArrayType<A>> & Mixed> {
   abstract class MixClass extends Base {

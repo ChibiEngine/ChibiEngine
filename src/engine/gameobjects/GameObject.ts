@@ -21,6 +21,8 @@ import assignComponent from "./operations/assignComponent";
 import {ComponentProperties} from "../component/types/ComponentProperty";
 import Mixin, {ClassArrayType, Mixed} from "../mixin/Mixin";
 import {Class, ComponentClass, UnionToIntersection} from "../utils/type_utils";
+import AbstractGameObject from "./AbstractGameObject";
+import PositionComponent from "../component/PositionComponent";
 
 // Inspired by https://docs.cocos2d-x.org/api-ref/cplusplus/v4x/d3/d82/classcocos2d_1_1_node.html
 
@@ -36,9 +38,7 @@ import {Class, ComponentClass, UnionToIntersection} from "../utils/type_utils";
  * - Sprite
  *   - Text
  */
-export default abstract class GameObject extends Loadable implements Positionable, Sizeable, VariableUpdatable {
-  type = "gameobject";
-
+export default abstract class GameObject extends AbstractGameObject.With(PositionComponent) implements Positionable, Sizeable, VariableUpdatable {
   public _parent: Container;
 
   protected abstract _internal: PIXI.Container;
@@ -48,8 +48,6 @@ export default abstract class GameObject extends Loadable implements Positionabl
   private _rotation: Rotation;
 
   public interpolation = true;
-
-  private components: Component<string, any>[] = [];
 
   public constructor(position: Position = Position.zero()) {
     super();
@@ -180,33 +178,6 @@ export default abstract class GameObject extends Loadable implements Positionabl
 
   //// COMPONENTS ////
 
-  public addComponent<C extends Component<string, this>>(component: C, assign: boolean = true) {
-    this.components.push(component);
-    component.apply(this);
-    if (isUpdatable(component)) {
-      this.scene.addUpdatable(component);
-    }
-    return assign && assignComponent(this, component);
-  }
-
-  public removeComponent(component: Component<string, this>) {
-    const index = this.components.indexOf(component);
-    if (index === -1) return false;
-    this.components.splice(index, 1);
-    if (isUpdatable(component)) {
-      this.scene.removeUpdatable(component);
-    }
-  }
-
-  public getComponent<T extends Component<string>>(type: Class<T>): T {
-    for (const component of this.components) {
-      if (component instanceof type) {
-        return component;
-      }
-    }
-    return null;
-  }
-
   public play(action: Action<this>) {
     //@ts-ignore
     this.addComponent(action, false);
@@ -230,12 +201,5 @@ export default abstract class GameObject extends Loadable implements Positionabl
     } else {
       return this.parent.getParent(type);
     }
-  }
-
-  //////////////////////
-
-  public static With<T extends abstract new (...args: any) => any, A extends Array<Class<Component<string, InstanceType<T>>>>>(this: T, ...classes: A):
-      ComponentClass<T, InstanceType<T> & UnionToIntersection<ClassArrayType<A>> & ComponentProperties<A> & Mixed> {
-    return Mixin(this, ...classes) as any;
   }
 }
