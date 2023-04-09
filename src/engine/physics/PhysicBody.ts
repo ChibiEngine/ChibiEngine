@@ -4,7 +4,7 @@ import Component from "../component/Component";
 import {Class} from "../utils/type_utils";
 
 export default class PhysicBody extends Component<"body"> implements FixedUpdatable {
-    readonly name = "body";
+    readonly componentName = "body";
     readonly targetType: Class<GameObject>;
 
     public apply(target: GameObject): void {

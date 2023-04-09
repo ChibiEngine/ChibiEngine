@@ -202,7 +202,7 @@ export default abstract class GameObject extends AbstractGameObject.With(Positio
   }
 
   public static With<T extends abstract new (...args: any) => any, A extends Array<Class<Component<string, InstanceType<T>>>>>(this: T, ...classes: A):
-      ComponentClass<T, InstanceType<T> & UnionToIntersection<ClassArrayTypeOmit<A, "name">> & ComponentProperties<A> & Mixed> & {With: typeof GameObject.With} {
+      ComponentClass<T, InstanceType<T> & UnionToIntersection<ClassArrayTypeOmit<A, "componentName">> & ComponentProperties<A> & Mixed> & {With: typeof GameObject.With} {
     return Mixin(this, ...classes) as any;
   }
 }

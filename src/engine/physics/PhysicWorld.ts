@@ -3,7 +3,7 @@ import {FixedUpdatable} from "../gameobjects/Updatable";
 import Component from "../component/Component";
 
 export default class PhysicWorld extends Component<"world"> implements FixedUpdatable {
-    readonly name = "world";
+    readonly componentName = "world";
 
     readonly targetType = GameObject;
     protected target: GameObject;

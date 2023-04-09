@@ -2,7 +2,7 @@ import Component from "../../engine/component/Component";
 import Event from "../../engine/event/Event";
 
 export default class Damageable extends Component<"damageable"> {
-  public readonly name = "damageable";
+  public readonly componentName = "damageable";
 
   public readonly onDeath = new Event<void>();
 

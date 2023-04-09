@@ -19,6 +19,6 @@ export default function assignComponent<O extends AbstractGameObject, C extends 
     });
   }
   //@ts-ignore
-  target[component.name] = component;
+  target[component.componentName] = component;
   return target as any;
 }

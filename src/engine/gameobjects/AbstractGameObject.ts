@@ -67,7 +67,7 @@ export default abstract class AbstractGameObject extends Loadable {
   }
 
   public static With<T extends abstract new (...args: any) => any, A extends Array<Class<AbstractComponent<string, InstanceType<T>>>>>(this: T, ...classes: A):
-      ComponentClass<T, InstanceType<T> & UnionToIntersection<ClassArrayTypeOmit<A, "name">> & ComponentProperties<A> & Mixed> & {With: typeof AbstractGameObject.With} {
+      ComponentClass<T, InstanceType<T> & UnionToIntersection<ClassArrayTypeOmit<A, "componentName">> & ComponentProperties<A> & Mixed> & {With: typeof AbstractGameObject.With} {
     return Mixin(this, ...classes) as any;
   }
 }

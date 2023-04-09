@@ -6,7 +6,7 @@ import Component from "../component/Component";
 import {VariableUpdatable} from "../gameobjects/Updatable";
 
 export default abstract class Action<in T extends GameObject = GameObject> extends Component<"_action", T> implements VariableUpdatable {
-  public readonly name = "_action";
+  public readonly componentName = "_action";
 
   protected target: T & any;
 

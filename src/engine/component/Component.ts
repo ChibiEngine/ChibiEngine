@@ -2,7 +2,7 @@ import GameObject from "../gameobjects/GameObject";
 import AbstractGameObject from "../gameobjects/AbstractGameObject";
 
 export abstract class AbstractComponent<Name extends string, in T extends AbstractGameObject = AbstractGameObject> {
-    public abstract readonly name: Name;
+    public abstract readonly componentName: Name;
 
     public apply(target: T): void {
 
