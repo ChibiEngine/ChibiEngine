@@ -4,7 +4,7 @@ import Position from "../../engine/geom/position/Position";
 import Movable from "./Movable";
 import AIController from "./AIController";
 
-export default class Enemy extends Container.With(Damageable, Movable).With(AIController) {
+export default class Enemy extends Container.With(Damageable, Movable, AIController) {
   constructor(x: number, y: number) {
     super(new Position(x, y))
     this.addComponent(new Damageable(100));
