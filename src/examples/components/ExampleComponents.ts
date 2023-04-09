@@ -15,7 +15,8 @@ export default class ExampleComponents extends Scene {
   protected async _create() {
     console.log("==== ExampleComponents ====");
 
-    const enemy = this.add(new Enemy(100, 100)).addComponent(new Damageable(100))
+    const enemy = this.add(new Enemy(100, 100));
+    enemy.health = 10;
     console.log(enemy.health, "PV");
     enemy.damage(3);
     console.log(enemy.damageable.health, "PV");

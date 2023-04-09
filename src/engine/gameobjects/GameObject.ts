@@ -1,12 +1,10 @@
 import * as PIXI from "pixi.js";
-import Component from "../component/Component";
 import Event from "../event/Event";
 import Position from "../geom/position/Position";
 
 import Positionable from "../geom/position/Positionable";
 import Size from "../geom/size/Size";
 import Sizeable from "../geom/size/Sizeable";
-import Loadable from "../loader/Loadable";
 import center from "./positioning/center";
 
 import type Container from "./Container";
@@ -17,12 +15,12 @@ import assignPosition from "../geom/position/assignPosition";
 import assignSize from "../geom/size/assignSize";
 import Rotation from "../geom/rotation/Rotation";
 import assignRotation from "../geom/rotation/assignRotation";
-import assignComponent from "./operations/assignComponent";
-import {ComponentProperties} from "../component/types/ComponentProperty";
-import Mixin, {ClassArrayType, Mixed} from "../mixin/Mixin";
 import {Class, ComponentClass, UnionToIntersection} from "../utils/type_utils";
 import AbstractGameObject from "./AbstractGameObject";
 import PositionComponent from "../component/PositionComponent";
+import Component from "../component/Component";
+import Mixin, {ClassArrayTypeOmit, Mixed} from "../mixin/Mixin";
+import {ComponentProperties} from "../component/types/ComponentProperty";
 
 // Inspired by https://docs.cocos2d-x.org/api-ref/cplusplus/v4x/d3/d82/classcocos2d_1_1_node.html
 
@@ -201,5 +199,10 @@ export default abstract class GameObject extends AbstractGameObject.With(Positio
     } else {
       return this.parent.getParent(type);
     }
+  }
+
+  public static With<T extends abstract new (...args: any) => any, A extends Array<Class<Component<string, InstanceType<T>>>>>(this: T, ...classes: A):
+      ComponentClass<T, InstanceType<T> & UnionToIntersection<ClassArrayTypeOmit<A, "name">> & ComponentProperties<A> & Mixed> & {With: typeof GameObject.With} {
+    return Mixin(this, ...classes) as any;
   }
 }

@@ -8,7 +8,8 @@ export default function assignComponent<O extends AbstractGameObject, C extends 
   for(const key of getMethods(component)) {
     if(key === "constructor") continue;
     Object.defineProperty(target, key, {
-      get: () => component[key]
+      get: () => component[key],
+      set: (value) =>  component[key] = value
     });
   }
   for(const key in component) {
