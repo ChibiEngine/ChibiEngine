@@ -21,6 +21,7 @@ import PositionComponent from "../component/PositionComponent";
 import Component from "../component/Component";
 import Mixin, {ClassArrayType, ClassArrayTypeOmit, Mixed} from "../mixin/Mixin";
 import {ComponentProperties} from "../component/types/ComponentProperty";
+import DisplayObjectComponent from "../component/DisplayObjectComponent";
 
 // Inspired by https://docs.cocos2d-x.org/api-ref/cplusplus/v4x/d3/d82/classcocos2d_1_1_node.html
 
@@ -36,10 +37,8 @@ import {ComponentProperties} from "../component/types/ComponentProperty";
  * - Sprite
  *   - Text
  */
-export default abstract class GameObject extends AbstractGameObject.With(PositionComponent) implements Positionable, Sizeable, VariableUpdatable {
+export default abstract class GameObject extends AbstractGameObject.With(DisplayObjectComponent, PositionComponent) implements Positionable, Sizeable, VariableUpdatable {
   public _parent: Container;
-
-  protected abstract _internal: PIXI.Container;
 
   private _position: Position;
   private _size: Size;
@@ -72,19 +71,10 @@ export default abstract class GameObject extends AbstractGameObject.With(Positio
 
   //////////////////////
 
-  public get internal(): PIXI.Container {
-    return this._internal;
-  }
-
   //// POSITION ////
-
-  public get position() {
-    return this._position;
-  }
 
   public setPosition(position: Position): this {
     this._position = position;
-    assignPosition(this._internal, this.position);
     this.onPositionChange(() => {
       console.log("position changed");
     })

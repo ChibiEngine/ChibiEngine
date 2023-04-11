@@ -35,6 +35,7 @@ export default class Example1 extends Scene implements VariableUpdatable {
       await new Promise((resolve) => setTimeout(resolve, 100));
     }
 
+
     await this.container;
 
     this.container.internal.pivot.x = this.container.internal.width / 2;
