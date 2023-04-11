@@ -38,7 +38,7 @@ import {ComponentProperties} from "../component/types/ComponentProperty";
 export default abstract class GameObject extends AbstractGameObject.With(PositionComponent) implements Positionable, Sizeable, VariableUpdatable {
   public _parent: Container;
 
-  public abstract internal: PIXI.Container;
+  public abstract pixi: PIXI.Container;
 
   private _position: Position;
   private _size: Size;
@@ -80,8 +80,8 @@ export default abstract class GameObject extends AbstractGameObject.With(Positio
   public setPosition(position: Position): this {
     this._position = position;
 
-    if(this.internal)
-      this.internal.position = position;
+    if(this.pixi)
+      this.pixi.position = position;
 
     return this;
   }
@@ -89,7 +89,7 @@ export default abstract class GameObject extends AbstractGameObject.With(Positio
   public variableUpdate(dt: number): void {
     if(!this.interpolation) return;
     const vec2 = this.position.interpolateDt(dt);
-    this.internal.position.set(vec2.x, vec2.y);
+    this.pixi.position.set(vec2.x, vec2.y);
   }
 
   public get onPositionChange(): Event<Position> {
@@ -126,7 +126,7 @@ export default abstract class GameObject extends AbstractGameObject.With(Positio
 
   public setSize(size: Size): this {
     this._size = size;
-    assignSize(this.internal, this.size);
+    assignSize(this.pixi, this.size);
     return this;
   }
 
@@ -160,7 +160,7 @@ export default abstract class GameObject extends AbstractGameObject.With(Positio
 
   public setRotation(rotation: Rotation) {
     this._rotation = rotation;
-    assignRotation(this.internal, this.rotation);
+    assignRotation(this.pixi, this.rotation);
   }
 
   public get onRotationChange(): Event<Rotation> {

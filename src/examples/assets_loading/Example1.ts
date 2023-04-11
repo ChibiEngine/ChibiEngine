@@ -35,8 +35,8 @@ export default class Example1 extends Scene implements VariableUpdatable {
 
     await this.container;
 
-    this.container.internal.pivot.x = this.container.internal.width / 2;
-    this.container.internal.pivot.y = this.container.internal.height / 2;
+    this.container.pixi.pivot.x = this.container.pixi.width / 2;
+    this.container.pixi.pivot.y = this.container.pixi.height / 2;
 
     // Center bunny sprite in local container coordinates
     // TODO
@@ -58,6 +58,6 @@ export default class Example1 extends Scene implements VariableUpdatable {
 
   public render(dt: number) {
     console.log("fps",1000/dt);
-    this.container.internal.rotation -= 0.0007 * dt;
+    this.container.pixi.rotation -= 0.0007 * dt;
   }
 }

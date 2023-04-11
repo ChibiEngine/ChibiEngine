@@ -12,7 +12,7 @@ interface GameConfig {
 }
 
 export default class Game extends Container {
-  public readonly internal: PIXI.Container = null;
+  public readonly pixi: PIXI.Container = null;
 
   private readonly app: PIXI.Application;
   private readonly sceneStack: Scene[] = [];
@@ -25,7 +25,7 @@ export default class Game extends Container {
     super();
     this.app = new PIXI.Application(config);
     document.body.appendChild(this.app.view);
-    this.internal = this.app.stage;
+    this.pixi = this.app.stage;
     this.gameLoop.start(this.updateScenes.bind(this));
     this.screen = new Rectangle(this.app.screen.x, this.app.screen.y, this.app.screen.width, this.app.screen.height);
     this.app.renderer.on("resize", () => {
