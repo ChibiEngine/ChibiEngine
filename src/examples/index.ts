@@ -17,10 +17,11 @@ const game = new Game({
     // autoResize: true,
 });
 
+game.addScene(new Example1());
 // game.addScene(new ExampleKeyboard());
 // game.addScene(new ExampleAtlas());
 // game.addScene(new ExampleUpdateLoop());
-game.addScene(new ExampleKeyboard());
+// game.addScene(new ExampleKeyboard());
 // game.addScene(new ExampleTweens());
 // game.addScene(new ExampleReactivePositioning());
 // game.addScene(new ExampleComponents());

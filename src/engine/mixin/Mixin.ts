@@ -1,5 +1,5 @@
 import {Class} from "../utils/type_utils";
-import getMethods from "../utils/getMethods";
+import getMethods, {getMethodsFromPrototype} from "../utils/getMethods";
 import {UnionToIntersection} from "../utils/type_utils";
 
 export class Mixed {
@@ -41,14 +41,7 @@ export default function Mixin<Base extends abstract new (...args: any) => any, A
     }
   }
 
-  const mixed = [Mixed, ...classes];
-
-  for (const m of mixed) {
-    if (!m) break;
-    for (const p of getMethods(m)) {
-      (MixClass.prototype as any)[p] = m.prototype[p];
-    }
-  }
+  MixClass.prototype.mixin = (Mixed.prototype as any).mixin;
 
   return MixClass as any;
 }

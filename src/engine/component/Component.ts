@@ -1,12 +1,9 @@
 import GameObject from "../gameobjects/GameObject";
 import AbstractGameObject from "../gameobjects/AbstractGameObject";
 
-export abstract class AbstractComponent<Name extends string, in T extends AbstractGameObject = AbstractGameObject> {
-    public abstract readonly componentName: Name;
-
-    public apply(target: T): void {
-
-    }
+export interface AbstractComponent<Name extends string, in T extends AbstractGameObject = AbstractGameObject> {
+    readonly componentName: Name;
+    apply(target: T): void;
 }
 
 /*
@@ -14,6 +11,7 @@ export abstract class AbstractComponent<Name extends string, in T extends Abstra
     because Sprite extends GameObject, something that is applicable to a GameObject is applicable to a Sprite
     => contravariance
 */
-export default abstract class Component<Name extends string, in T extends AbstractGameObject = GameObject> extends AbstractComponent<Name, T> {
-
+export default abstract class Component<Name extends string, in T extends AbstractGameObject = GameObject> implements AbstractComponent<Name, T> {
+    public abstract readonly componentName: Name;
+    public apply(target: T): void { }
 }

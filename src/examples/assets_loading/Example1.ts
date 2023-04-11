@@ -8,6 +8,8 @@ import Scene from "../../engine/game/Scene";
 import Cache from "../../engine/loader/Cache";
 import {VariableUpdatable} from "../../engine/gameobjects/Updatable";
 
+import {Sprite as PixiSprite} from "pixi.js";
+
 export default class Example1 extends Scene implements VariableUpdatable {
   private container: Container;
   private text: Text;
@@ -46,6 +48,9 @@ export default class Example1 extends Scene implements VariableUpdatable {
     console.log("dependencies", this.dependencies);
     console.log("cache", Cache.resources);
     // console.log(this.game.loader.resources);
+
+    const sprite = this.container.children[0] as Sprite;
+    sprite.skew.set(0.5, 0.5);
 
     await new Promise((resolve) => setTimeout(resolve, 3000));
     console.log("3 seconds later");

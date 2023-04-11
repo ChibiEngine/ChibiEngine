@@ -5,8 +5,9 @@ import ComponentProperty from "../../component/types/ComponentProperty";
 import AbstractGameObject from "../AbstractGameObject";
 
 export default function assignComponent<O extends AbstractGameObject, C extends Component<string, O>>(target: O, component: C): O & Omit<C, "name"> & ComponentProperty<C> {
-  for(const key of getMethods(component)) {
-    if(key === "constructor" || key === "apply") continue;
+  const methods = getMethods(component);
+  for(const key of methods) {
+    if(key === "constructor" || key === "apply" || key in target) continue;
 
     Object.defineProperty(target, key, {
       get: () => component[key],
@@ -14,7 +15,8 @@ export default function assignComponent<O extends AbstractGameObject, C extends 
     });
   }
   for(const key in component) {
-    if(key == "componentName") continue;
+    if(key == "componentName" || key in target) continue;
+    if(methods.includes(key)) continue;
 
     Object.defineProperty(target, key, {
       get: () => component[key],

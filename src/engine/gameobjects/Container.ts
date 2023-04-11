@@ -10,7 +10,7 @@ import assignPosition from "../geom/position/assignPosition";
 // TODO : renommer en Container?
 export default class Container extends GameObject {
   public readonly _internal: PIXI.Container;
-  private children: GameObject[] = [];
+  public readonly children: GameObject[] = [];
 
   public constructor(position: Position = Position.zero()) {
     super(position);
