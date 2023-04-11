@@ -8,12 +8,12 @@ import GameObject from "./GameObject";
  */
 // TODO : renommer en Container?
 export default class Container extends GameObject {
-  public readonly _internal: PIXI.Container;
+  public readonly internal: PIXI.Container;
   private children: GameObject[] = [];
 
   public constructor(position: Position = Position.zero()) {
     super(position);
-    this._internal = new PIXI.Container();
+    this.internal = new PIXI.Container();
     this.setPosition(position);
   }
 
@@ -37,10 +37,10 @@ export default class Container extends GameObject {
     this.load(child);
 
     if (child.internal) {
-      this._internal.addChild(child.internal);
+      this.internal.addChild(child.internal);
     } else {
       child.onLoaded.subscribeOnce(node => {
-        this._internal.addChild(node.internal)
+        this.internal.addChild(node.internal)
       });
     }
 
@@ -62,6 +62,6 @@ export default class Container extends GameObject {
   }
 
   public async _destroy(): Promise<void> {
-    this._internal.destroy();
+    this.internal.destroy();
   }
 }

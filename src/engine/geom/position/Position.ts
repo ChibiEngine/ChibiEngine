@@ -106,13 +106,8 @@ export default class Position {
     const alpha = Math.min(1, this.currentDt / this.lastUpdateDt);
     this.isNewPosition = true;
     if(alpha === 1) {
-      console.log("alpha === 1")
       return this.current;
     }
-    // while(this.currentDt > this.lastUpdateDt) {
-    //   this.currentDt -= this.lastUpdateDt;
-    // }
-    console.log("alpha", alpha, this.last, this.current)
     return this.interpolate(alpha);
   }
 
