@@ -11,7 +11,6 @@ import type Container from "./Container";
 import type Scene from "../game/Scene";
 import Action from "../tween/Action";
 import {isUpdatable, VariableUpdatable} from "./Updatable";
-import assignPosition from "../geom/position/assignPosition";
 import assignSize from "../geom/size/assignSize";
 import Rotation from "../geom/rotation/Rotation";
 import assignRotation from "../geom/rotation/assignRotation";
@@ -84,10 +83,10 @@ export default abstract class GameObject extends AbstractGameObject.With(Positio
 
   public setPosition(position: Position): this {
     this._position = position;
-    assignPosition(this._internal, this.position);
-    this.onPositionChange(() => {
-      console.log("position changed");
-    })
+
+    if(this._internal)
+      this._internal.position = position;
+
     return this;
   }
 

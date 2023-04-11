@@ -13,7 +13,6 @@ import type Container from "./Container";
 import type Scene from "../game/Scene";
 import Action from "../tween/Action";
 import {isUpdatable, VariableUpdatable} from "./Updatable";
-import assignPosition from "../geom/position/assignPosition";
 import assignSize from "../geom/size/assignSize";
 import Rotation from "../geom/rotation/Rotation";
 import assignRotation from "../geom/rotation/assignRotation";

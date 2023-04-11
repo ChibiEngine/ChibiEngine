@@ -2,7 +2,6 @@ import {Sprite as PixiSprite} from "pixi.js";
 import Image from "../resource/Image";
 import GameObject from "./GameObject";
 import Position from "../geom/position/Position";
-import assignPosition from "../geom/position/assignPosition";
 
 export default class Sprite extends GameObject {
   public _internal: PixiSprite;
@@ -17,7 +16,7 @@ export default class Sprite extends GameObject {
     //
     const image = await this.load(this.image);
     this._internal = new PixiSprite(image.texture);
-    assignPosition(this._internal, this.position);
+    this.setPosition(this.position);
   }
 
   public async _destroy() {

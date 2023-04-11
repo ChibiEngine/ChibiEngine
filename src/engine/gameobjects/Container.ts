@@ -1,7 +1,6 @@
 import * as PIXI from "pixi.js";
 import Position from "../geom/position/Position";
 import GameObject from "./GameObject";
-import assignPosition from "../geom/position/assignPosition";
 
 /**
  * Noeud simple au sens conteneur PIXI : possède des enfants
@@ -15,7 +14,7 @@ export default class Container extends GameObject {
   public constructor(position: Position = Position.zero()) {
     super(position);
     this._internal = new PIXI.Container();
-    assignPosition(this._internal, position);
+    this.setPosition(position);
   }
 
   /**
