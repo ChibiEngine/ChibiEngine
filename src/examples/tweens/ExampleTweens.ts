@@ -8,7 +8,6 @@ import Easing from "../../engine/math/easing/Easing";
 import Sequence from "../../engine/tween/Sequence";
 import Callback from "../../engine/tween/Callback";
 import ContainerSpecific from "../../engine/tween/ContainerSpecific";
-import GameObject from "../../engine/gameobjects/GameObject";
 import Container from "../../engine/gameobjects/Container";
 
 export default class ExampleTweens extends Scene {

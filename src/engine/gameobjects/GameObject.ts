@@ -1,25 +1,21 @@
 import * as PIXI from "pixi.js";
-import Event from "../event/Event";
 import Position from "../geom/position/Position";
 
-import Positionable from "../geom/position/Positionable";
 import Size from "../geom/size/Size";
-import Sizeable from "../geom/size/Sizeable";
-import center from "./positioning/center";
 
 import type Container from "./Container";
 import type Scene from "../game/Scene";
 import Action from "../tween/Action";
-import {isUpdatable, VariableUpdatable} from "./Updatable";
-import assignSize from "../geom/size/assignSize";
+import {isUpdatable} from "./Updatable";
 import Rotation from "../geom/rotation/Rotation";
-import assignRotation from "../geom/rotation/assignRotation";
 import {Class, ComponentClass, UnionToIntersection} from "../utils/type_utils";
 import AbstractGameObject from "./AbstractGameObject";
 import PositionComponent from "../component/PositionComponent";
 import Component from "../component/Component";
 import Mixin, {ClassArrayType, ClassArrayTypeOmit, Mixed} from "../mixin/Mixin";
 import {ComponentProperties} from "../component/types/ComponentProperty";
+import SizeComponent from "../component/SizeComponent";
+import RotationComponent from "../component/RotationComponent";
 
 // Inspired by https://docs.cocos2d-x.org/api-ref/cplusplus/v4x/d3/d82/classcocos2d_1_1_node.html
 
@@ -35,22 +31,16 @@ import {ComponentProperties} from "../component/types/ComponentProperty";
  * - Sprite
  *   - Text
  */
-export default abstract class GameObject extends AbstractGameObject.With(PositionComponent) implements Positionable, Sizeable {
+export default abstract class GameObject extends AbstractGameObject.With(PositionComponent, SizeComponent, RotationComponent) {
   public _parent: Container;
-
   public abstract pixi: PIXI.Container;
-
-  private _position: Position;
-  private _size: Size;
-  private _rotation: Rotation;
-
   public interpolation = true;
 
   public constructor(position: Position = Position.zero()) {
     super();
-    this.setPosition(position);
-    this.setSize(Size.zero());
-    this.setRotation(Rotation.zero());
+    this.addComponent(new PositionComponent(position));
+    this.addComponent(new SizeComponent(Size.zero()));
+    this.addComponent(new RotationComponent(Rotation.zero()));
   }
 
   public async create(): Promise<void> {
@@ -68,100 +58,6 @@ export default abstract class GameObject extends AbstractGameObject.With(Positio
   // _update() can be implemented when needed
 
   protected abstract _destroy(): Promise<void>;
-
-  //////////////////////
-
-  //// POSITION ////
-
-  public get position() {
-    return this._position;
-  }
-
-  public setPosition(position: Position): this {
-    this._position = position;
-
-    if(this.pixi) {
-      this.position.onChange.subscribe((position) => {
-        this.pixi.position.set(position.x, position.y);
-      });
-    }
-    return this;
-  }
-
-  public get onPositionChange(): Event<Position> {
-    return this._position.onChange;
-  }
-
-  public get x() {
-    return this._position.x;
-  }
-
-  public set x(x: number) {
-    this._position.x = x;
-  }
-
-  public get y() {
-    return this._position.y;
-  }
-
-  public set y(y: number) {
-    this._position.y = y;
-  }
-
-  public get center() {
-    return center(this);
-  }
-
-  //////////////////////
-
-  //// SIZE ////
-
-  public get size() {
-    return this._size;
-  }
-
-  public setSize(size: Size): this {
-    this._size = size;
-    assignSize(this.pixi, this.size);
-    return this;
-  }
-
-  public get onSizeChange(): Event<Size> {
-    return this._size.onChange;
-  }
-
-  public get width() {
-    return this._size.width;
-  }
-
-  public set width(width: number) {
-    this._size.width = width;
-  }
-
-  public get height() {
-    return this._size.height;
-  }
-
-  public set height(height: number) {
-    this._size.height = height;
-  }
-
-  //////////////////////
-
-  //// ROTATION ////
-
-  public get rotation() {
-    return this._rotation;
-  }
-
-  public setRotation(rotation: Rotation) {
-    this._rotation = rotation;
-    assignRotation(this.pixi, this.rotation);
-  }
-
-  public get onRotationChange(): Event<Rotation> {
-    return this._rotation.onChange;
-  }
 
   //////////////////////
 
