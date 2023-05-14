@@ -1,6 +1,6 @@
 import * as PIXI from "pixi.js";
-import Position from "../geom/position/Position";
 import GameObject from "./GameObject";
+import Position from "../component/Position";
 
 /**
  * Noeud simple au sens conteneur PIXI : possède des enfants

@@ -5,7 +5,7 @@ import AbstractGameObject from "../gameobjects/AbstractGameObject";
 import Rotation from "../geom/rotation/Rotation";
 
 export default class RotationComponent extends Component<"rotationComponent", AbstractGameObject> {
-  readonly componentName: "rotationComponent";
+  readonly componentName = "rotationComponent";
   private _rotation: Rotation;
   public pixi: PIXI.Container;
 

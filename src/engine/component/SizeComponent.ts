@@ -6,14 +6,14 @@ import AbstractGameObject from "../gameobjects/AbstractGameObject";
 import Sizeable from "../geom/size/Sizeable";
 
 export default class SizeComponent extends Component<"sizeComponent", AbstractGameObject> implements Sizeable {
-  readonly componentName: "sizeComponent";
+  readonly componentName = "sizeComponent";
   private _size: Size;
   public pixi: PIXI.Container;
 
   // public https://github.com/microsoft/TypeScript/issues/49709
   public target: AbstractGameObject;
 
-  public constructor(size: Size = Size.zero()) {
+  public constructor(size: Size = new Size()) {
     super();
     this._size = size;
   }
@@ -22,7 +22,7 @@ export default class SizeComponent extends Component<"sizeComponent", AbstractGa
     this.target = target;
     // @ts-ignore TODO: fix this
     this.pixi = target.pixi;
-    this.setSize(this.size);
+    this._size.set(this.pixi.width, this.pixi.height);
   }
 
   public get size(): Size {

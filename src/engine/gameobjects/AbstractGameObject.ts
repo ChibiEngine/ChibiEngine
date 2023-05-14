@@ -13,7 +13,9 @@ import {Class, ComponentClass, UnionToIntersection} from "../utils/type_utils";
 
 export default abstract class AbstractGameObject extends Loadable {
   type = "gameobject";
-  private components: Component<string, any>[] = [];
+  protected components: Component<string, any>[] = [];
+
+  protected created = false;
 
   public constructor() {
     super();
@@ -27,8 +29,10 @@ export default abstract class AbstractGameObject extends Loadable {
 
   public addComponent<C extends Component<string, this>>(component: C, assign: boolean = true) {
     this.components.push(component);
-    component.apply(this);
-    if (isUpdatable(component)) {
+    if(this.created) {
+      component.apply(this);
+    }
+    if (isUpdatable(component) && this.scene?.initialized) {
       this.scene.addUpdatable(component);
     }
     return assign && assignComponent(this, component);

@@ -9,9 +9,11 @@ export default abstract class Scene extends Container {
 
   private readonly fixedUpdatableSet: Set<FixedUpdatable> = new Set();
   private readonly variableUpdatableSet: Set<VariableUpdatable> = new Set();
+  public initialized: boolean = false;
 
   constructor() {
     super();
+    this.initialized = true;
     if(isUpdatable(this)) {
       this.addUpdatable(this);
     }

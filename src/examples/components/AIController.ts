@@ -5,7 +5,7 @@ import Movable from "./Movable";
 export default class AIController extends Component<"ai_controller", GameObject & Movable> {
   public readonly componentName = "ai_controller";
 
-  private target: GameObject & Movable;
+  public target: GameObject & Movable;
   apply(target: GameObject & Movable) {
     this.target = target;
     this.aiMove();

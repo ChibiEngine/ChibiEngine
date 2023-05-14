@@ -23,7 +23,7 @@ export default class ExampleReactivePositioning extends Scene implements Variabl
     });
   }
 
-  public render(delta: number): void {
+  public variableUpdate(delta: number): void {
     if (this.direction === "right") {
       this.bunny1.x += 0.2 * delta;
     } else {

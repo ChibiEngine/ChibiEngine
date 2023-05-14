@@ -1,5 +1,4 @@
 import * as PIXI from "pixi.js";
-import Position from "../geom/position/Position";
 
 import Size from "../geom/size/Size";
 
@@ -10,7 +9,7 @@ import {isUpdatable} from "./Updatable";
 import Rotation from "../geom/rotation/Rotation";
 import {Class, ComponentClass, UnionToIntersection} from "../utils/type_utils";
 import AbstractGameObject from "./AbstractGameObject";
-import PositionComponent from "../component/PositionComponent";
+import Position from "../component/Position";
 import Component from "../component/Component";
 import Mixin, {ClassArrayType, ClassArrayTypeOmit, Mixed} from "../mixin/Mixin";
 import {ComponentProperties} from "../component/types/ComponentProperty";
@@ -31,15 +30,16 @@ import RotationComponent from "../component/RotationComponent";
  * - Sprite
  *   - Text
  */
-export default abstract class GameObject extends AbstractGameObject.With(PositionComponent, SizeComponent, RotationComponent) {
+export default abstract class GameObject extends AbstractGameObject.With(Position, SizeComponent, RotationComponent) {
   public _parent: Container;
   public abstract pixi: PIXI.Container;
-  public interpolation = true;
+
+  protected created = false;
 
   public constructor(position: Position = Position.zero()) {
     super();
-    this.addComponent(new PositionComponent(position));
-    this.addComponent(new SizeComponent(Size.zero()));
+    this.addComponent(position);
+    this.addComponent(new SizeComponent());
     this.addComponent(new RotationComponent(Rotation.zero()));
   }
 
@@ -48,6 +48,11 @@ export default abstract class GameObject extends AbstractGameObject.With(Positio
     const scene = this.scene;
     if (isUpdatable(this)) {
       scene.addUpdatable(this);
+    }
+    this.created = true;
+    // Init components
+    for (const component of this.components) {
+      component.apply(this);
     }
   }
 
@@ -77,7 +82,7 @@ export default abstract class GameObject extends AbstractGameObject.With(Positio
   }
 
   public get scene(): Scene {
-    return this.parent.scene;
+    return this.parent && this.parent.scene;
   }
 
   public getParent<T extends GameObject>(type: Class<T>): T {

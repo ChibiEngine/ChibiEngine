@@ -1,8 +1,8 @@
 import Damageable from "./Damageable";
 import Container from "../../engine/gameobjects/Container";
-import Position from "../../engine/geom/position/Position";
 import Movable from "./Movable";
 import AIController from "./AIController";
+import Position from "../../engine/component/Position";
 
 export default class Enemy extends Container.With(Damageable, Movable, AIController) {
   constructor(x: number, y: number) {

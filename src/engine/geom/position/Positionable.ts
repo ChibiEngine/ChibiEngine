@@ -1,8 +1,8 @@
 import Event from "../../event/Event";
-import Position from "./Position";
+import IPosition from "./IPosition";
 
 export default interface Positionable {
   x: number;
   y: number;
-  onPositionChange: Event<Position>;
+  onPositionChange: Event<IPosition>;
 }

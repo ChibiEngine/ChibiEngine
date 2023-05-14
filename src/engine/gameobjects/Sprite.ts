@@ -1,7 +1,7 @@
 import {Sprite as PixiSprite} from "pixi.js";
 import Image from "../resource/Image";
 import GameObject from "./GameObject";
-import Position from "../geom/position/Position";
+import Position from "../component/Position";
 
 export default class Sprite extends GameObject {
   public pixi: PixiSprite;
