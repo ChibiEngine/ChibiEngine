@@ -80,9 +80,11 @@ export default abstract class GameObject extends AbstractGameObject.With(Positio
   public setPosition(position: Position): this {
     this._position = position;
 
-    if(this.pixi)
-      this.pixi.position = position;
-
+    if(this.pixi) {
+      this.position.onChange.subscribe((position) => {
+        this.pixi.position.set(position.x, position.y);
+      });
+    }
     return this;
   }
 
@@ -163,7 +165,7 @@ export default abstract class GameObject extends AbstractGameObject.With(Positio
 
   //////////////////////
 
-  //// COMPONENTS ////
+  //// ACTIONS ////
 
   public play(action: Action<this>) {
     //@ts-ignore
