@@ -35,7 +35,7 @@ import {ComponentProperties} from "../component/types/ComponentProperty";
  * - Sprite
  *   - Text
  */
-export default abstract class GameObject extends AbstractGameObject.With(PositionComponent) implements Positionable, Sizeable, VariableUpdatable {
+export default abstract class GameObject extends AbstractGameObject.With(PositionComponent) implements Positionable, Sizeable {
   public _parent: Container;
 
   public abstract pixi: PIXI.Container;
@@ -84,12 +84,6 @@ export default abstract class GameObject extends AbstractGameObject.With(Positio
       this.pixi.position = position;
 
     return this;
-  }
-
-  public variableUpdate(dt: number): void {
-    if(!this.interpolation) return;
-    const vec2 = this.position.interpolateDt(dt);
-    this.pixi.position.set(vec2.x, vec2.y);
   }
 
   public get onPositionChange(): Event<Position> {
