@@ -20,14 +20,14 @@ export default class Image extends Resource {
     return new Image(this.path, x, y, width, height);
   }
 
-  public get texture(): PIXI.Texture {
+  public get pixi(): PIXI.Texture {
     return this._texture;
   }
 
   protected async _create(): Promise<void> {
     if(this.baseImage) {
       await this.load(this.baseImage);
-      this._texture = new PIXI.Texture(this.baseImage.texture.baseTexture, this.frame);
+      this._texture = new PIXI.Texture(this.baseImage.pixi.baseTexture, this.frame);
       return;
     }
 

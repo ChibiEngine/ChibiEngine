@@ -15,7 +15,7 @@ export default class Sprite extends GameObject {
     // TODO: syntaxe bizarre, on s'attendrait à juste faire `const image = await this.load(this.image)` sans le .loaded
     //
     const image = await this.load(this.image);
-    this.pixi = new PixiSprite(image.texture);
+    this.pixi = new PixiSprite(image.pixi);
     this.setPosition(this.position);
   }
 
