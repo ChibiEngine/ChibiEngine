@@ -12,7 +12,7 @@ export default class ExampleReactivePositioning extends Scene implements Variabl
   private direction: "left" | "right" = "right";
 
   protected async _create() {
-    console.log("==== ExampleUpdateLoop ====");
+    console.log("==== ExampleTransition ====");
 
     const image = new Image(BUNNY_URL);
 

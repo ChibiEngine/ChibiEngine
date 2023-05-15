@@ -5,7 +5,7 @@ import ExampleAtlas from "./atlas/ExampleAtlas";
 import ExampleReactivePositioning from "./reactive_positioning/ExampleReactivePositioning";
 import ExampleTweens from "./tweens/ExampleTweens";
 import ExampleComponents from "./components/ExampleComponents";
-import ExampleUpdateLoop from "./gameloop/ExampleUpdateLoop";
+import ExampleTransition from "./transition/ExampleTransition";
 import ExampleKeyboard from "./keyboard/ExampleKeyboard";
 
 const game = new Game({
@@ -20,7 +20,7 @@ const game = new Game({
 // game.addScene(new Example1());
 // game.addScene(new ExampleKeyboard());
 // game.addScene(new ExampleAtlas());
-game.addScene(new ExampleUpdateLoop());
+game.addScene(new ExampleTransition());
 // game.addScene(new ExampleKeyboard());
 // game.addScene(new ExampleTweens());
 // game.addScene(new ExampleReactivePositioning());
