@@ -14,6 +14,7 @@ export default class ExampleKeyboard extends Scene implements FixedUpdatable {
     console.log("==== ExampleKeyboard ====");
 
     this.bunny = this.add(new Sprite(new Image(bunnyURL)));
+    this.bunny.position.setTransition(100)
   }
 
   update(): void {

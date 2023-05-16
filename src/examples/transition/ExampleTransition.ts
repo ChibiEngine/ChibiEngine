@@ -18,8 +18,15 @@ export default class ExampleTransition extends Scene implements FixedUpdatable {
 
     const image = new Image(BUNNY_URL);
 
+    const ghost = this.add(new Sprite(image, 0, 0));
+    ghost.then(() => ghost.pixi.alpha = 0.5);
+
     this.bunny = this.add(new Sprite(image, 0, 0));
     this.bunny.position.setTransition(1000);
+
+    this.bunny.onPositionChange((position) => {
+      ghost.position.set(position);
+    });
   }
 
   public update(): void {

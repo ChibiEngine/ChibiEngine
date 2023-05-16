@@ -51,13 +51,11 @@ export default class Position extends TransitionableComponent<"position", IPosit
   }
 
   public set x(x: number) {
-    this.last.x = this.current.x;
     this.current.x = x;
     this.onChange.trigger(this);
   }
 
   public set y(y: number) {
-    this.last.y = this.current.y;
     this.current.y = y;
     this.onChange.trigger(this);
   }

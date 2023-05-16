@@ -10,11 +10,9 @@ export default abstract class TransitionableComponent<Name extends string, T, Ta
   protected lastTime: number;
   protected updateDt: number;
 
-  protected future: T;
   protected last: T;
+  protected last1: T;
   protected current: T;
-
-  protected isNew: boolean = false;
 
   public readonly onChange: Event<this> = new Event();
 
@@ -22,14 +20,14 @@ export default abstract class TransitionableComponent<Name extends string, T, Ta
 
   protected constructor(current: T) {
     super();
+
     this.current = current;
     this.last = { ...current };
+    this.last1 = { ...current };
 
     this.lastTime = performance.now();
+
     this.onChange(() => {
-      if(!this.isNew) {
-        return;
-      }
       this.currentDt = 0;
       this.lastTime = performance.now();
     });
@@ -59,15 +57,17 @@ export default abstract class TransitionableComponent<Name extends string, T, Ta
   }
 
   public set(value: T) {
-    this.last = { ...this.current }
     this.current = value;
     this.onChange.trigger(this);
   }
 
   public interpolateDt(dt: number): T {
+    if(this.currentDt === 0) {
+      this.last = { ...this.last1 };
+      this.last1 = { ...this.current };
+    }
     this.currentDt += dt;
     const alpha = Math.min(1, this.currentDt / this.updateDt);
-    this.isNew = true;
     if(alpha === 1) {
       return this.current;
     }
