@@ -1,6 +1,5 @@
-import {Class} from "../utils/type_utils";
+import {Class, UnionToIntersection} from "../utils/type_utils";
 import getMethods from "../utils/getMethods";
-import {UnionToIntersection} from "../utils/type_utils";
 
 export class Mixed {
   protected mixin<T extends object>(target: T) {

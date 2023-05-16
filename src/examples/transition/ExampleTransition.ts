@@ -10,9 +10,6 @@ export default class ExampleTransition extends Scene implements FixedUpdatable {
 
   private bunny: Sprite;
 
-  private directionX = 1;
-  private directionY = 1;
-
   protected async _create() {
     console.log("==== ExampleTransition ====");
 

@@ -1,8 +1,8 @@
 import Event from "../../event/Event";
-import Size from "./Size";
+import ISize from "./ISize";
 
 export default interface Sizeable {
   width: number;
   height: number;
-  onSizeChange: Event<Size>;
+  onSizeChange: Event<ISize>;
 }

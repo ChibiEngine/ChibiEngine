@@ -1,20 +1,17 @@
 import * as PIXI from "pixi.js";
 
-import Size from "../geom/size/Size";
-
 import type Container from "./Container";
 import type Scene from "../game/Scene";
 import Action from "../tween/Action";
 import {isUpdatable} from "./Updatable";
-import Rotation from "../geom/rotation/Rotation";
 import {Class, ComponentClass, UnionToIntersection} from "../utils/type_utils";
 import AbstractGameObject from "./AbstractGameObject";
 import Position from "../component/Position";
 import Component from "../component/Component";
 import Mixin, {ClassArrayType, ClassArrayTypeOmit, Mixed} from "../mixin/Mixin";
 import {ComponentProperties} from "../component/types/ComponentProperty";
-import SizeComponent from "../component/SizeComponent";
-import RotationComponent from "../component/RotationComponent";
+import Size from "../component/Size";
+import Rotation from "../component/Rotation";
 
 // Inspired by https://docs.cocos2d-x.org/api-ref/cplusplus/v4x/d3/d82/classcocos2d_1_1_node.html
 
@@ -30,7 +27,7 @@ import RotationComponent from "../component/RotationComponent";
  * - Sprite
  *   - Text
  */
-export default abstract class GameObject extends AbstractGameObject.With(Position, SizeComponent, RotationComponent) {
+export default abstract class GameObject extends AbstractGameObject.With(Position, Size, Rotation) {
   public _parent: Container;
   public abstract pixi: PIXI.Container;
 
@@ -39,8 +36,8 @@ export default abstract class GameObject extends AbstractGameObject.With(Positio
   public constructor(position: Position = Position.zero()) {
     super();
     this.addComponent(position);
-    this.addComponent(new SizeComponent());
-    this.addComponent(new RotationComponent(Rotation.zero()));
+    this.addComponent(new Size());
+    this.addComponent(new Rotation());
   }
 
   public async create(): Promise<void> {

@@ -10,7 +10,7 @@ export default class Position extends TransitionableComponent<"position", IPosit
 
   // public https://github.com/microsoft/TypeScript/issues/49709
   public target: AbstractGameObject;
-  private _pixi: PIXI.Container;
+  public _pixi: PIXI.Container;
 
   public constructor(x: number, y: number) {
     super({ x, y});
@@ -22,7 +22,7 @@ export default class Position extends TransitionableComponent<"position", IPosit
     this._pixi = target.pixi;
     this.onChange.subscribe((position) => {
       // TODO : disable this listener when transition is set?
-      this._pixi.position.set(position.x, position.y);
+      this.assign(position);
     });
     this.onChange.trigger(this);
     if(this.updateDt) {
@@ -30,7 +30,7 @@ export default class Position extends TransitionableComponent<"position", IPosit
     }
   }
 
-  public get onPositionChange(): Event<Position> {
+  public get onPositionChange(): Event<IPosition> {
     return this.onChange;
   }
 

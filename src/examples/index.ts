@@ -1,12 +1,6 @@
 import Game from "../engine/game/Game";
-import Example1 from "./assets_loading/Example1";
 // import "./pixi";
-import ExampleAtlas from "./atlas/ExampleAtlas";
-import ExampleReactivePositioning from "./reactive_positioning/ExampleReactivePositioning";
-import ExampleTweens from "./tweens/ExampleTweens";
-import ExampleComponents from "./components/ExampleComponents";
 import ExampleTransition from "./transition/ExampleTransition";
-import ExampleKeyboard from "./keyboard/ExampleKeyboard";
 
 const game = new Game({
     width: 800,
