@@ -43,20 +43,20 @@ export default class Position extends TransitionableComponent<"position", IPosit
   }
 
   public get x() {
-    return this.current.x;
+    return this.value.x;
   }
 
   public get y() {
-    return this.current.y;
+    return this.value.y;
   }
 
   public set x(x: number) {
-    this.current.x = x;
+    this.value.x = x;
     this.onChange.trigger(this);
   }
 
   public set y(y: number) {
-    this.current.y = y;
+    this.value.y = y;
     this.onChange.trigger(this);
   }
 
@@ -100,8 +100,8 @@ export default class Position extends TransitionableComponent<"position", IPosit
 
   public interpolate(alpha: number): IPosition {
     return {
-      x: this.current.x * alpha + this.last.x * (1 - alpha),
-      y: this.current.y * alpha + this.last.y * (1 - alpha)
+      x: this.next.x * alpha + this.previous.x * (1 - alpha),
+      y: this.next.y * alpha + this.previous.y * (1 - alpha)
     }
   }
 
