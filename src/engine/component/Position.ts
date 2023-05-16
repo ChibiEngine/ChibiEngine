@@ -21,6 +21,7 @@ export default class Position extends TransitionableComponent<"position", IPosit
     // @ts-ignore
     this._pixi = target.pixi;
     this.onChange.subscribe((position) => {
+      // TODO : disable this listener when transition is set?
       this._pixi.position.set(position.x, position.y);
     });
     this.onChange.trigger(this);
@@ -70,10 +71,12 @@ export default class Position extends TransitionableComponent<"position", IPosit
 
   public setX(x: number) {
     this.x = x;
+    return this;
   }
 
   public setY(y: number) {
     this.y = y;
+    return this;
   }
 
   public addX(number: number): this {
