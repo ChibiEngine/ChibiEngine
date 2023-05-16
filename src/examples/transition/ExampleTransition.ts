@@ -30,15 +30,9 @@ export default class ExampleTransition extends Scene implements FixedUpdatable {
   }
 
   public update(): void {
-    this.bunny.x += 100 * this.directionX;
-    this.bunny.y += 100 * this.directionY;
+    const x = Math.random() * (this.game.screen.width-26);
+    const y = Math.random() * (this.game.screen.height-37);
 
-    if(this.bunny.x >= this.game.screen.width || this.bunny.x <= 0) {
-      this.directionX *= -1;
-    }
-
-    if(this.bunny.y >= this.game.screen.height || this.bunny.y <= 0) {
-      this.directionY *= -1;
-    }
+    this.bunny.position.set({x, y});
   }
 }
