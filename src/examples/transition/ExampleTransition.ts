@@ -20,9 +20,13 @@ export default class ExampleTransition extends Scene implements FixedUpdatable {
 
     this.bunny = this.add(new Sprite(image, 0, 0));
     this.bunny.position.setTransition(1000);
+    this.bunny.size.setTransition(1000);
+    this.bunny.rotation.setTransition(1000);
 
     this.bunny.onPositionChange((position) => {
       ghost.position.set(position);
+      ghost.size.set(this.bunny.size);
+      ghost.rotation.set(this.bunny.rotation);
     });
   }
 
@@ -30,6 +34,13 @@ export default class ExampleTransition extends Scene implements FixedUpdatable {
     const x = Math.random() * (this.game.screen.width-26);
     const y = Math.random() * (this.game.screen.height-37);
 
+    const scale = Math.random() * 2 + 0.5;
+
+    const degrees = Math.random() * 360;
+
+    this.bunny.rotation.degrees = degrees;
+
+    this.bunny.size.setScale(scale);
     this.bunny.position.set({x, y});
   }
 }

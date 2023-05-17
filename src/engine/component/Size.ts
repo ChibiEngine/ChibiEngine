@@ -8,6 +8,7 @@ import ISize from "../geom/size/ISize";
 export default class Size extends TransitionableComponent<"size", ISize, AbstractGameObject> implements Sizeable {
   readonly componentName = "size";
   public _pixi: PIXI.Container;
+  private originalSize: ISize;
 
   // public https://github.com/microsoft/TypeScript/issues/49709
   public target: AbstractGameObject;
@@ -22,6 +23,7 @@ export default class Size extends TransitionableComponent<"size", ISize, Abstrac
     this._pixi = target.pixi;
 
     target.onLoaded(() => {
+      this.originalSize = { width: this._pixi.width, height: this._pixi.height };
       this.set({ width: this._pixi.width, height: this._pixi.height });
     });
 
@@ -51,6 +53,10 @@ export default class Size extends TransitionableComponent<"size", ISize, Abstrac
   public set height(height: number) {
     this.value.height = height;
     this.onChange.trigger(this);
+  }
+
+  public setScale(scale: number) {
+    this.set({ width: this.originalSize.width * scale, height: this.originalSize.height * scale });
   }
 
   public set(width: number|ISize, height: number = 0) {
