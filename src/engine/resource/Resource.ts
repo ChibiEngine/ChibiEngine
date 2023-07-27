@@ -1,6 +1,6 @@
 import Event from "../event/Event";
 import Loadable from "../loader/Loadable";
-import Logger from "../../Logger";
+import Logger from "../utils/Logger";
 import debug = Logger.debug;
 
 /**
