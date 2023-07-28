@@ -21,7 +21,7 @@ namespace Keyboard {
         _downKeys.delete(e.key);
         onKeyUp.trigger(e);
         onKeyPressed.trigger(e);
-        _downKeysTime.set(e.key, performance.now()-1);
+        // _downKeysTime.set(e.key, performance.now()-1);
     });
 
     export function downKeys() {
