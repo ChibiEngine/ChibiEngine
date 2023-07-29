@@ -8,6 +8,7 @@
     "sourceMap": true,
     "noEmit": false,
     "outDir": "./dist",
+    "declaration": true,
     "allowJs": true,
     "lib": [
       "es6",
