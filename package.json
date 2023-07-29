@@ -1,6 +1,6 @@
 {
   "name": "chibiengine",
-  "version": "0.0.0-dev",
+  "version": "0.1.0-dev",
   "description": "Modern Web Game Engine based on PixiJS",
   "author": "Feavy",
   "repository": {
@@ -23,5 +23,13 @@
   "resolutions": {
     "@babel/preset-env": "7.13.8"
   },
-  "keywords": ["game", "engine", "2d", "pixijs", "typescript", "extensible", "entity-component-system"]
+  "keywords": [
+    "game",
+    "engine",
+    "2d",
+    "pixijs",
+    "typescript",
+    "extensible",
+    "entity-component-system"
+  ]
 }
