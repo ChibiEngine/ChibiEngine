@@ -1,5 +1,7 @@
 # Chibi Engine (WIP)
 
+[![npm version](https://badge.fury.io/js/chibiengine.svg)](https://badge.fury.io/js/chibiengine)
+
 The goal is to create a 2D Web game engine to simplify game development.
 
 It acts as a wrapper on top of the rendering engine [PixiJS](https://github.com/pixijs/pixijs).
