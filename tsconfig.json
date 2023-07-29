@@ -3,10 +3,11 @@
     "strict": true,
     "module": "commonjs",
     "jsx": "preserve",
-    "target": "es6",
+    "target": "es2015",
     "esModuleInterop": true,
     "sourceMap": true,
-    "noEmit": true,
+    "noEmit": false,
+    "outDir": "./dist",
     "allowJs": true,
     "lib": [
       "es6",

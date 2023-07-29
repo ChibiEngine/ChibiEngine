@@ -1,4 +1,4 @@
-import Position from "../../../engine/component/Position";
+import Position from "../../../src/component/Position";
 
 test('Position interpolation 0.5 between (0;0) and (100;100) should be (50;50)', () => {
   const position = new Position(0, 0);
