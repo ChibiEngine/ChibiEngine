@@ -5,6 +5,7 @@ import Event from "../event/Event";
 import {VariableUpdatable} from "../gameobjects/Updatable";
 
 export default abstract class TransitionableComponent<Name extends string, T, Target extends AbstractGameObject = GameObject> extends Component<Name, Target> implements VariableUpdatable {
+  public dontAddToUpdateList = true;
   protected currentDt: number = 0;
 
   protected lastTime: number;

@@ -3,7 +3,7 @@ import Component, {AbstractComponent} from "../component/Component";
 import Loadable from "../loader/Loadable";
 
 import type Scene from "../game/Scene";
-import {isUpdatable} from "./Updatable";
+import Updatable, {isUpdatable} from "./Updatable";
 import assignComponent from "./operations/assignComponent";
 import {ComponentProperties} from "../component/types/ComponentProperty";
 import Mixin, {ClassArrayType, ClassArrayTypeOmit, Mixed} from "../mixin/Mixin";
@@ -14,8 +14,11 @@ import {Class, ComponentClass, UnionToIntersection} from "../utils/type_utils";
 export default abstract class AbstractGameObject extends Loadable {
   type = "gameobject";
   protected components: Component<string, any>[] = [];
+  protected updatableComponentsToAdd: (Component<string, any> & Updatable)[] = [];
 
   protected created = false;
+
+  private _scene: Scene;
 
   public constructor() {
     super();
@@ -23,19 +26,33 @@ export default abstract class AbstractGameObject extends Loadable {
 
   //////////////////////
 
-  public abstract get scene(): Scene;
+  public get scene() {
+    return this._scene;
+  }
+
+  public set scene(scene: Scene) {
+    this._scene = scene;
+    for(const component of this.updatableComponentsToAdd) {
+      this._scene.addUpdatable(component);
+    }
+    this.updatableComponentsToAdd.length = 0;
+  }
 
   //// COMPONENTS ////
 
-  public addComponent<C extends Component<string, this>>(component: C, assign: boolean = true) {
+  public addComponent<C extends Component<string, this>>(component: C) {
     this.components.push(component);
     if(this.created) {
       component.apply(this);
     }
-    if (isUpdatable(component) && this.scene?.initialized) {
-      this.scene.addUpdatable(component);
+    if (isUpdatable(component) && !component.dontAddToUpdateList) {
+      if(this.scene?.initialized) {
+        this.scene.addUpdatable(component);
+      } else {
+        this.updatableComponentsToAdd.push(component);
+      }
     }
-    return assign && assignComponent(this, component);
+    return assignComponent(this, component);
   }
 
   public removeComponent(component: Component<string, this>) {

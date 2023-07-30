@@ -1,4 +1,5 @@
 export interface FixedUpdatable {
+    dontAddToUpdateList?: boolean;
     lastUpdateTime?: number;
 
     update(): void;
@@ -11,6 +12,7 @@ export interface FixedUpdatable {
 }
 
 export interface VariableUpdatable {
+    dontAddToUpdateList?: boolean;
     variableUpdate(dt: number): void;
 }
 

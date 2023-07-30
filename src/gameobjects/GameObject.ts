@@ -1,9 +1,8 @@
 import * as PIXI from "pixi.js";
 
 import type Container from "./Container";
-import type Scene from "../game/Scene";
 import Action from "../tween/Action";
-import {isUpdatable} from "./Updatable";
+import Updatable, {isUpdatable} from "./Updatable";
 import {Class, ComponentClass, UnionToIntersection} from "../utils/type_utils";
 import AbstractGameObject from "./AbstractGameObject";
 import Position from "../component/Position";
@@ -44,7 +43,7 @@ export default abstract class GameObject extends AbstractGameObject.With(Positio
     await super.create();
     const scene = this.scene;
     if (isUpdatable(this)) {
-      scene.addUpdatable(this);
+      scene.addUpdatable(this as Updatable);
     }
     this.created = true;
     // Init components
@@ -76,10 +75,6 @@ export default abstract class GameObject extends AbstractGameObject.With(Positio
 
   public get parent(): Container {
     return this._parent;
-  }
-
-  public get scene(): Scene {
-    return this.parent && this.parent.scene;
   }
 
   public getParent<T extends GameObject>(type: Class<T>): T {

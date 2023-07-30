@@ -1,6 +1,7 @@
 import * as PIXI from "pixi.js";
 import GameObject from "./GameObject";
 import Position from "../component/Position";
+import type Scene from "../game/Scene";
 
 /**
  * Noeud simple au sens conteneur PIXI : possède des enfants
@@ -24,14 +25,22 @@ export default class Container extends GameObject {
   protected async _create(): Promise<void> {
   }
 
+  public set scene(scene: Scene) {
+    super.scene = scene;
+    for (const child of this.children) {
+      child.scene = scene;
+    }
+  }
+
   /**
    * Ajoute un enfant à ce noeud et charge ses dépendances si nécessaire (just-in-time loading)
    * This method is asynchronous and resolves when the dependency is loaded.
    * @param child
    */
-  public add<T extends GameObject>(child: T): T & PromiseLike<T>{
+  public add<T extends GameObject>(child: T): T & PromiseLike<T> {
     if (child._parent) throw new Error("Child already has a parent");
     child._parent = this;
+    if(this.scene) child.scene = this.scene;
 
     this.children.push(child);
     this.load(child);
