@@ -1,7 +1,7 @@
 import Camera from "../camera/Camera";
 import Container from "../gameobjects/Container";
 import Game from "./Game";
-import Updatable, {FixedUpdatable, isFixedUpdatable, isUpdatable, VariableUpdatable} from "../gameobjects/Updatable";
+import Updatable, {FixedUpdatable, isFixedUpdatable, isUpdatable, isVariableUpdatable, VariableUpdatable} from "../gameobjects/Updatable";
 
 export default abstract class Scene extends Container {
   public game: Game;
@@ -51,7 +51,8 @@ export default abstract class Scene extends Container {
       }
       param.lastUpdateTime = performance.now();
       this.fixedUpdatableSet.add(param);
-    } else {
+    }
+    if(isVariableUpdatable(param)) {
       this.variableUpdatableSet.add(param);
     }
   }
