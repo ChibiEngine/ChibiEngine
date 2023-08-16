@@ -1,18 +1,19 @@
+import { Texture, Rectangle } from "@pixi/core";
+
 import Resource from "./Resource";
-import * as PIXI from "pixi.js";
 import Blob from "./Blob";
 import {DomImage} from "../utils/dom";
 
 export default class Image extends Resource {
-  private _texture: PIXI.Texture;
+  private _texture: Texture;
   private readonly baseImage: Image;
-  private readonly frame: PIXI.Rectangle;
+  private readonly frame: Rectangle;
 
   public constructor(path: string, x: number = -1, y: number = -1, width: number = -1, height: number = -1) {
     super(path, x, y, width, height);
     if(x !== -1 && y !== -1 && width !== -1 && height !== -1) {
       this.baseImage = new Image(path);
-      this.frame = new PIXI.Rectangle(x, y, width, height);
+      this.frame = new Rectangle(x, y, width, height);
     }
   }
 
@@ -20,14 +21,14 @@ export default class Image extends Resource {
     return new Image(this.path, x, y, width, height);
   }
 
-  public get pixi(): PIXI.Texture {
+  public get pixi(): Texture {
     return this._texture;
   }
 
   protected async _create(): Promise<void> {
     if(this.baseImage) {
       await this.load(this.baseImage);
-      this._texture = new PIXI.Texture(this.baseImage.pixi.baseTexture, this.frame);
+      this._texture = new Texture(this.baseImage.pixi.baseTexture, this.frame);
       return;
     }
 
@@ -39,7 +40,7 @@ export default class Image extends Resource {
 
     return new Promise((resolve, reject) => {
       image.onload = () => {
-        this._texture = PIXI.Texture.from(image);
+        this._texture = Texture.from(image);
         if(this.frame) {
           this._texture.frame = this.frame;
         }

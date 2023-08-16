@@ -1,4 +1,6 @@
-import * as PIXI from "pixi.js";
+import { Application } from "@pixi/app";
+import { Container as PixiContainer } from "@pixi/display";
+
 import Scene from "./Scene";
 import Container from "../gameobjects/Container";
 import Rectangle from "../geom/rect/Rectangle";
@@ -12,9 +14,9 @@ interface GameConfig {
 }
 
 export default class Game extends Container {
-  public readonly pixi: PIXI.Container = null;
+  public readonly pixi: PixiContainer = null;
 
-  private readonly app: PIXI.Application;
+  private readonly app: Application;
   private readonly sceneStack: Scene[] = [];
 
   private readonly gameLoop: GameLoop = new GameLoop();
@@ -23,8 +25,8 @@ export default class Game extends Container {
 
   public constructor(config: GameConfig) {
     super();
-    this.app = new PIXI.Application(config);
-    document.body.appendChild(this.app.view);
+    this.app = new Application(config);
+    document.body.appendChild(this.app.view as HTMLCanvasElement);
     this.pixi = this.app.stage;
     this.gameLoop.start(this.updateScenes.bind(this));
     this.screen = new Rectangle(this.app.screen.x, this.app.screen.y, this.app.screen.width, this.app.screen.height);

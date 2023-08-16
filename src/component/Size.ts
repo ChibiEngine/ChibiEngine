@@ -1,5 +1,6 @@
+import { Container} from "@pixi/display";
+
 import Event from "../event/Event";
-import * as PIXI from "pixi.js";
 import AbstractGameObject from "../gameobjects/AbstractGameObject";
 import Sizeable from "../geom/size/Sizeable";
 import TransitionableComponent from "./TransitionableComponent";
@@ -7,7 +8,7 @@ import ISize from "../geom/size/ISize";
 
 export default class Size extends TransitionableComponent<"size", ISize, AbstractGameObject> implements Sizeable {
   readonly componentName = "size";
-  public _pixi: PIXI.Container;
+  public _pixi: Container;
   private originalSize: ISize;
 
   // public https://github.com/microsoft/TypeScript/issues/49709

@@ -1,4 +1,4 @@
-import * as PIXI from "pixi.js";
+import { Container as PixiContainer } from "@pixi/display";
 
 import type Container from "./Container";
 import Action from "../tween/Action";
@@ -28,7 +28,7 @@ import Rotation from "../component/Rotation";
  */
 export default abstract class GameObject extends AbstractGameObject.With(Position, Size, Rotation) {
   public _parent: Container;
-  public abstract pixi: PIXI.Container;
+  public abstract pixi: PixiContainer;
 
   protected created = false;
 

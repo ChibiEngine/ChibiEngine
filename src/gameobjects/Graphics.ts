@@ -1,5 +1,6 @@
+import { Graphics as PixiGraphics } from "@pixi/graphics";
+
 import GameObject from "./GameObject";
-import { Graphics as PixiGraphics } from "pixi.js";
 import Position from "../component/Position";
 import Rectangle from "../geom/rect/Rectangle";
 

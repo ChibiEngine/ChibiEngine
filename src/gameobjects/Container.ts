@@ -1,4 +1,5 @@
-import * as PIXI from "pixi.js";
+import { Container as PixiContainer } from "@pixi/display";
+
 import GameObject from "./GameObject";
 import Position from "../component/Position";
 import type Scene from "../game/Scene";
@@ -9,12 +10,12 @@ import type Scene from "../game/Scene";
  */
 // TODO : renommer en Container?
 export default class Container extends GameObject {
-  public readonly pixi: PIXI.Container;
+  public readonly pixi: PixiContainer;
   private children: GameObject[] = [];
 
   public constructor(position: Position = Position.zero()) {
     super(position);
-    this.pixi = new PIXI.Container();
+    this.pixi = new PixiContainer();
     this.setPosition(position);
   }
 

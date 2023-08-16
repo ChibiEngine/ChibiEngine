@@ -1,5 +1,6 @@
+import { Container } from "@pixi/display";
+
 import GameObject from "./GameObject";
-import { Container } from "pixi.js";
 
 class PixiObjectImpl<T extends Container> extends GameObject {
   public pixi: T;

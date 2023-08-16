@@ -1,5 +1,6 @@
+import { Container } from "@pixi/display";
+
 import Event from "../event/Event";
-import * as PIXI from "pixi.js";
 import AbstractGameObject from "../gameobjects/AbstractGameObject";
 import TransitionableComponent from "./TransitionableComponent";
 import IRotation from "../geom/rotation/IRotation";
@@ -8,7 +9,7 @@ import Rotationable from "../geom/rotation/Rotationable";
 
 export default class Rotation extends TransitionableComponent<"rotation", IRotation, AbstractGameObject> implements Rotationable {
   readonly componentName = "rotation";
-  public _pixi: PIXI.Container;
+  public _pixi: Container;
 
   public target: AbstractGameObject;
 

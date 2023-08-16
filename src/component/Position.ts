@@ -1,5 +1,6 @@
+import { Container } from "@pixi/display";
+
 import Event from "../event/Event";
-import * as PIXI from "pixi.js";
 import AbstractGameObject from "../gameobjects/AbstractGameObject";
 import Positionable from "../geom/position/Positionable";
 import TransitionableComponent from "./TransitionableComponent";
@@ -10,7 +11,7 @@ export default class Position extends TransitionableComponent<"position", IPosit
 
   // public https://github.com/microsoft/TypeScript/issues/49709
   public target: AbstractGameObject;
-  public _pixi: PIXI.Container;
+  public _pixi: Container;
 
   public constructor(x: number, y: number) {
     super({ x, y});
