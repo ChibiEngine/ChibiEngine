@@ -3,6 +3,8 @@ class EventImpl<T> extends Function {
 
   private listeners: EventListener<T>[] = [];
 
+  private lastValue: T = undefined;
+
   constructor() {
     super();
     return new Proxy(this, {
@@ -10,7 +12,7 @@ class EventImpl<T> extends Function {
         const callback = args[0];
         // An empty call is treated as a read
         if (!callback || typeof callback !== "function") {
-          throw new Error("Event must be called with a callback callback parameter.");
+          throw new Error("Event must be called with a callback parameter.");
         }
 
         target.subscribe(callback);
@@ -18,19 +20,35 @@ class EventImpl<T> extends Function {
     })
   }
 
-  public subscribe(callback: (value: T) => void): EventListener<T> {
+  /**
+   *
+   * @param callback
+   * @param instantTrigger If true and the event has already been triggered, the callback will be called immediately with the last value.
+   */
+  public subscribe(callback: (value: T) => void, instantTrigger: boolean = false): EventListener<T> {
     const listener = new EventListener(this, callback);
     this.listeners.push(listener);
+    if(instantTrigger && this.lastValue !== undefined) {
+      callback(this.lastValue);
+    }
     return listener;
   }
 
-  public subscribeOnce(callback: (value: T) => void) {
+  /**
+   *
+   * @param callback
+   * @param instantTrigger If true and the event has already been triggered, the callback will be called immediately with the last value.
+   */
+  public subscribeOnce(callback: (value: T) => void, instantTrigger: boolean = false) {
     const once = (value: T) => {
       this.unsubscribe(listener);
       callback(value);
     };
     const listener = new EventListener<T>(this, once);
     this.listeners.push(listener);
+    if(instantTrigger && this.lastValue !== undefined) {
+      callback(this.lastValue);
+    }
     return listener;
   }
 
@@ -46,6 +64,11 @@ class EventImpl<T> extends Function {
     for (const listener of listeners) {
       listener.callback(value);
     }
+    this.lastValue = value;
+  }
+
+  public forget() {
+    this.lastValue = undefined;
   }
 }
 
