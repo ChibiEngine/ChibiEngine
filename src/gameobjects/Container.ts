@@ -43,14 +43,24 @@ export default class Container extends GameObject {
     child._parent = this;
     if(this.scene) child.scene = this.scene;
 
+    let index = this.children.length;
+
     this.children.push(child);
     this.load(child);
 
     if (child.pixi) {
-      this.pixi.addChild(child.pixi);
+      if(index <= this.pixi.children.length) {
+        this.pixi.addChildAt(child.pixi, index);
+      } else {
+        this.pixi.addChild(child.pixi);
+      }
     } else {
       child.onLoaded.subscribeOnce(node => {
-        this.pixi.addChild(node.pixi)
+        if(index <= this.pixi.children.length) {
+          this.pixi.addChildAt(node.pixi, index);
+        } else {
+          this.pixi.addChild(node.pixi);
+        }
       });
     }
 
