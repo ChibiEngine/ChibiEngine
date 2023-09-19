@@ -13,6 +13,8 @@ export default class Size extends TransitionableComponent<"size", ISize, Abstrac
 
   // public https://github.com/microsoft/TypeScript/issues/49709
   public target: AbstractGameObject;
+  private scaleX: number = 1;
+  private scaleY: number = 1;
 
   public constructor(width: number = 0, height: number = 0) {
     super({ width: width, height: height});
@@ -25,13 +27,13 @@ export default class Size extends TransitionableComponent<"size", ISize, Abstrac
 
     target.onLoaded(() => {
       this.originalSize = { width: this._pixi.width, height: this._pixi.height };
-      this.set({ width: this._pixi.width, height: this._pixi.height });
+      this.set({ width: this._pixi.width*this.scaleX, height: this._pixi.height*this.scaleY });
     });
 
     this.onChange.subscribe((size) => {
       // TODO : disable this listener when transition is set?
       this.assign(size);
-    });
+    }, true);
 
     if(this.updateDt) {
       this.enableTransition();
@@ -56,8 +58,17 @@ export default class Size extends TransitionableComponent<"size", ISize, Abstrac
     this.onChange.trigger(this);
   }
 
-  public setScale(scale: number) {
-    this.set({ width: this.originalSize.width * scale, height: this.originalSize.height * scale });
+  public setScale(scaleX: number, scaleY: number = scaleX) {
+    this.scaleX = scaleX;
+    this.scaleY = scaleY;
+    if(this.originalSize) {
+      this.set({ width: this.originalSize.width * scaleX, height: this.originalSize.height * scaleY });
+    }
+  }
+
+  public withScale(scaleX: number, scaleY: number = scaleX) {
+    this.setScale(scaleX, scaleY);
+    return this;
   }
 
   public set(width: number|ISize, height: number = 0) {

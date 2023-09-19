@@ -21,11 +21,16 @@ export default class Rotation extends TransitionableComponent<"rotation", IRotat
     this.target = target;
     // @ts-ignore TODO: fix this
     this._pixi = target.pixi;
+
+    target.onLoaded(() => {
+      this.set({radians: this.value.radians});
+    });
+
     this.onChange.subscribe((rotation) => {
       // TODO : disable this listener when transition is set?
       this.assign(rotation);
-    });
-    this.onChange.trigger(this);
+    }, true);
+
     if(this.updateDt) {
       this.enableTransition();
     }
@@ -37,7 +42,6 @@ export default class Rotation extends TransitionableComponent<"rotation", IRotat
 
   public set radians(radians: number) {
     this.set({radians: radians})
-    this.onChange.trigger(this);
   }
 
   public get degrees() {
@@ -45,8 +49,12 @@ export default class Rotation extends TransitionableComponent<"rotation", IRotat
   }
 
   public set degrees(degrees: number) {
-    this.set({radians: degreesToRadians(degrees)})
-    this.onChange.trigger(this);
+    this.set({radians: degreesToRadians(degrees)});
+  }
+
+  public withRotation(rotation: IRotation) {
+    this.radians = rotation.radians; // TODO : why does it not work with this.set({radians: rotation.radians}) ?
+    return this;
   }
 
   public static ofRadians(radians: number) {
