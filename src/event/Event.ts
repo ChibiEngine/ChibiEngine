@@ -10,12 +10,16 @@ class EventImpl<T> extends Function {
     return new Proxy(this, {
       apply (target, thisArg, args) {
         const callback = args[0];
+        const instantTrigger = args[1] || false;
         // An empty call is treated as a read
         if (!callback || typeof callback !== "function") {
           throw new Error("Event must be called with a callback parameter.");
         }
 
         target.subscribe(callback);
+        if(instantTrigger) {
+          callback(target.lastValue);
+        }
       }
     })
   }
@@ -23,12 +27,12 @@ class EventImpl<T> extends Function {
   /**
    *
    * @param callback
-   * @param instantTrigger If true and the event has already been triggered, the callback will be called immediately with the last value.
+   * @param instantTrigger If true the callback will be called immediately with the last known value (or undefined).
    */
   public subscribe(callback: (value: T) => void, instantTrigger: boolean = false): EventListener<T> {
     const listener = new EventListener(this, callback);
     this.listeners.push(listener);
-    if(instantTrigger && this.lastValue !== undefined) {
+    if(instantTrigger) {
       callback(this.lastValue);
     }
     return listener;
@@ -37,8 +41,7 @@ class EventImpl<T> extends Function {
   /**
    *
    * @param callback
-   * @param instantTrigger If true and the event has already been triggered, the callback will be called immediately with the last value.
-   */
+   * @param instantTrigger If true the callback will be called immediately with the last known value (or undefined).   */
   public subscribeOnce(callback: (value: T) => void, instantTrigger: boolean = false) {
     const once = (value: T) => {
       this.unsubscribe(listener);
@@ -46,7 +49,7 @@ class EventImpl<T> extends Function {
     };
     const listener = new EventListener<T>(this, once);
     this.listeners.push(listener);
-    if(instantTrigger && this.lastValue !== undefined) {
+    if(instantTrigger) {
       callback(this.lastValue);
     }
     return listener;
@@ -72,7 +75,11 @@ class EventImpl<T> extends Function {
   }
 }
 
-declare type Event<T> = EventImpl<T> & ((callback: (val: T) => void) => EventListener<T>);
+/**
+ * @param callback
+ * @param instantTrigger If true and the event has already been triggered, the callback will be called immediately with the last value.
+ */
+declare type Event<T> = EventImpl<T> & ((callback: (val: T) => void, instantTrigger?: boolean) => EventListener<T>);
 
 const Event: new <T>() => Event<T> = EventImpl as any;
 export default Event;

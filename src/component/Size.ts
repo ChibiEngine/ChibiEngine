@@ -26,13 +26,13 @@ export default class Size extends TransitionableComponent<"size", ISize, Abstrac
     this._pixi = target.pixi;
 
     target.onLoaded(() => {
-      this.originalSize = { width: this._pixi.width, height: this._pixi.height };
-      this.set({ width: this._pixi.width*this.scaleX, height: this._pixi.height*this.scaleY });
+      this.originalSize = { width: this._pixi.width/this._pixi.scale.x, height: this._pixi.height/this._pixi.scale.y };
+      this.set({ width: this.originalSize.width*this.scaleX, height: this.originalSize.height*this.scaleY });
     });
 
     this.onChange.subscribe((size) => {
       // TODO : disable this listener when transition is set?
-      this.assign(size);
+      size && this.assign(size);
     }, true);
 
     if(this.updateDt) {

@@ -1,4 +1,4 @@
-import { Container } from "pixi.js";
+import {Container} from "pixi.js";
 
 import Event from "../event/Event";
 import AbstractGameObject from "../gameobjects/AbstractGameObject";
@@ -14,7 +14,7 @@ export default class Rotation extends TransitionableComponent<"rotation", IRotat
   public target: AbstractGameObject;
 
   public constructor(radians: number = 0) {
-    super({ radians: radians });
+    super({radians: radians});
   }
 
   public apply(target: AbstractGameObject): void {
@@ -28,10 +28,10 @@ export default class Rotation extends TransitionableComponent<"rotation", IRotat
 
     this.onChange.subscribe((rotation) => {
       // TODO : disable this listener when transition is set?
-      this.assign(rotation);
+      rotation && this.assign(rotation);
     }, true);
 
-    if(this.updateDt) {
+    if (this.updateDt) {
       this.enableTransition();
     }
   }
