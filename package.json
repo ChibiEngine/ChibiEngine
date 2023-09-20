@@ -12,12 +12,8 @@
     "test": "jest"
   },
   "dependencies": {
-    "@pixi/app": "^7.2.4",
-    "@pixi/core": "^7.2.4",
-    "@pixi/display": "^7.2.4",
-    "@pixi/graphics": "^7.2.4",
-    "@pixi/sprite": "^7.2.4",
-    "@types/css-font-loading-module": "^0.0.8"
+    "@types/css-font-loading-module": "^0.0.8",
+    "pixi.js": "~7.3.0"
   },
   "devDependencies": {
     "@types/jest": "^29.5.0",

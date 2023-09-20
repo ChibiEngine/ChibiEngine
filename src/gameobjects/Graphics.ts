@@ -1,4 +1,4 @@
-import { Graphics as PixiGraphics } from "@pixi/graphics";
+import { Graphics as PixiGraphics } from "pixi.js";
 
 import GameObject from "./GameObject";
 import Position from "../component/Position";

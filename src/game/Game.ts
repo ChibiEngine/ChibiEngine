@@ -1,5 +1,4 @@
-import { Application } from "@pixi/app";
-import { Container as PixiContainer } from "@pixi/display";
+import { Application, Container as PixiContainer } from "pixi.js";
 
 import Scene from "./Scene";
 import Container from "../gameobjects/Container";

@@ -1,4 +1,4 @@
-import {Texture, Rectangle, SCALE_MODES} from "@pixi/core";
+import { Texture, Rectangle, SCALE_MODES } from "pixi.js";
 
 import Resource from "./Resource";
 import Blob from "./Blob";

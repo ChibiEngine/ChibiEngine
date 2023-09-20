@@ -1,4 +1,4 @@
-import { Sprite as PixiSprite } from "@pixi/sprite";
+import { Sprite as PixiSprite } from "pixi.js";
 
 import Image from "../resource/Image";
 import GameObject from "./GameObject";

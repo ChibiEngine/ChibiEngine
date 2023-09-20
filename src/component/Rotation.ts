@@ -1,4 +1,4 @@
-import { Container } from "@pixi/display";
+import { Container } from "pixi.js";
 
 import Event from "../event/Event";
 import AbstractGameObject from "../gameobjects/AbstractGameObject";
