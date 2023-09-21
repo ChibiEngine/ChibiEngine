@@ -24,7 +24,7 @@ export default class Position extends TransitionableComponent<"position", IPosit
     this.onChange.subscribe((position) => {
       // TODO : disable this listener when transition is set?
       this.assign(position);
-    }).triggerNowIfValue();
+    }).triggerNowIfValueExists();
 
     if(this.updateDt) {
       this.enableTransition();

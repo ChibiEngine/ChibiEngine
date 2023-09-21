@@ -29,7 +29,7 @@ export default class Rotation extends TransitionableComponent<"rotation", IRotat
     this.onChange.subscribe((rotation) => {
       // TODO : disable this listener when transition is set?
       this.assign(rotation);
-    }).triggerNowIfValue();
+    }).triggerNowIfValueExists();
 
     if (this.updateDt) {
       this.enableTransition();

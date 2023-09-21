@@ -102,7 +102,7 @@ export class EventListener<T> {
   /**
    * Triggers the callback if the event has already been triggered.
    */
-  public triggerNowIfValue() {
+  public triggerNowIfValueExists() {
     if(this.event.lastValue !== undefined) {
       this.callback(this.event.lastValue);
     }

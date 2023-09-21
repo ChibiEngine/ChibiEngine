@@ -34,7 +34,7 @@ export default class Size extends TransitionableComponent<"size", ISize, Abstrac
     this.onChange.subscribe((size) => {
       // TODO : disable this listener when transition is set?
       this.assign(size);
-    }).triggerNowIfValue();
+    }).triggerNowIfValueExists();
 
     if(this.updateDt) {
       this.enableTransition();
