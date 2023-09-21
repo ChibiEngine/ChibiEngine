@@ -5,8 +5,13 @@ class EventImpl<T> extends Function {
 
   lastValue: T = undefined;
 
-  constructor() {
+  public readonly onAddListener: Event<EventListener<T>>;
+
+  constructor(onAddListener: boolean = true) {
     super();
+    if(onAddListener) {
+      this.onAddListener = new Event(false);
+    }
     return new Proxy(this, {
       apply (target, thisArg, args) {
         const callback = args[0];
@@ -16,10 +21,7 @@ class EventImpl<T> extends Function {
           throw new Error("Event must be called with a callback parameter.");
         }
 
-        target.subscribe(callback);
-        if(instantTrigger) {
-          callback(target.lastValue);
-        }
+        return target.subscribe(callback, instantTrigger);
       }
     })
   }
@@ -35,6 +37,7 @@ class EventImpl<T> extends Function {
     if(instantTrigger) {
       callback(this.lastValue);
     }
+    this.onAddListener && this.onAddListener.trigger(listener);
     return listener;
   }
 
@@ -52,6 +55,7 @@ class EventImpl<T> extends Function {
     if(instantTrigger) {
       callback(this.lastValue);
     }
+    this.onAddListener && this.onAddListener.trigger(listener);
     return listener;
   }
 
@@ -81,7 +85,7 @@ class EventImpl<T> extends Function {
  */
 declare type Event<T> = EventImpl<T> & ((callback: (val: T) => void, instantTrigger?: boolean) => EventListener<T>);
 
-const Event: new <T>() => Event<T> = EventImpl as any;
+const Event: new <T>(onAddListener?: boolean) => Event<T> = EventImpl as any;
 export default Event;
 
 export class EventListener<T> {
