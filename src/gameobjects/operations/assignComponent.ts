@@ -5,7 +5,7 @@ import AbstractGameObject from "../AbstractGameObject";
 
 const ignore = ["constructor", "apply", "update", "variableUpdate", "componentName"];
 
-export default function assignComponent<O extends AbstractGameObject, C extends Component<string, O>>(target: O, component: C): O & Omit<C, "componentName"> & ComponentProperty<C> {
+export default function assignComponent<O extends AbstractGameObject, C extends Component<string, O>>(target: O, component: C): Omit<O & C & ComponentProperty<C>, "componentName"> {
   for(const key of getMethods(component)) {
     if(ignore.includes(key as string) || key in target) continue;
 
