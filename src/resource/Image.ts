@@ -13,7 +13,7 @@ export interface ImageOptions {
 }
 
 export default class Image extends Resource {
-  private _texture: Texture;
+  public pixi: Texture;
   private readonly baseImage: Image;
   private readonly frame: Rectangle;
   private readonly pixelScale: boolean;
@@ -31,16 +31,12 @@ export default class Image extends Resource {
     return new Image(this.path, {x, y, width, height, pixelScale: this.pixelScale});
   }
 
-  public get pixi(): Texture {
-    return this._texture;
-  }
-
   protected async _create(): Promise<void> {
     if(this.baseImage) {
       await this.load(this.baseImage);
-      this._texture = new Texture(this.baseImage.pixi.baseTexture, this.frame);
+      this.pixi = new Texture(this.baseImage.pixi.baseTexture, this.frame);
       if(this.pixelScale) {
-        this._texture.baseTexture.scaleMode = SCALE_MODES.NEAREST;
+        this.pixi.baseTexture.scaleMode = SCALE_MODES.NEAREST;
       }
       return;
     }
@@ -53,12 +49,12 @@ export default class Image extends Resource {
 
     return new Promise((resolve, reject) => {
       image.onload = () => {
-        this._texture = Texture.from(image);
+        this.pixi = Texture.from(image);
         if(this.pixelScale) {
-          this._texture.baseTexture.scaleMode = SCALE_MODES.NEAREST;
+          this.pixi.baseTexture.scaleMode = SCALE_MODES.NEAREST;
         }
         if(this.frame) {
-          this._texture.frame = this.frame;
+          this.pixi.frame = this.frame;
         }
         resolve();
       };
@@ -67,6 +63,6 @@ export default class Image extends Resource {
   }
 
   protected async _destroy() {
-    this._texture.destroy();
+    this.pixi.destroy();
   }
 }
