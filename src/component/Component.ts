@@ -4,6 +4,20 @@ import AbstractGameObject from "../gameobjects/AbstractGameObject";
 export abstract class AbstractComponent<Name extends string, in T extends AbstractGameObject = AbstractGameObject> {
     public abstract readonly componentName: Name;
 
+    /**
+     * To override.
+     * Called when the component is added to a gameobject.
+     * @param target
+     */
+    public setTarget(target: T): void {
+
+    }
+
+    /**
+     * To override.
+     * Called when the gameobject is loaded and ready to apply the component.
+     * @param target
+     */
     public apply(target: T): void {
 
     }
