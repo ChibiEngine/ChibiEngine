@@ -65,8 +65,7 @@ export default abstract class GameObject extends AbstractGameObject.With(Positio
   //// ACTIONS ////
 
   public play(action: Action<this>) {
-    //@ts-ignore
-    this.addComponent(action, false);
+    this.addComponent(action);
   }
 
   //////////////////////

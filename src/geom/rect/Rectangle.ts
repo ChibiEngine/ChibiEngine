@@ -43,4 +43,20 @@ export default class Rectangle implements Sizeable, Positionable {
     public get height() {
         return this.size.height;
     }
+
+    public get left() {
+        return this.x;
+    }
+
+    public get right() {
+        return this.x + this.width;
+    }
+
+    public get top() {
+        return this.y;
+    }
+
+    public get bottom() {
+        return this.y + this.height;
+    }
 };

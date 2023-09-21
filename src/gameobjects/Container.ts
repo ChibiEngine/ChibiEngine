@@ -33,6 +33,10 @@ export default class Container extends GameObject {
     }
   }
 
+  public get scene(): Scene {
+    return super.scene;
+  }
+
   /**
    * Ajoute un enfant à ce noeud et charge ses dépendances si nécessaire (just-in-time loading)
    * This method is asynchronous and resolves when the dependency is loaded.
