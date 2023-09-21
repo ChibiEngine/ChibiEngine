@@ -24,10 +24,10 @@ It acts as a wrapper on top of the rendering engine [PixiJS](https://github.com/
 - [ ] Scenes ⚒️
   - [x] Basic implementation
   - [ ] Transitions between scenes
-- [ ] Automated position interpolation ⚒️
+- [x] Automated props interpolation (position, rotation, size)
 - [ ] Input ⚒️
-  - [ ] Keyboard
-  - [ ] Mouse
+  - [x] Keyboard
+  - [ ] Mouse ⚒️
   - [ ] Gamepad
   - [ ] Touch
 - [ ] Implement missing [transformation attributes](https://pixijs.download/dev/docs/PIXI.Container.html)..
@@ -36,10 +36,10 @@ It acts as a wrapper on top of the rendering engine [PixiJS](https://github.com/
 - [x] Tweens and sequences (inspired by [Cocos2d-x](https://docs.cocos.com/cocos2d-x/manual/en/actions/getting_started.html))
   - [x] Easing functions ([penner](https://github.com/bcherny/penner) / [phaser](https://github.com/photonstorm/phaser/tree/master/src/math/easing))
   - [ ] Implement missing actions
-- [ ] Camera (inspired by [pixi-viewport](https://github.com/davidfig/pixi-viewport))
+- [ ] Camera (inspired by [pixi-viewport](https://github.com/davidfig/pixi-viewport)) ⚒️
+  - [x] Bounds 
   - [ ] Parallax
   - [ ] Lerp
-  - [ ] Constraints
   - [ ] Effects
 - [ ] Physics engine
   - [ ] Wrapper of [planck.js](https://github.com/shakiba/planck.js/)
