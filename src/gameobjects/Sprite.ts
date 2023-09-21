@@ -17,9 +17,18 @@ export default class Sprite extends GameObject {
     this.setPosition(this.position);
   }
 
-  public async setTexture(image: Image) {
-    const image2 = await this.load(image);
-    this.pixi.texture = image2.pixi;
+  public setTexture(image: Image) {
+    this.load(image).then(img => {
+      this.pixi.texture = img.pixi;
+    });
+    return this;
+  }
+
+  public setAnchor(x: number, y: number) {
+    this.whenLoaded(() => {
+      this.pixi.anchor.set(x, y);
+    });
+    return this;
   }
 
   public async _destroy() {

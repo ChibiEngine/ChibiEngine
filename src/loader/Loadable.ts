@@ -132,6 +132,16 @@ export default abstract class Loadable {
         }
     }
 
+    public whenLoaded(callback: (loadable: this) => void) {
+        // TODO : duplicates onLoaded event?
+        // this should be handled by the event itself
+        if(this.isLoaded) {
+            callback(this);
+        } else {
+            this.onLoaded.subscribeOnce(callback, false);
+        }
+    }
+
     public get isLoaded() {
         return this._isLoaded && this.allDependenciesLoaded();
     }
