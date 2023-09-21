@@ -6,7 +6,5 @@ import {FixedUpdatable} from "../gameobjects/Updatable";
 export default abstract class Behavior<Name extends string, T extends GameObject = GameObject> extends Component<Name, T> implements FixedUpdatable {
   public abstract readonly targetType: Class<T>;
 
-  public abstract updateRate: number;
-
   abstract update(): void;
 }
