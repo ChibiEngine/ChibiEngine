@@ -3,7 +3,7 @@ class EventImpl<T> extends Function {
 
   private listeners: EventListener<T>[] = [];
 
-  private lastValue: T = undefined;
+  lastValue: T = undefined;
 
   constructor() {
     super();
@@ -42,7 +42,7 @@ class EventImpl<T> extends Function {
    *
    * @param callback
    * @param instantTrigger If true the callback will be called immediately with the last known value (or undefined).   */
-  public subscribeOnce(callback: (value: T) => void, instantTrigger: boolean = false) {
+  public subscribeOnce(callback: (value: T) => void, instantTrigger: boolean = false): EventListener<T> {
     const once = (value: T) => {
       this.unsubscribe(listener);
       callback(value);
@@ -86,6 +86,30 @@ export default Event;
 
 export class EventListener<T> {
   constructor(private readonly event: EventImpl<T>, public readonly callback: (value: any) => void) {
+  }
+
+  /**
+   * Triggers the callback with the last value.
+   */
+  public triggerNow() {
+    this.callback(this.event.lastValue);
+  }
+
+  /**
+   * Triggers the callback if the event has already been triggered.
+   */
+  public triggerNowIfValue() {
+    if(this.event.lastValue !== undefined) {
+      this.callback(this.event.lastValue);
+    }
+  }
+
+  /**
+   * Triggers the callback with the given value.
+   * @param value
+   */
+  public triggerNowWith(value: T) {
+    this.callback(value);
   }
 
   public unsubscribe() {

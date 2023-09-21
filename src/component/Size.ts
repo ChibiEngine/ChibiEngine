@@ -1,10 +1,11 @@
-import { Container} from "pixi.js";
+import {Container, Point} from "pixi.js";
 
 import Event from "../event/Event";
 import AbstractGameObject from "../gameobjects/AbstractGameObject";
 import Sizeable from "../geom/size/Sizeable";
 import TransitionableComponent from "./TransitionableComponent";
 import ISize from "../geom/size/ISize";
+import IPosition from "../geom/position/IPosition";
 
 export default class Size extends TransitionableComponent<"size", ISize, AbstractGameObject> implements Sizeable {
   readonly componentName = "size";
@@ -32,8 +33,8 @@ export default class Size extends TransitionableComponent<"size", ISize, Abstrac
 
     this.onChange.subscribe((size) => {
       // TODO : disable this listener when transition is set?
-      size && this.assign(size);
-    }, true);
+      this.assign(size);
+    }).triggerNowIfValue();
 
     if(this.updateDt) {
       this.enableTransition();
@@ -58,16 +59,16 @@ export default class Size extends TransitionableComponent<"size", ISize, Abstrac
     this.onChange.trigger(this);
   }
 
+  public get scale(): IPosition {
+    return this._pixi.scale;
+  }
+
   public setScale(scaleX: number, scaleY: number = scaleX) {
     this.scaleX = scaleX;
     this.scaleY = scaleY;
     if(this.originalSize) {
       this.set({ width: this.originalSize.width * scaleX, height: this.originalSize.height * scaleY });
     }
-  }
-
-  public withScale(scaleX: number, scaleY: number = scaleX) {
-    this.setScale(scaleX, scaleY);
     return this;
   }
 

@@ -23,9 +23,9 @@ export default class Position extends TransitionableComponent<"position", IPosit
     this._pixi = target.pixi;
     this.onChange.subscribe((position) => {
       // TODO : disable this listener when transition is set?
-      position && this.assign(position);
-    }, true);
-    this.onChange.trigger(this);
+      this.assign(position);
+    }).triggerNowIfValue();
+
     if(this.updateDt) {
       this.enableTransition();
     }
@@ -39,27 +39,12 @@ export default class Position extends TransitionableComponent<"position", IPosit
     return new Position(0, 0);
   }
 
-  public setPosition(position: IPosition) {
-    this.set({x: position.x, y: position.y});
-    return this;
-  }
-
-  public withPosition(position: IPosition|number, y: number = 0) {
+  public setPosition(position: IPosition|number, y: number = 0) {
     if(typeof position === "number") {
-      position = { x: position, y };
+      this.set({ x: position, y });
     } else {
-      this.setPosition(position);
+      this.set({x: position.x, y: position.y});
     }
-    return this;
-  }
-
-  public withX(x: number) {
-    this.setX(x);
-    return this;
-  }
-
-  public withY(y: number) {
-    this.setY(y);
     return this;
   }
 

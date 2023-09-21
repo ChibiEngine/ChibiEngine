@@ -28,8 +28,8 @@ export default class Rotation extends TransitionableComponent<"rotation", IRotat
 
     this.onChange.subscribe((rotation) => {
       // TODO : disable this listener when transition is set?
-      rotation && this.assign(rotation);
-    }, true);
+      this.assign(rotation);
+    }).triggerNowIfValue();
 
     if (this.updateDt) {
       this.enableTransition();
@@ -52,7 +52,7 @@ export default class Rotation extends TransitionableComponent<"rotation", IRotat
     this.set({radians: degreesToRadians(degrees)});
   }
 
-  public withRotation(rotation: IRotation) {
+  public setRotation(rotation: IRotation) {
     this.radians = rotation.radians; // TODO : why does it not work with this.set({radians: rotation.radians}) ?
     return this;
   }
