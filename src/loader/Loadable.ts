@@ -1,4 +1,4 @@
-import Event from "../event/Event";
+import Event, {EventListener} from "../event/Event";
 import type Blob from "../resource/Blob";
 import Cache from "./Cache";
 import InstantEvent from "../event/InstantEvent";
@@ -20,6 +20,7 @@ export default abstract class Loadable {
     public readonly dependencies: Loadable[] = [];
     public readonly dependants: Loadable[] = [];
     public readonly blobs: Blob[] = [];
+    private readonly dependencyListeners: EventListener<any>[] = [];
 
     private _isLoaded: boolean = false;
     private _isLoading: boolean = false;
@@ -68,8 +69,13 @@ export default abstract class Loadable {
             // Si c'est un blob, appeler addBlob
             this.addBlob(dependency as any);
         }
-        this.dependencies.push(dependency);
-        dependency.onLoaded.subscribeOnce(this.onDependencyLoaded);
+
+        if(!this._isLoaded) {
+            // This object depends on dependency to be created
+            this.dependencies.push(dependency);
+            const listener = dependency.onLoaded.subscribe(this.onDependencyLoaded);
+            this.dependencyListeners.push(listener);
+        }
 
         // TypeScript doesn't like awaiting a Thenable :
         // If a class has a then() method it must conform to a valid PromiseLike signature
@@ -93,6 +99,7 @@ export default abstract class Loadable {
     private onDependencyLoaded(_: Loadable) {
         if(this.isLoaded) {
             this.onLoaded.trigger(this);
+            this.dependencyListeners.forEach(e => e.unsubscribe());
         }
     }
 
@@ -103,6 +110,7 @@ export default abstract class Loadable {
         this.loadingEnd();
     }
 
+    // TODO: pass the scene as parameter ?
     protected abstract _create(): Promise<void>;
 
     /**
@@ -129,6 +137,7 @@ export default abstract class Loadable {
         this._isLoaded = true;
         if(this.allDependenciesLoaded()) {
             this.onLoaded.trigger(this);
+            this.dependencyListeners.forEach(e => e.unsubscribe());
         }
     }
 
