@@ -2,9 +2,13 @@
 
 [![npm version](https://badge.fury.io/js/chibiengine.svg)](https://badge.fury.io/js/chibiengine)
 
-The goal is to create a 2D Web game engine to simplify game development.
+Chibi Engine aims to offer a modern and simple approach to game development with web technologies. It takes advantage of TypeScript and ES6 features such as asynchronism, classes, and mixins for a flexible and maintainable programming methodology, inspired by popular game engines.
 
-It acts as a wrapper on top of the rendering engine [PixiJS](https://github.com/pixijs/pixijs).
+Its main objective is to pave the way for cross-engine game development. In this way it introduces an abstraction layer over existing engines to simplify the development process, gathering their common features under a unified API, while still allowing developers to leverage specific engine capabilities.
+
+Additionally, Chibi Engine aims to integrate usual game creation features such as an entity component system, a physics engine and camera system.
+
+Currently, the main target is [PixiJS](https://github.com/pixijs/pixijs).
 
 ## Objectives
 - Modern API, easy to use. Inspired by [Flash](https://help.adobe.com/fr_FR/FlashPlatform/reference/actionscript/3/package-detail.html) and [Cocos2d-x](https://docs.cocos2d-x.org/api-ref/cplusplus/v4x/). 
@@ -27,9 +31,9 @@ It acts as a wrapper on top of the rendering engine [PixiJS](https://github.com/
 - [x] Automated props interpolation (position, rotation, size)
 - [ ] Input ⚒️
   - [x] Keyboard
-  - [ ] Mouse ⚒️
+  - [x] Mouse
+  - [x] Touch
   - [ ] Gamepad
-  - [ ] Touch
 - [ ] Implement missing [transformation attributes](https://pixijs.download/dev/docs/PIXI.Container.html)..
 - [ ] Audio: SFX and Music with volume control
 - [ ] English translation ⚒️
@@ -38,7 +42,7 @@ It acts as a wrapper on top of the rendering engine [PixiJS](https://github.com/
   - [ ] Implement missing actions
 - [ ] Camera (inspired by [pixi-viewport](https://github.com/davidfig/pixi-viewport)) ⚒️
   - [x] Bounds 
-  - [ ] Parallax
+  - [ ] Parallax ⚒️
   - [ ] Lerp
   - [ ] Effects
 - [ ] Physics engine
@@ -53,13 +57,12 @@ It acts as a wrapper on top of the rendering engine [PixiJS](https://github.com/
   - [ ] Frame-by-frame element integration
   - [ ] Animation editor 🔮
 - [ ] Tilemap
-- [ ] PIXI filters (shaders)
 - [ ] Masks
 - [ ] Meshes
 - [ ] Dynamic node loading (prefab) ❓
 - [ ] Atlas generation at runtime (for optimization) 🔮
     - [ ] Or ahead-of-time at compile-time? Or with a CLI?
-- [ ] 3D support with [three.js](https://github.com/mrdoob/three.js) 🔮
+- [ ] 3D support with [babylon.js](https://github.com/BabylonJS/Babylon.js) or [three.js](https://github.com/mrdoob/three.js) 🔮
 - [ ] Native Desktop/Android/iOS version with [cocos2d-x](https://github.com/cocos2d/cocos2d-x) 🔮
 
 ⚒️ Work in progress...
