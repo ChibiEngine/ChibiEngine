@@ -42,7 +42,7 @@ export default abstract class GameObject extends AbstractGameObject.With(Positio
   public async create(): Promise<void> {
     await super.create();
     const scene = this.scene;
-    if (isUpdatable(this)) {
+    if (isUpdatable(this) && !this.dontAddToUpdateList) {
       scene.addUpdatable(this as Updatable);
     }
     this.created = true;

@@ -23,7 +23,14 @@ export default abstract class TransitionableComponent<Name extends string, T, Ta
   protected next: T;
   protected value: T;
 
+  public transitionEnabled: boolean = false;
+
+  public exactValue: T;
+
   public readonly onChange: Event<this> = new Event();
+
+  // Disabled for now, don't know the overhead of this
+  // public readonly onExactValueChange: Event<T> = new Event();
 
   public abstract target: Target;
 
@@ -59,15 +66,21 @@ export default abstract class TransitionableComponent<Name extends string, T, Ta
 
   protected enableTransition() {
     this.target.scene.addUpdatable(this);
+    this.transitionEnabled = true;
   }
 
   public disableTransition() {
     this.target.scene.removeUpdatable(this);
+    this.transitionEnabled = false;
   }
 
   public set(value: T) {
     this.value = value;
     this.onChange.trigger(this);
+    if(!this.transitionEnabled) {
+      // TODO : assign here ?
+      this.exactValue = value;
+    }
   }
 
   public interpolateDt(dt: number): T {
@@ -88,6 +101,9 @@ export default abstract class TransitionableComponent<Name extends string, T, Ta
   protected abstract assign(value: T): void;
 
   public variableUpdate(dt: number) {
-    this.assign(this.interpolateDt(dt));
+    const val = this.interpolateDt(dt);
+    this.assign(val);
+    this.exactValue = val;
+    // this.onExactValueChange.trigger(val);
   }
 }

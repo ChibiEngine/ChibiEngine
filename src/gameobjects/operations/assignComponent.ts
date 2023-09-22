@@ -3,7 +3,7 @@ import getMethods from "../../utils/getMethods";
 import ComponentProperty from "../../component/types/ComponentProperty";
 import AbstractGameObject from "../AbstractGameObject";
 
-const ignore = ["constructor", "apply", "update", "variableUpdate", "componentName"];
+const ignore = ["constructor", "apply", "update", "variableUpdate", "componentName", "dontAddToUpdateList"];
 
 export default function assignComponent<O extends AbstractGameObject, C extends Component<string, O>>(target: O, component: C): Omit<O & C & ComponentProperty<C>, "componentName"> {
   for(const key of getMethods(component)) {

@@ -12,6 +12,8 @@ export interface FixedUpdatable {
 }
 
 export interface VariableUpdatable {
+    // TODO : find a better way than this flag?
+    // Maybe let the objects remove themselves from the update list after create
     dontAddToUpdateList?: boolean;
     variableUpdate(dt: number): void;
 }

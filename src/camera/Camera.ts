@@ -2,10 +2,15 @@ import Container from "../gameobjects/Container";
 import Scene from "../game/Scene";
 import GameObject from "../gameobjects/GameObject";
 import Rectangle from "../geom/rect/Rectangle";
+import {VariableUpdatable} from "../gameobjects/Updatable";
 
-export default class Camera extends Container {
+export default class Camera extends Container implements VariableUpdatable {
+  dontAddToUpdateList = true;
+
   private readonly _offset = {x: 0, y: 0};
   private _bounds: Rectangle = undefined;
+
+  private following: GameObject;
 
   public constructor(scene: Scene) {
     super();
@@ -48,11 +53,27 @@ export default class Camera extends Container {
   }
 
   public follow(target: GameObject) {
+    this.following = target;
     this.position.set(target.x, target.y);
-    target.position.onChange(pos => {
-      this.position.set(pos.x, pos.y);
+
+    this.scene.removeUpdatable(this);
+
+    // To be sure that this Updatable is called after the target's position one :
+    target.whenLoaded(() => {
+      this.scene.addUpdatable(this);
     });
 
+    // Alternative with onExactValueChange event in TransitionableComponent
+    // target.position.onExactValueChange(pos => {
+    //   this.position.set(pos.x, pos.y);
+    // });
+
     return this;
+  }
+
+  public variableUpdate(dt: number) {
+    if(this.following && this.following.position.exactValue) {
+      this.setPosition(this.following.position.exactValue.x, this.following.position.exactValue.y);
+    }
   }
 }
