@@ -32,11 +32,15 @@ export default abstract class GameObject extends AbstractGameObject.With(Positio
 
   protected created = false;
 
-  public constructor(position: Position = Position.zero()) {
+  public constructor(
+      position: Position = Position.zero(),
+      size: Size = new Size(),
+      rotation: Rotation = new Rotation(),
+  ) {
     super();
     this.addComponent(position);
-    this.addComponent(new Size());
-    this.addComponent(new Rotation());
+    this.addComponent(size);
+    this.addComponent(rotation);
   }
 
   public async create(): Promise<void> {

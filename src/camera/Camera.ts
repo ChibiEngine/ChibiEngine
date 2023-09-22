@@ -1,19 +1,18 @@
 import Container from "../gameobjects/Container";
 import Scene from "../game/Scene";
 import GameObject from "../gameobjects/GameObject";
-import Rectangle from "../geom/rect/Rectangle";
 import {VariableUpdatable} from "../gameobjects/Updatable";
+import ConstrainedPosition from "../component/ConstrainedPosition";
 
-export default class Camera extends Container implements VariableUpdatable {
+export default class Camera extends Container.With(ConstrainedPosition) implements VariableUpdatable {
   dontAddToUpdateList = true;
 
   private readonly _offset = {x: 0, y: 0};
-  private _bounds: Rectangle = undefined;
 
   private following: GameObject;
 
   public constructor() {
-    super();
+    super(new ConstrainedPosition(0, 0));
   }
 
   protected async _create(): Promise<void> {
@@ -27,26 +26,11 @@ export default class Camera extends Container implements VariableUpdatable {
       let x = -pos.x + width + this._offset.x;
       let y = -pos.y + height + this._offset.y;
 
-      if(this._bounds) {
-        if(pos.x-width < this._bounds.left) {
-          x = -this._bounds.left;
-        } else if(pos.x + width > this._bounds.right) {
-          x = -(this._bounds.right - width*2);
-        }
-
-        if(pos.y-height < this._bounds.top) {
-          y = -this._bounds.top;
-        } else if(pos.y + height > this._bounds.bottom) {
-          y = -(this._bounds.bottom - height*2);
-        }
-      }
-
       for(const layer of scene.layers) {
         const scrollFactor = layer.scrollFactor;
         layer.position.set(x*scrollFactor.x, y*scrollFactor.y);
-        // layer.position.set(x, y);
       }
-    })
+    });
   }
 
   public setOffset(x: number, y: number) {
@@ -57,7 +41,11 @@ export default class Camera extends Container implements VariableUpdatable {
   }
 
   public setBounds(x1: number, y1: number, x2: number, y2: number) {
-    this._bounds = new Rectangle(x1, y1, x2-x1, y2-y1);
+    this.position.setPositionBounds(x1+this.scene.game.screen.width/2,
+        y1+this.scene.game.screen.height/2,
+        x2-this.scene.game.screen.width/2,
+        y2-this.scene.game.screen.height/2
+    );
 
     return this;
   }
