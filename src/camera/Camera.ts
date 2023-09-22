@@ -12,29 +12,39 @@ export default class Camera extends Container implements VariableUpdatable {
 
   private following: GameObject;
 
-  public constructor(scene: Scene) {
+  public constructor() {
     super();
+  }
+
+  protected async _create(): Promise<void> {
+    const scene = this.scene as Scene;
 
     this.position.onChange(pos => {
       // TODO : use scene size instead of screen size
       const width = scene.game.screen.width/2;
       const height = scene.game.screen.height/2;
 
-      scene.x = -pos.x + width + this._offset.x;
-      scene.y = -pos.y + height + this._offset.y;
+      let x = -pos.x + width + this._offset.x;
+      let y = -pos.y + height + this._offset.y;
 
       if(this._bounds) {
         if(pos.x-width < this._bounds.left) {
-          scene.x = -this._bounds.left;
+          x = -this._bounds.left;
         } else if(pos.x + width > this._bounds.right) {
-          scene.x = -(this._bounds.right - width*2);
+          x = -(this._bounds.right - width*2);
         }
 
         if(pos.y-height < this._bounds.top) {
-          scene.y = -this._bounds.top;
+          y = -this._bounds.top;
         } else if(pos.y + height > this._bounds.bottom) {
-          scene.y = -(this._bounds.bottom - height*2);
+          y = -(this._bounds.bottom - height*2);
         }
+      }
+
+      for(const layer of scene.layers) {
+        const scrollFactor = layer.scrollFactor;
+        layer.position.set(x*scrollFactor.x, y*scrollFactor.y);
+        // layer.position.set(x, y);
       }
     })
   }

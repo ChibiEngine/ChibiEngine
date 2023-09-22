@@ -3,16 +3,16 @@ import Container from "../gameobjects/Container";
 import Game from "./Game";
 import Updatable, {FixedUpdatable, isFixedUpdatable, isUpdatable, isVariableUpdatable, VariableUpdatable} from "../gameobjects/Updatable";
 import Layer from "../camera/Layer";
+import type GameObject from "../gameobjects/GameObject";
 
 export default abstract class Scene extends Container {
   public game: Game;
-  public readonly camera: Camera;
 
   private readonly fixedUpdatableSet: Set<FixedUpdatable> = new Set();
   private readonly variableUpdatableSet: Set<VariableUpdatable> = new Set();
   public initialized: boolean = false;
 
-  private readonly layers: Layer[] = [];
+  public readonly layers: Layer[] = [];
 
   constructor() {
     super();
@@ -20,8 +20,14 @@ export default abstract class Scene extends Container {
     if(isUpdatable(this)) {
       this.addUpdatable(this);
     }
-    this.camera = new Camera(this);
-    this.add(this.camera);
+  }
+
+  public add<T extends GameObject>(child: T): T & PromiseLike<T> {
+    const ret = super.add(child);
+    if(child instanceof Layer) {
+      this.layers.push(child);
+    }
+    return ret;
   }
 
   public get scene() {
