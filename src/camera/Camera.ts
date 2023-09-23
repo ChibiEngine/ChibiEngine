@@ -3,11 +3,13 @@ import Scene from "../game/Scene";
 import GameObject from "../gameobjects/GameObject";
 import {VariableUpdatable} from "../gameobjects/Updatable";
 import ConstrainedPosition from "../component/ConstrainedPosition";
+import Linear from "../math/easing/Linear";
 
 export default class Camera extends Container.With(ConstrainedPosition) implements VariableUpdatable {
   dontAddToUpdateList = true;
 
   private readonly _offset = {x: 0, y: 0};
+  private readonly _lerp = {x: 1, y: 1};
 
   private following: GameObject;
 
@@ -36,6 +38,13 @@ export default class Camera extends Container.With(ConstrainedPosition) implemen
   public setOffset(x: number, y: number) {
     this._offset.x = x;
     this._offset.y = y;
+
+    return this;
+  }
+
+  public setLerp(x: number, y: number) {
+    this._lerp.x = x;
+    this._lerp.y = y;
 
     return this;
   }
@@ -71,7 +80,13 @@ export default class Camera extends Container.With(ConstrainedPosition) implemen
 
   public variableUpdate(dt: number) {
     if(this.following && this.following.position.exactValue) {
-      this.setPosition(this.following.position.exactValue.x, this.following.position.exactValue.y);
+      const pos = this.position.exactValue;
+      const targetPos = this.following.position.exactValue;
+
+      this.position.set(
+          Linear.INSTANCE.interpolate(pos.x, targetPos.x, this._lerp.x),
+          Linear.INSTANCE.interpolate(pos.y, targetPos.y, this._lerp.y)
+      );
     }
   }
 }
