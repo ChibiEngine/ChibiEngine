@@ -12,7 +12,7 @@ import {QuinticIn, QuinticInOut, QuinticOut} from "./Quintic";
 
 /**
  * Usual easing functions.
- * Create new instances to customize easing functions.
+ * To customize their parameters, create new instances.
  */
 module Easing {
   // Linear

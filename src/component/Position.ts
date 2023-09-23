@@ -5,6 +5,7 @@ import AbstractGameObject from "../gameobjects/AbstractGameObject";
 import Positionable from "../geom/position/Positionable";
 import TransitionableComponent from "./TransitionableComponent";
 import IPosition from "../geom/position/IPosition";
+import Linear from "../math/easing/Linear";
 
 export default class Position extends TransitionableComponent<"position", IPosition, AbstractGameObject> implements Positionable {
   readonly componentName = "position";
@@ -108,8 +109,8 @@ export default class Position extends TransitionableComponent<"position", IPosit
 
   public interpolate(alpha: number): IPosition {
     return {
-      x: this.next.x * alpha + this.previous.x * (1 - alpha),
-      y: this.next.y * alpha + this.previous.y * (1 - alpha)
+      x: Linear.INSTANCE.interpolate(this.previous.x, this.next.x, alpha),
+      y: Linear.INSTANCE.interpolate(this.previous.y, this.next.y, alpha)
     }
   }
 

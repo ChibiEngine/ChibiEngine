@@ -1,9 +1,11 @@
 import EasingFunction from "./EasingFunction";
 
-export class BackOut implements EasingFunction {
+export class BackOut extends EasingFunction {
   public static readonly INSTANCE = new BackOut();
 
-  public constructor(private readonly overshoot: number = 1.70158) { }
+  public constructor(private readonly overshoot: number = 1.70158) {
+    super();
+  }
 
   public apply(t: number): number {
     if(t === 0 || t === 1) {
@@ -13,10 +15,12 @@ export class BackOut implements EasingFunction {
   }
 }
 
-export class BackIn implements EasingFunction {
+export class BackIn extends EasingFunction {
   public static readonly INSTANCE = new BackIn();
 
-  public constructor(private readonly overshoot: number = 1.70158) { }
+  public constructor(private readonly overshoot: number = 1.70158) {
+    super();
+  }
 
   public apply(t: number): number {
     if(t === 0 || t === 1) {
@@ -26,10 +30,12 @@ export class BackIn implements EasingFunction {
   }
 }
 
-export class BackInOut implements EasingFunction {
+export class BackInOut extends EasingFunction {
   public static readonly INSTANCE = new BackInOut();
 
-  public constructor(private readonly overshoot: number = 1.70158) { }
+  public constructor(private readonly overshoot: number = 1.70158) {
+    super();
+  }
 
   public apply(t: number): number {
     if(t === 0 || t === 1) {

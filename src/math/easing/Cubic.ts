@@ -1,6 +1,6 @@
 import EasingFunction from "./EasingFunction";
 
-export class CubicIn implements EasingFunction {
+export class CubicIn extends EasingFunction {
   public static readonly INSTANCE = new CubicIn();
 
   public apply(t: number): number {
@@ -11,7 +11,7 @@ export class CubicIn implements EasingFunction {
   }
 }
 
-export class CubicOut implements EasingFunction {
+export class CubicOut extends EasingFunction {
   public static readonly INSTANCE = new CubicOut();
 
   public apply(t: number): number {
@@ -22,7 +22,7 @@ export class CubicOut implements EasingFunction {
   }
 }
 
-export class CubicInOut implements EasingFunction {
+export class CubicInOut extends EasingFunction {
   public static readonly INSTANCE = new CubicInOut();
 
   public apply(t: number): number {

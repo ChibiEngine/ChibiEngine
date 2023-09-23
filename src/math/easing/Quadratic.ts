@@ -1,6 +1,6 @@
 import EasingFunction from "./EasingFunction";
 
-export class QuadraticIn implements EasingFunction {
+export class QuadraticIn extends EasingFunction {
   public static readonly INSTANCE = new QuadraticIn();
 
   public apply(t: number): number {
@@ -11,7 +11,7 @@ export class QuadraticIn implements EasingFunction {
   }
 }
 
-export class QuadraticOut implements EasingFunction {
+export class QuadraticOut extends EasingFunction {
   public static readonly INSTANCE = new QuadraticOut();
 
   public apply(t: number): number {
@@ -22,7 +22,7 @@ export class QuadraticOut implements EasingFunction {
   }
 }
 
-export class QuadraticInOut implements EasingFunction {
+export class QuadraticInOut extends EasingFunction {
   public static readonly INSTANCE = new QuadraticInOut();
 
   public apply(t: number): number {

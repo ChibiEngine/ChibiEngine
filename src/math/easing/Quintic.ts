@@ -1,6 +1,6 @@
 import EasingFunction from "./EasingFunction";
 
-export class QuinticIn implements EasingFunction {
+export class QuinticIn extends EasingFunction {
   public static readonly INSTANCE = new QuinticIn();
 
   public apply(t: number): number {
@@ -11,7 +11,7 @@ export class QuinticIn implements EasingFunction {
   }
 }
 
-export class QuinticOut implements EasingFunction {
+export class QuinticOut extends EasingFunction {
   public static readonly INSTANCE = new QuinticOut();
 
   public apply(t: number): number {
@@ -22,7 +22,7 @@ export class QuinticOut implements EasingFunction {
   }
 }
 
-export class QuinticInOut implements EasingFunction {
+export class QuinticInOut extends EasingFunction {
   public static readonly INSTANCE = new QuinticInOut();
 
   public apply(t: number): number {

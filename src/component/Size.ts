@@ -6,6 +6,7 @@ import Sizeable from "../geom/size/Sizeable";
 import TransitionableComponent from "./TransitionableComponent";
 import ISize from "../geom/size/ISize";
 import IPosition from "../geom/position/IPosition";
+import Linear from "../math/easing/Linear";
 
 export default class Size extends TransitionableComponent<"size", ISize, AbstractGameObject> implements Sizeable {
   readonly componentName = "size";
@@ -95,8 +96,8 @@ export default class Size extends TransitionableComponent<"size", ISize, Abstrac
 
   public interpolate(alpha: number): ISize {
     return {
-      width: this.next.width * alpha + this.previous.width * (1 - alpha),
-      height: this.next.height * alpha + this.previous.height * (1 - alpha)
+      width: Linear.INSTANCE.interpolate(this.previous.width, this.next.width, alpha),
+      height: Linear.INSTANCE.interpolate(this.previous.height, this.next.height, alpha)
     };
   }
 

@@ -1,9 +1,11 @@
 import EasingFunction from "./EasingFunction";
 
-export class ElasticOut implements EasingFunction {
+export class ElasticOut extends EasingFunction {
   public static readonly INSTANCE = new ElasticOut();
 
-  public constructor(private readonly amplitude: number = 0.1, private readonly period: number = 0.4) { }
+  public constructor(private readonly amplitude: number = 0.1, private readonly period: number = 0.4) {
+    super();
+  }
 
   public apply(t: number): number {
     if (t === 0 || t === 1) {
@@ -15,10 +17,12 @@ export class ElasticOut implements EasingFunction {
   }
 }
 
-export class ElasticIn implements EasingFunction {
+export class ElasticIn extends EasingFunction {
   public static readonly INSTANCE = new ElasticIn();
 
-  public constructor(private readonly amplitude: number = 0.1, private readonly period: number = 0.4) { }
+  public constructor(private readonly amplitude: number = 0.1, private readonly period: number = 0.4) {
+    super();
+  }
 
   public apply(t: number): number {
     if (t === 0 || t === 1) {
@@ -30,10 +34,12 @@ export class ElasticIn implements EasingFunction {
   }
 }
 
-export class ElasticInOut implements EasingFunction {
+export class ElasticInOut extends EasingFunction {
   public static readonly INSTANCE = new ElasticInOut();
 
-  public constructor(private readonly amplitude: number = 0.1, private readonly period: number = 0.4) { }
+  public constructor(private readonly amplitude: number = 0.1, private readonly period: number = 0.4) {
+    super();
+  }
 
   public apply(t: number): number {
     if (t === 0 || t === 1) {

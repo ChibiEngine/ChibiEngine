@@ -1,6 +1,6 @@
 import EasingFunction from "./EasingFunction";
 
-export class BounceOut implements EasingFunction {
+export class BounceOut extends EasingFunction {
   public static readonly INSTANCE = new BounceOut();
 
   public apply(t: number): number {
@@ -19,7 +19,7 @@ export class BounceOut implements EasingFunction {
   }
 }
 
-export class BounceIn implements EasingFunction {
+export class BounceIn extends EasingFunction {
   public static readonly INSTANCE = new BounceIn();
 
   public apply(t: number): number {
@@ -30,7 +30,7 @@ export class BounceIn implements EasingFunction {
   }
 }
 
-export class BounceInOut implements EasingFunction {
+export class BounceInOut extends EasingFunction {
   public static readonly INSTANCE = new BounceInOut();
 
   public apply(t: number): number {

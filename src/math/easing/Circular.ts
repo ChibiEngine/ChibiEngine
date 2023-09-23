@@ -1,6 +1,6 @@
 import EasingFunction from "./EasingFunction";
 
-export class CircularIn implements EasingFunction {
+export class CircularIn extends EasingFunction {
   public static readonly INSTANCE = new CircularIn();
 
   public apply(t: number): number {
@@ -11,7 +11,7 @@ export class CircularIn implements EasingFunction {
   }
 }
 
-export class CircularOut implements EasingFunction {
+export class CircularOut extends EasingFunction {
   public static readonly INSTANCE = new CircularOut();
 
   public apply(t: number): number {
@@ -22,7 +22,7 @@ export class CircularOut implements EasingFunction {
   }
 }
 
-export class CircularInOut implements EasingFunction {
+export class CircularInOut extends EasingFunction {
   public static readonly INSTANCE = new CircularInOut();
 
   public apply(t: number): number {

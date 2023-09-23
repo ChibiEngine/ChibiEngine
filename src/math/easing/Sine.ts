@@ -1,6 +1,6 @@
 import EasingFunction from "./EasingFunction";
 
-export class SineIn implements EasingFunction {
+export class SineIn extends EasingFunction {
   public static readonly INSTANCE = new SineIn();
 
   public apply(t: number): number {
@@ -11,7 +11,7 @@ export class SineIn implements EasingFunction {
   }
 }
 
-export class SineOut implements EasingFunction {
+export class SineOut extends EasingFunction {
   public static readonly INSTANCE = new SineOut();
 
   public apply(t: number): number {
@@ -22,7 +22,7 @@ export class SineOut implements EasingFunction {
   }
 }
 
-export class SineInOut implements EasingFunction {
+export class SineInOut extends EasingFunction {
   public static readonly INSTANCE = new SineInOut();
 
   public apply(t: number): number {

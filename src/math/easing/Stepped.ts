@@ -1,6 +1,6 @@
 import EasingFunction from "./EasingFunction";
 
-export class Stepped implements EasingFunction {
+export class Stepped extends EasingFunction {
   public static readonly INSTANCE = new Stepped();
 
   public constructor(private readonly steps: number = 1) {

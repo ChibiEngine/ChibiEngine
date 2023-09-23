@@ -6,6 +6,7 @@ import TransitionableComponent from "./TransitionableComponent";
 import IRotation from "../geom/rotation/IRotation";
 import {degreesToRadians, radiansToDegrees} from "../math/utils";
 import Rotationable from "../geom/rotation/Rotationable";
+import Linear from "../math/easing/Linear";
 
 export default class Rotation extends TransitionableComponent<"rotation", IRotation, AbstractGameObject> implements Rotationable {
   readonly componentName = "rotation";
@@ -75,7 +76,7 @@ export default class Rotation extends TransitionableComponent<"rotation", IRotat
 
   public interpolate(alpha: number): IRotation {
     return {
-      radians: this.next.radians * alpha + this.previous.radians * (1 - alpha),
+      radians: Linear.INSTANCE.interpolate(this.previous.radians, this.next.radians, alpha)
     }
   }
 
