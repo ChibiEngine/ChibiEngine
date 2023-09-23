@@ -13,7 +13,6 @@ export default abstract class Loadable {
 
     public abstract readonly type: string;
 
-    // TODO: pb si les sous-classes utilisent un LoaderInfoAggregate
     public readonly onProgress: Event<this> = new Event<this>();
     public readonly onLoaded: Event<this> = new InstantEvent<this>();
 
@@ -22,8 +21,8 @@ export default abstract class Loadable {
     public readonly blobs: Blob[] = [];
     private readonly dependencyListeners: EventListener<any>[] = [];
 
-    private _isLoaded: boolean = false;
-    private _isLoading: boolean = false;
+    private _isCreating: boolean = false;
+    private _isCreated: boolean = false;
 
     protected constructor() {
         this.onDependencyLoaded = this.onDependencyLoaded.bind(this);
@@ -70,7 +69,7 @@ export default abstract class Loadable {
             this.addBlob(dependency as any);
         }
 
-        if(!this._isLoaded) {
+        if(!this._isCreated) {
             // This object depends on dependency to be created
             this.dependencies.push(dependency);
             const listener = dependency.onLoaded.subscribe(this.onDependencyLoaded);
@@ -104,10 +103,17 @@ export default abstract class Loadable {
     }
 
     public async create() {
-        // On set le parent de la dépendance comme ça lorsqu'il appellera this.load, il pourra faire remonter les appels
-        this.loadingStart();
+        this._isCreating = true;
+        this._isCreated = false;
+
         await this._create()
-        this.loadingEnd();
+
+        this._isCreating = false;
+        this._isCreated = true;
+        if(this.allDependenciesLoaded()) {
+            this.onLoaded.trigger(this);
+            this.dependencyListeners.forEach(e => e.unsubscribe());
+        }
     }
 
     // TODO: pass the scene as parameter ?
@@ -127,20 +133,6 @@ export default abstract class Loadable {
 
     protected abstract _destroy(): Promise<void>;
 
-    private loadingStart() {
-        this._isLoading = true;
-        this._isLoaded = false;
-    }
-
-    private loadingEnd() {
-        this._isLoading = false;
-        this._isLoaded = true;
-        if(this.allDependenciesLoaded()) {
-            this.onLoaded.trigger(this);
-            this.dependencyListeners.forEach(e => e.unsubscribe());
-        }
-    }
-
     public whenLoaded(callback: (loadable: this) => void) {
         // TODO : duplicates onLoaded event?
         // this should be handled by the event itself
@@ -152,11 +144,11 @@ export default abstract class Loadable {
     }
 
     public get isLoaded() {
-        return this._isLoaded && this.allDependenciesLoaded();
+        return this._isCreated && this.allDependenciesLoaded();
     }
 
     public get isLoading() {
-        return this._isLoading || this.hasDependencyLoading();
+        return this._isCreating || this.hasDependencyLoading();
     }
 
     private allDependenciesLoaded(): boolean {
