@@ -50,7 +50,6 @@ export default class Container extends GameObject {
     let index = this.children.length;
 
     this.children.push(child);
-    this.load(child);
 
     // pixi object can be present before object is loaded
     // Example: when creating a scene, the container is immediately available while populating it (create) can take time
@@ -69,6 +68,9 @@ export default class Container extends GameObject {
         }
       });
     }
+
+    // after so onDependencyLoaded is called after the pixi objects has been added
+    this.load(child);
 
     // @ts-ignore
     return child;

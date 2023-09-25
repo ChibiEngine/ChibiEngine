@@ -56,17 +56,16 @@ export default abstract class Loadable {
             }
             dependency.dependants.push(this);
             this.addBlob(...dependency.blobs);
-        } else if (dependency.type !== "blob") {
-            dependency.dependants.push(this);
-            dependency.create();
-        } else {
+        } else if (dependency.type === "blob") {
             const fromCache = Cache.load(dependency as any);
             if(fromCache !== dependency) {
                 makeProxy(dependency, fromCache);
             }
             dependency.dependants.push(this);
-            // Si c'est un blob, appeler addBlob
-            this.addBlob(dependency as any);
+            this.addBlob(dependency as unknown as Blob);
+        } else {
+            dependency.dependants.push(this);
+            dependency.create();
         }
 
         if(!this._isCreated) {
@@ -103,17 +102,9 @@ export default abstract class Loadable {
     }
 
     public async create() {
-        this._isCreating = true;
-        this._isCreated = false;
-
+        this.loadingStart();
         await this._create()
-
-        this._isCreating = false;
-        this._isCreated = true;
-        if(this.allDependenciesLoaded()) {
-            this.onLoaded.trigger(this);
-            this.dependencyListeners.forEach(e => e.unsubscribe());
-        }
+        this.loadingEnd();
     }
 
     // TODO: pass the scene as parameter ?
@@ -132,6 +123,21 @@ export default abstract class Loadable {
     }
 
     protected abstract _destroy(): Promise<void>;
+
+    protected loadingStart() {
+        this._isCreating = true;
+        this._isCreated = false;
+    }
+
+    protected loadingEnd() {
+        this._isCreating = false;
+        this._isCreated = true;
+
+        if(this.allDependenciesLoaded()) {
+            this.onLoaded.trigger(this);
+            this.dependencyListeners.forEach(e => e.unsubscribe());
+        }
+    }
 
     public whenLoaded(callback: (loadable: this) => void) {
         // TODO : duplicates onLoaded event?

@@ -30,6 +30,7 @@ export default abstract class GameObject extends AbstractGameObject.With(Positio
   public _parent: Container;
   public abstract pixi: PixiContainer;
 
+  // TODO : reuse parent _isCreated attribute
   protected created = false;
 
   public constructor(
@@ -44,16 +45,24 @@ export default abstract class GameObject extends AbstractGameObject.With(Positio
   }
 
   public async create(): Promise<void> {
-    await super.create();
+    this.loadingStart();
+
+    // Set first to be sure other components are applied first
+    // TODO : should only set _isCreated to true when all components are applied ?
+    this.whenLoaded(() => {
+      for (const component of this.components) {
+        component.apply(this);
+      }
+    });
+    await this._create();
+
     const scene = this.scene;
     if (isUpdatable(this) && !this.dontAddToUpdateList) {
       scene.addUpdatable(this as Updatable);
     }
     this.created = true;
-    // Init components
-    for (const component of this.components) {
-      component.apply(this);
-    }
+
+    this.loadingEnd();
   }
 
   //// LIFE CYCLE ////

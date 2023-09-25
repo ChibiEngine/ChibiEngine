@@ -27,10 +27,8 @@ export default class Size extends TransitionableComponent<"size", ISize, Abstrac
     // @ts-ignore TODO: fix this
     this._pixi = target.pixi;
 
-    target.onLoaded(() => {
-      this.originalSize = { width: this._pixi.width/this._pixi.scale.x, height: this._pixi.height/this._pixi.scale.y };
-      this.set({ width: this.originalSize.width*this.scaleX, height: this.originalSize.height*this.scaleY });
-    });
+    this.originalSize = { width: this._pixi.width/this._pixi.scale.x, height: this._pixi.height/this._pixi.scale.y };
+    this.set({ width: this.originalSize.width*this.scaleX, height: this.originalSize.height*this.scaleY });
 
     this.onChange.subscribe((size) => {
       // TODO : disable this listener when transition is set?
@@ -39,6 +37,14 @@ export default class Size extends TransitionableComponent<"size", ISize, Abstrac
 
     if(this.updateDt) {
       this.enableTransition();
+    }
+  }
+
+  // TODO: call this when target is updated
+  public updateSize() {
+    if(this._pixi&&this.originalSize) {
+      this.originalSize = { width: this._pixi.width/this._pixi.scale.x, height: this._pixi.height/this._pixi.scale.y };
+      this.set({ width: this.originalSize.width*this.scaleX, height: this.originalSize.height*this.scaleY });
     }
   }
 
@@ -75,7 +81,6 @@ export default class Size extends TransitionableComponent<"size", ISize, Abstrac
 
   public set(width: number|ISize, height: number = 0) {
     if(typeof width === "number") {
-      console.trace("set ", width, height)
       super.set({ width, height });
     } else {
       super.set(width);
