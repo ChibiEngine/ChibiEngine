@@ -1,4 +1,10 @@
 export interface FixedUpdatable {
+    /**
+     * Can be negative to be called before, or positive to be called after.
+     * Default is 0.
+     */
+    updateCallOrder?: number;
+
     dontAddToUpdateList?: boolean;
     lastUpdateTime?: number;
 
@@ -12,7 +18,13 @@ export interface FixedUpdatable {
 }
 
 export interface VariableUpdatable {
-    // TODO : find a better way than this flag?
+    /**
+     * Can be negative to be called before, or positive to be called after.
+     * Default is 0.
+     */
+    updateCallOrder?: number;
+
+    // TODO : find a better way than this strange flag?
     // Maybe let the objects remove themselves from the update list after create
     dontAddToUpdateList?: boolean;
     variableUpdate(dt: number): void;

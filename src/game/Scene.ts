@@ -1,15 +1,16 @@
-import Camera from "../camera/Camera";
 import Container from "../gameobjects/Container";
 import Game from "./Game";
 import Updatable, {FixedUpdatable, isFixedUpdatable, isUpdatable, isVariableUpdatable, VariableUpdatable} from "../gameobjects/Updatable";
 import Layer from "../camera/Layer";
 import type GameObject from "../gameobjects/GameObject";
+import RelativeArray from "../utils/RelativeArray";
 
 export default abstract class Scene extends Container {
   public game: Game;
 
-  private readonly fixedUpdatableSet: Set<FixedUpdatable> = new Set();
-  private readonly variableUpdatableSet: Set<VariableUpdatable> = new Set();
+  private readonly fixedUpdatableSet: RelativeArray<Set<FixedUpdatable>> = new RelativeArray();
+  private readonly variableUpdatableSet: RelativeArray<Set<VariableUpdatable>> = new RelativeArray();
+
   public initialized: boolean = false;
 
   public readonly layers: Layer[] = [];
@@ -35,11 +36,15 @@ export default abstract class Scene extends Container {
   }
 
   public updateScene(time: number, dt: number) {
-    for (let updatable of this.fixedUpdatableSet) {
-      this.fixedUpdate(updatable, time);
+    for (let updatables of this.fixedUpdatableSet) {
+      for (let updatable of updatables) {
+        this.fixedUpdate(updatable, time);
+      }
     }
-    for (let updatable of this.variableUpdatableSet) {
-      updatable.variableUpdate(dt);
+    for (let updatables of this.variableUpdatableSet) {
+      for (let updatable of updatables) {
+        updatable.variableUpdate(dt);
+      }
     }
   }
 
@@ -47,7 +52,9 @@ export default abstract class Scene extends Container {
     const t1 = performance.now();
     const updateDt = 1000/updatable.updateRate;
     let interval = time - updatable.lastUpdateTime;
+    let updatecount = 0;
     while (interval >= updateDt) {
+      updatecount++;
       updatable.update();
       updatable.lastUpdateTime += updateDt;
       interval -= updateDt;
@@ -56,23 +63,27 @@ export default abstract class Scene extends Container {
   }
 
   public addUpdatable(param: Updatable) {
+    param.updateCallOrder = param.updateCallOrder || 0;
     if(isFixedUpdatable(param)) {
       if(param.updateRate === undefined) {
         param.updateRate = 50;
       }
       param.lastUpdateTime = performance.now();
-      this.fixedUpdatableSet.add(param);
+      this.fixedUpdatableSet.getOrAdd(param.updateCallOrder, new Set()).add(param);
     }
     if(isVariableUpdatable(param)) {
-      this.variableUpdatableSet.add(param);
+      this.variableUpdatableSet.getOrAdd(param.updateCallOrder, new Set()).add(param);
     }
   }
 
   public removeUpdatable(param: Updatable) {
+    param.updateCallOrder = param.updateCallOrder || 0;
     if(isFixedUpdatable(param)) {
-      this.fixedUpdatableSet.delete(param);
+      const set = this.fixedUpdatableSet.get(param.updateCallOrder);
+      set && set.delete(param);
     } else {
-      this.variableUpdatableSet.delete(param);
+      const set = this.variableUpdatableSet.get(param.updateCallOrder);
+      set && set.delete(param);
     }
   }
 }

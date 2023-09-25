@@ -6,7 +6,7 @@ import ConstrainedPosition from "../component/ConstrainedPosition";
 import Linear from "../math/easing/Linear";
 
 export default class Camera extends Container.With(ConstrainedPosition) implements VariableUpdatable {
-  dontAddToUpdateList = true;
+  public readonly updateCallOrder = 1;
 
   private readonly _offset = {x: 0, y: 0};
   private readonly _lerp = {x: 1, y: 1};
@@ -42,7 +42,7 @@ export default class Camera extends Container.With(ConstrainedPosition) implemen
     return this;
   }
 
-  public setLerp(x: number, y: number) {
+  public setLerp(x: number, y: number = x) {
     this._lerp.x = x;
     this._lerp.y = y;
 
@@ -63,18 +63,6 @@ export default class Camera extends Container.With(ConstrainedPosition) implemen
     this.following = target;
     this.position.set(target.x, target.y);
 
-    this.scene.removeUpdatable(this);
-
-    // To be sure that this Updatable is called after the target's position one :
-    target.whenLoaded(() => {
-      this.scene.addUpdatable(this);
-    });
-
-    // Alternative with onExactValueChange event in TransitionableComponent
-    // target.position.onExactValueChange(pos => {
-    //   this.position.set(pos.x, pos.y);
-    // });
-
     return this;
   }
 
@@ -83,6 +71,8 @@ export default class Camera extends Container.With(ConstrainedPosition) implemen
       const pos = this.position.exactValue;
       const targetPos = this.following.position.exactValue;
 
+      // TODO : PB : lerp is dependant on the frame rate
+      // Possible fix : this._lerp.x / (16.66/dt)
       this.position.set(
           Linear.INSTANCE.interpolate(pos.x, targetPos.x, this._lerp.x),
           Linear.INSTANCE.interpolate(pos.y, targetPos.y, this._lerp.y)
