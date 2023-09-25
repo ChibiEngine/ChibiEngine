@@ -1,30 +1,22 @@
-/**
- * RelativeArray is a wrapper around an array that allows for relative (negative) indexing.
- */
-
 export default class RelativeArray<T> {
-  private readonly negative: T[] = [];
-  private readonly positive: T[] = [];
+  private readonly indexes: number[] = [];
+  private readonly values: Map<number, T> = new Map();
+
 
   public add(index: number, value: T): void {
-    if(index < 0) {
-      this.negative[-index-1] = value;
-    } else {
-      this.positive[index] = value;
-    }
+    this.indexes.push(index);
+    this.values.set(index, value);
+
+    this.indexes.sort((a, b) => a - b);
   }
 
   public get(index: number): T {
-    if(index < 0) {
-      return this.negative[-index-1];
-    } else {
-      return this.positive[index];
-    }
+    return this.values.get(index);
   }
 
   public getOrAdd(index: number, value: T): T {
     const existing = this.get(index);
-    if(existing !== undefined) {
+    if (existing !== undefined) {
       return existing;
     }
     this.add(index, value);
@@ -32,38 +24,36 @@ export default class RelativeArray<T> {
   }
 
   public remove(index: number): void {
-    if(index < 0) {
-      delete this.negative[-index-1];
-    } else {
-      delete this.positive[index];
-    }
+    const indexIndex = this.indexes.indexOf(index);
+    if(indexIndex === -1) return;
+
+    this.indexes.splice(indexIndex, 1);
+    this.values.delete(index);
   }
 
   public removeValue(value: T): void {
     const index = this.indexOf(value);
-    if(index !== -1) {
+    if (index !== -1) {
       this.remove(index);
     }
   }
 
   public indexOf(value: T): number {
-    const index = this.positive.indexOf(value);
-    if(index !== -1) {
-      return index;
+    for (const index of this.indexes) {
+      if (this.values.get(index) === value) {
+        return index;
+      }
     }
-    return -this.negative.indexOf(value);
+    return -1;
   }
 
   public get length(): number {
-    return this.negative.length + this.positive.length;
+    return this.indexes.length;
   }
 
-  *[Symbol.iterator]() {
-    for(let i = 0; i < this.negative.length; i++) {
-      yield this.negative[i];
-    }
-    for(let i = 0; i < this.positive.length; i++) {
-      yield this.positive[i];
+  * [Symbol.iterator]() {
+    for(const index of this.indexes) {
+      yield this.values.get(index);
     }
   }
 }
