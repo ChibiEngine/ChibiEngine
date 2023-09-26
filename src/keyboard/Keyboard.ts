@@ -28,12 +28,15 @@ namespace Keyboard {
         return _downKeys;
     }
 
-    export function isKeyDown(key: string) {
+    /**
+     * @param key The key to check (see https://developer.mozilla.org/en-US/docs/Web/API/UI_Events/Keyboard_event_key_values)
+     * @param dt Check if the key was down in the last dt milliseconds
+     */
+    export function isKeyDown(key: string, dt?: number) {
+        if(dt) {
+            return _downKeys.has(key) || _downKeysTime.has(key) && performance.now() - _downKeysTime.get(key) < dt;
+        }
         return _downKeys.has(key);
-    }
-
-    export function wasKeyDown(key: string, dt: number) {
-        return isKeyDown(key) || _downKeysTime.has(key) && performance.now() - _downKeysTime.get(key) < dt;
     }
 }
 
