@@ -22,12 +22,12 @@ export default class ConstrainedPosition extends Position {
         x = this._positionBounds.right;
       }
     }
-    this.value.x = x;
+    this.current.x = x;
     this.onChange.trigger(this);
   }
 
   public get x() {
-    return this.value.x;
+    return this.current.x;
   }
 
   public set y(y: number) {
@@ -38,12 +38,12 @@ export default class ConstrainedPosition extends Position {
         y = this._positionBounds.bottom;
       }
     }
-    this.value.y = y;
+    this.current.y = y;
     this.onChange.trigger(this);
   }
 
   public get y() {
-    return this.value.y;
+    return this.current.y;
   }
 
   public set(x: number|IPosition, y: number = 0) {

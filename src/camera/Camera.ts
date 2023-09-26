@@ -67,9 +67,9 @@ export default class Camera extends Container.With(ConstrainedPosition) implemen
   }
 
   public variableUpdate(dt: number) {
-    if(this.following && this.following.position.exactValue) {
-      const pos = this.position.exactValue;
-      const targetPos = this.following.position.exactValue;
+    if(this.following && this.following.position) {
+      const pos = this.position;
+      const targetPos = this.following.position;
 
       // TODO : PB : lerp is dependant on the frame rate
       // Possible fix : this._lerp.x / (16.66/dt)

@@ -23,22 +23,15 @@ export default class Rotation extends TransitionableComponent<"rotation", IRotat
     // @ts-ignore TODO: fix this
     this._pixi = target.pixi;
 
-    target.onLoaded(() => {
-      this.set({radians: this.value.radians});
-    });
+    this.set(this.current);
 
-    this.onChange.subscribe((rotation) => {
-      // TODO : disable this listener when transition is set?
-      this.assign(rotation);
-    }).triggerNowIfValueExists();
-
-    if (this.updateDt) {
+    if (this.transitionMillis) {
       this.enableTransition();
     }
   }
 
   public get radians() {
-    return this.value.radians;
+    return this.current.radians;
   }
 
   public set radians(radians: number) {
@@ -46,15 +39,20 @@ export default class Rotation extends TransitionableComponent<"rotation", IRotat
   }
 
   public get degrees() {
-    return radiansToDegrees(this.value.radians);
+    return radiansToDegrees(this.current.radians);
   }
 
   public set degrees(degrees: number) {
     this.set({radians: degreesToRadians(degrees)});
   }
 
+  public set(value: IRotation) {
+    super.set({radians: value.radians, degrees: radiansToDegrees(value.radians)});
+  }
+
   public setRotation(rotation: IRotation) {
-    this.radians = rotation.radians; // TODO : why does it not work with this.set({radians: rotation.radians}) ?
+    this.set(rotation);
+    // this.radians = rotation.radians; // TODO : why does it not work with this.set({radians: rotation.radians}) ?
     return this;
   }
 
@@ -74,9 +72,9 @@ export default class Rotation extends TransitionableComponent<"rotation", IRotat
     return this.onChange;
   }
 
-  public interpolate(alpha: number): IRotation {
+  public interpolate(from: IRotation, to: IRotation, alpha: number): IRotation {
     return {
-      radians: Linear.INSTANCE.interpolate(this.previous.radians, this.next.radians, alpha)
+      radians: Linear.INSTANCE.interpolate(from.radians, to.radians, alpha)
     }
   }
 

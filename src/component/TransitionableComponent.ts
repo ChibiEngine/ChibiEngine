@@ -6,26 +6,21 @@ import {VariableUpdatable} from "../gameobjects/Updatable";
 
 export default abstract class TransitionableComponent<Name extends string, T, Target extends AbstractGameObject = GameObject> extends Component<Name, Target> implements VariableUpdatable {
   public dontAddToUpdateList = true;
-  protected currentDt: number = 0;
+  protected elapsed: number = 0;
 
-  protected lastTime: number;
-  protected updateDt: number;
+  protected transitionMillis: number;
 
   /**
-   * Interpolation source
+   * Interpoalte from
    * @protected
    */
-  protected previous: T;
+  protected from: T;
+  protected current: T;
   /**
-   * Interpolation target
+   * Interpolate to
    * @protected
    */
-  protected next: T;
-  protected value: T;
-
-  public transitionEnabled: boolean = false;
-
-  public exactValue: T;
+  protected to: T;
 
   public readonly onChange: Event<this> = new Event();
 
@@ -37,73 +32,72 @@ export default abstract class TransitionableComponent<Name extends string, T, Ta
   protected constructor(current: T) {
     super();
 
-    this.value = current;
-    this.previous = { ...current };
-    this.next = { ...current };
+    this.from = current;
+    this.current = current;
+    this.to = current;
 
-    this.lastTime = performance.now();
-
-    this.onChange(() => {
-      this.currentDt = 0;
-      this.lastTime = performance.now();
-    });
+    this.assign = this.assign.bind(this);
   }
 
   public setTransition(millis: number) {
     /* TODO: automatically deduce interval from parent update rate?
        It supposes that the parent updates the component position in its update method
      */
-    this.updateDt = millis;
+    this.transitionMillis = millis;
     if(!this.target) {
       return;
     }
-    if(this.updateDt) {
+    if(this.transitionMillis) {
       this.enableTransition();
     } else {
       this.disableTransition();
     }
   }
 
+  public get transitionEnabled() {
+    return this.transitionMillis > 0;
+  }
+
   protected enableTransition() {
     this.target.scene.addUpdatable(this);
-    this.transitionEnabled = true;
   }
 
   public disableTransition() {
     this.target.scene.removeUpdatable(this);
-    this.transitionEnabled = false;
   }
 
   public set(value: T) {
-    this.value = value;
-    this.onChange.trigger(this);
     if(!this.transitionEnabled) {
-      // TODO : assign here ?
-      this.exactValue = value;
+      this.current = value;
+      try {
+        this.assign(value);
+      }catch (_) { }
+    } else {
+      this.from = this.current;
+      this.to = value;
+      this.elapsed = 0;
     }
+    this.onChange.trigger(this);
   }
 
   public interpolateDt(dt: number): T {
-    if(this.currentDt === 0) {
-      this.previous = { ...this.next };
-      this.next = { ...this.value };
-    }
-    this.currentDt += dt;
-    const alpha = Math.min(1, this.currentDt / this.updateDt);
+    this.elapsed += dt;
+    const alpha = Math.min(1, this.elapsed / this.transitionMillis);
+
     if(alpha === 1) {
-      return this.next;
+      return this.to;
     }
-    return this.interpolate(alpha);
+
+    return this.interpolate(this.from, this.to, alpha);
   }
 
-  protected abstract interpolate(alpha: number): T;
+  protected abstract interpolate(from: T, to: T, alpha: number): T;
 
   protected abstract assign(value: T): void;
 
   public variableUpdate(dt: number) {
     const val = this.interpolateDt(dt);
     this.assign(val);
-    this.exactValue = val;
-    // this.onExactValueChange.trigger(val);
+    this.current = val;
   }
 }

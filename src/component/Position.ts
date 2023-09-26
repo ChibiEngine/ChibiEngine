@@ -22,12 +22,10 @@ export default class Position extends TransitionableComponent<"position", IPosit
     this.target = target;
     // @ts-ignore
     this._pixi = target.pixi;
-    this.onChange.subscribe((position) => {
-      // TODO : disable this listener when transition is set?
-      this.assign(position);
-    }).triggerNowIfValueExists();
 
-    if(this.updateDt) {
+    this.set(this.current);
+
+    if(this.transitionMillis) {
       this.enableTransition();
     }
   }
@@ -44,26 +42,26 @@ export default class Position extends TransitionableComponent<"position", IPosit
     if(typeof position === "number") {
       this.set({ x: position, y });
     } else {
-      this.set({x: position.x, y: position.y});
+      this.set(position);
     }
     return this;
   }
 
   public get x() {
-    return this.value.x;
+    return this.current.x;
   }
 
   public get y() {
-    return this.value.y;
+    return this.current.y;
   }
 
   public set x(x: number) {
-    this.value.x = x;
+    this.current.x = x;
     this.onChange.trigger(this);
   }
 
   public set y(y: number) {
-    this.value.y = y;
+    this.current.y = y;
     this.onChange.trigger(this);
   }
 
@@ -71,7 +69,7 @@ export default class Position extends TransitionableComponent<"position", IPosit
     if(typeof x === "number") {
       super.set({ x, y });
     } else {
-      super.set(x);
+      super.set({x: x.x, y: x.y});
     }
   }
 
@@ -107,10 +105,10 @@ export default class Position extends TransitionableComponent<"position", IPosit
     return new Position(this.x + dx, this.y);
   }
 
-  public interpolate(alpha: number): IPosition {
+  public interpolate(from: IPosition, to: IPosition, alpha: number): IPosition {
     return {
-      x: Linear.INSTANCE.interpolate(this.previous.x, this.next.x, alpha),
-      y: Linear.INSTANCE.interpolate(this.previous.y, this.next.y, alpha)
+      x: Linear.INSTANCE.interpolate(from.x, to.x, alpha),
+      y: Linear.INSTANCE.interpolate(from.y, to.y, alpha)
     }
   }
 

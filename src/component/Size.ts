@@ -30,12 +30,7 @@ export default class Size extends TransitionableComponent<"size", ISize, Abstrac
     this.originalSize = { width: this._pixi.width/this._pixi.scale.x, height: this._pixi.height/this._pixi.scale.y };
     this.set({ width: this.originalSize.width*this.scaleX, height: this.originalSize.height*this.scaleY });
 
-    this.onChange.subscribe((size) => {
-      // TODO : disable this listener when transition is set?
-      this.assign(size);
-    }).triggerNowIfValueExists();
-
-    if(this.updateDt) {
+    if(this.transitionMillis) {
       this.enableTransition();
     }
   }
@@ -49,20 +44,20 @@ export default class Size extends TransitionableComponent<"size", ISize, Abstrac
   }
 
   public get width() {
-    return this.value.width;
+    return this.current.width;
   }
 
   public get height() {
-    return this.value.height;
+    return this.current.height;
   }
 
   public set width(width: number) {
-    this.value.width = width;
+    this.current.width = width;
     this.onChange.trigger(this);
   }
 
   public set height(height: number) {
-    this.value.height = height;
+    this.current.height = height;
     this.onChange.trigger(this);
   }
 
@@ -83,26 +78,26 @@ export default class Size extends TransitionableComponent<"size", ISize, Abstrac
     if(typeof width === "number") {
       super.set({ width, height });
     } else {
-      super.set(width);
+      super.set({width: width.width, height: width.height});
     }
   }
 
   public get half() {
-    return new Size(this.value.width / 2, this.value.height / 2);
+    return new Size(this.current.width / 2, this.current.height / 2);
   }
 
   public clone() {
-    return new Size(this.value.width, this.value.width);
+    return new Size(this.current.width, this.current.width);
   }
 
   public get onSizeChange(): Event<this> {
     return this.onChange;
   }
 
-  public interpolate(alpha: number): ISize {
+  public interpolate(from: ISize, to: ISize, alpha: number): ISize {
     return {
-      width: Linear.INSTANCE.interpolate(this.previous.width, this.next.width, alpha),
-      height: Linear.INSTANCE.interpolate(this.previous.height, this.next.height, alpha)
+      width: Linear.INSTANCE.interpolate(from.width, to.width, alpha),
+      height: Linear.INSTANCE.interpolate(from.height, to.height, alpha)
     };
   }
 
