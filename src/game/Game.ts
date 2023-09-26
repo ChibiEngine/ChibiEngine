@@ -25,6 +25,7 @@ export default class Game extends Container {
   public constructor(config: GameConfig) {
     super();
     this.app = new Application(config);
+    this.app.ticker.destroy();
     document.body.appendChild(this.app.view as HTMLCanvasElement);
     this.pixi = this.app.stage;
     this.gameLoop.start(this.updateScenes.bind(this));
@@ -60,5 +61,6 @@ export default class Game extends Container {
     for (const scene of this.sceneStack) {
       scene.updateScene(time, dt);
     }
+    this.app.render()
   }
 }
