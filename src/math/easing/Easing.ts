@@ -14,7 +14,7 @@ import {QuinticIn, QuinticInOut, QuinticOut} from "./Quintic";
  * Usual easing functions.
  * To customize their parameters, create new instances.
  */
-module Easing {
+namespace Easing {
   // Linear
   export const linear = Linear.INSTANCE;
 

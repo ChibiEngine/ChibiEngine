@@ -4,6 +4,7 @@ export class Stepped extends EasingFunction {
   public static readonly INSTANCE = new Stepped();
 
   public constructor(private readonly steps: number = 1) {
+    super();
   }
 
   public apply(t: number): number {

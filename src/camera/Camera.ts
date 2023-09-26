@@ -1,5 +1,4 @@
 import Container from "../gameobjects/Container";
-import Scene from "../game/Scene";
 import GameObject from "../gameobjects/GameObject";
 import {VariableUpdatable} from "../gameobjects/Updatable";
 import ConstrainedPosition from "../component/ConstrainedPosition";
@@ -18,19 +17,19 @@ export default class Camera extends Container.With(ConstrainedPosition) implemen
   }
 
   protected async _create(): Promise<void> {
-    const scene = this.scene as Scene;
+    const scene = this.scene;
 
     this.position.onChange(pos => {
       // TODO : use scene size instead of screen size
-      const width = scene.game.screen.width/2;
-      const height = scene.game.screen.height/2;
+      const width = scene.game.screen.width / 2;
+      const height = scene.game.screen.height / 2;
 
       let x = -pos.x + width + this._offset.x;
       let y = -pos.y + height + this._offset.y;
 
-      for(const layer of scene.layers) {
+      for (const layer of scene.layers) {
         const scrollFactor = layer.scrollFactor;
-        layer.position.set(x*scrollFactor.x, y*scrollFactor.y);
+        layer.position.set(x * scrollFactor.x, y * scrollFactor.y);
       }
     });
   }
@@ -50,10 +49,10 @@ export default class Camera extends Container.With(ConstrainedPosition) implemen
   }
 
   public setBounds(x1: number, y1: number, x2: number, y2: number) {
-    this.position.setPositionBounds(x1+this.scene.game.screen.width/2,
-        y1+this.scene.game.screen.height/2,
-        x2-this.scene.game.screen.width/2,
-        y2-this.scene.game.screen.height/2
+    this.position.setPositionBounds(x1 + this.scene.game.screen.width / 2,
+        y1 + this.scene.game.screen.height / 2,
+        x2 - this.scene.game.screen.width / 2,
+        y2 - this.scene.game.screen.height / 2
     );
 
     return this;
@@ -67,16 +66,18 @@ export default class Camera extends Container.With(ConstrainedPosition) implemen
   }
 
   public variableUpdate(dt: number) {
-    if(this.following && this.following.position) {
-      const pos = this.position;
-      const targetPos = this.following.position;
-
-      // TODO : PB : lerp is dependant on the frame rate
-      // Possible fix : this._lerp.x / (16.66/dt)
-      this.position.set(
-          Linear.INSTANCE.interpolate(pos.x, targetPos.x, this._lerp.x),
-          Linear.INSTANCE.interpolate(pos.y, targetPos.y, this._lerp.y)
-      );
+    if (!this.following?.position) {
+      return;
     }
+
+    const pos = this.position;
+    const targetPos = this.following.position;
+
+    // TODO : PB : lerp is dependant on the frame rate
+    // Possible fix : this._lerp.x / (16.66/dt)
+    this.position.set(
+        Linear.INSTANCE.interpolate(pos.x, targetPos.x, this._lerp.x),
+        Linear.INSTANCE.interpolate(pos.y, targetPos.y, this._lerp.y)
+    );
   }
 }

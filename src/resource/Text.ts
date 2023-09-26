@@ -23,6 +23,7 @@ export default class Text extends Resource {
     }
 
     protected async _destroy() {
+        // Nothing to do
     }
     
 }

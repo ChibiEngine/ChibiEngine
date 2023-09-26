@@ -36,14 +36,18 @@ export default class Game extends Container {
   }
 
   /**
-   * To be overridden
+   * To override
    */
-  public async _create() { }
+  public async _create() {
+    // To override
+  }
 
   /**
    * To be overridden
    */
-  public async _destroy() { }
+  public async _destroy() {
+    // To override
+  }
 
   public currentScene(): Scene {
     if (this.sceneStack.length === 0) return null;

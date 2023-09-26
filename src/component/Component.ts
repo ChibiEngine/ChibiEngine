@@ -2,28 +2,28 @@ import GameObject from "../gameobjects/GameObject";
 import AbstractGameObject from "../gameobjects/AbstractGameObject";
 
 export abstract class AbstractComponent<Name extends string, in T extends AbstractGameObject = AbstractGameObject> {
-    public abstract readonly componentName: Name;
+  public abstract readonly componentName: Name;
 
-    /**
-     * To override.
-     * Called when the component is added to a gameobject.
-     * @param target
-     */
-    public setTarget(target: T): void {
+  /**
+   * To override.
+   * Called when the component is added to a gameobject.
+   * @param target
+   */
+  public setTarget(target: T): void {
+    // To override
+  }
 
-    }
+  /**
+   * To override.
+   * Called when the gameobject is loaded and ready to apply the component.
+   * @param target
+   */
+  public apply(target: T): void {
+    // To override
+  }
 
-    /**
-     * To override.
-     * Called when the gameobject is loaded and ready to apply the component.
-     * @param target
-     */
-    public apply(target: T): void {
-
-    }
-
-    // Alternative to contravariance that may be broken https://github.com/microsoft/TypeScript/issues/53798
-    // #invariantStructuralHint = undefined as unknown as (x: T) => void
+  // Alternative to contravariance that may be broken https://github.com/microsoft/TypeScript/issues/53798
+  // #invariantStructuralHint = undefined as unknown as (x: T) => void
 }
 
 /*

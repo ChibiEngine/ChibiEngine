@@ -34,18 +34,14 @@ export type ClassArrayType<T> = T extends Array<Class<infer U>> ? U : never;
 export type ClassArrayTypeOmit<T, toOmit extends string> = ClassArrayType<T> & {[key in toOmit]: never};
 
 export default function Mixin<Base extends abstract new (...args: any) => any, A extends Array<Class<any>>>(Base: Base, ...classes: A): Class<InstanceType<Base> & UnionToIntersection<ClassArrayType<A>> & Mixed> {
-  abstract class MixClass extends Base {
-    constructor(...args: any[]) {
-      super(...args);
-    }
-  }
+  abstract class MixClass extends Base { }
 
   const mixed = [Mixed, ...classes];
 
   for (const m of mixed) {
     if (!m) break;
     for (const p of getMethods(m)) {
-      (MixClass.prototype as any)[p] = m.prototype[p];
+      (MixClass.prototype)[p] = m.prototype[p];
     }
   }
 

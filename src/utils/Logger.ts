@@ -1,4 +1,4 @@
-module Logger {
+namespace Logger {
   export function debug(...message: any) {
     console.log("[DEBUG]", ...message);
   }

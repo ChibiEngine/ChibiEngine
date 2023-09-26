@@ -13,5 +13,6 @@ export default class Callback extends Action {
   }
 
   public _update(offset: number, target: GameObject): void {
+    // Nothing to do
   }
 }

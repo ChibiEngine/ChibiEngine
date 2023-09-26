@@ -52,9 +52,7 @@ export default abstract class Scene extends Container {
     const t1 = performance.now();
     const updateDt = 1000/updatable.updateRate;
     let interval = time - updatable.lastUpdateTime;
-    let updatecount = 0;
     while (interval >= updateDt) {
-      updatecount++;
       updatable.update();
       updatable.lastUpdateTime += updateDt;
       interval -= updateDt;
@@ -80,10 +78,10 @@ export default abstract class Scene extends Container {
     param.updateCallOrder = param.updateCallOrder || 0;
     if(isFixedUpdatable(param)) {
       const set = this.fixedUpdatableSet.get(param.updateCallOrder);
-      set && set.delete(param);
+      set?.delete(param);
     } else {
       const set = this.variableUpdatableSet.get(param.updateCallOrder);
-      set && set.delete(param);
+      set?.delete(param);
     }
   }
 }

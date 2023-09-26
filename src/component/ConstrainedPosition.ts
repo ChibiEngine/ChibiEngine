@@ -16,11 +16,7 @@ export default class ConstrainedPosition extends Position {
 
   public set x(x: number) {
     if(this._positionBounds) {
-      if(x < this._positionBounds.left) {
-        x = this._positionBounds.left;
-      } else if(x > this._positionBounds.right) {
-        x = this._positionBounds.right;
-      }
+      x = Math.max(this._positionBounds.left, Math.min(this._positionBounds.right, x));
     }
     this.current.x = x;
     this.onChange.trigger(this);
@@ -32,11 +28,7 @@ export default class ConstrainedPosition extends Position {
 
   public set y(y: number) {
     if(this._positionBounds) {
-      if(y < this._positionBounds.top) {
-        y = this._positionBounds.top;
-      } else if(y > this._positionBounds.bottom) {
-        y = this._positionBounds.bottom;
-      }
+      y = Math.max(this._positionBounds.top, Math.min(this._positionBounds.bottom, y));
     }
     this.current.y = y;
     this.onChange.trigger(this);
@@ -49,30 +41,14 @@ export default class ConstrainedPosition extends Position {
   public set(x: number|IPosition, y: number = 0) {
     if(typeof x === "number") {
       if(this._positionBounds) {
-        if(x < this._positionBounds.left) {
-          x = this._positionBounds.left;
-        } else if(x > this._positionBounds.right) {
-          x = this._positionBounds.right;
-        }
-        if(y < this._positionBounds.top) {
-          y = this._positionBounds.top;
-        } else if(y > this._positionBounds.bottom) {
-          y = this._positionBounds.bottom;
-        }
+        x = Math.max(this._positionBounds.left, Math.min(this._positionBounds.right, x));
+        y = Math.max(this._positionBounds.top, Math.min(this._positionBounds.bottom, y));
       }
       super.set({ x, y });
     } else {
       if(this._positionBounds) {
-        if(x.x < this._positionBounds.left) {
-          x.x = this._positionBounds.left;
-        } else if(x.x > this._positionBounds.right) {
-          x.x = this._positionBounds.right;
-        }
-        if(x.y < this._positionBounds.top) {
-          x.y = this._positionBounds.top;
-        } else if(x.y > this._positionBounds.bottom) {
-          x.y = this._positionBounds.bottom;
-        }
+        x.x = Math.max(this._positionBounds.left, Math.min(this._positionBounds.right, x.x));
+        x.y = Math.max(this._positionBounds.top, Math.min(this._positionBounds.bottom, x.y));
       }
       super.set(x);
     }

@@ -24,6 +24,7 @@ export class ParallelImpl<T extends GameObject> extends Action {
   }
 
   public _update(offset: number, target: GameObject) {
+    // Nothing to do
   }
 }
 

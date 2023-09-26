@@ -8,7 +8,7 @@ import {VariableUpdatable} from "../gameobjects/Updatable";
 export default abstract class Action<in T extends GameObject = GameObject> extends Component<"_action", T> implements VariableUpdatable {
   public readonly componentName = "_action";
 
-  protected target: T & any;
+  protected target: any;
 
   protected _elapsed = 0;
   public _duration = 1000;
@@ -27,11 +27,11 @@ export default abstract class Action<in T extends GameObject = GameObject> exten
   }
 
   public stop() {
-
+    // TODO: implement
   }
 
   public pause() {
-
+    // TODO: implement
   }
 
   public apply(target: T) {

@@ -37,7 +37,7 @@ class EventImpl<T> extends Function {
     if(instantTrigger) {
       callback(this.lastValue);
     }
-    this.onAddListener && this.onAddListener.trigger(listener);
+    this.onAddListener?.trigger(listener);
     return listener;
   }
 
@@ -55,7 +55,7 @@ class EventImpl<T> extends Function {
     if(instantTrigger) {
       callback(this.lastValue);
     }
-    this.onAddListener && this.onAddListener.trigger(listener);
+    this.onAddListener?.trigger(listener);
     return listener;
   }
 

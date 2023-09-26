@@ -20,10 +20,10 @@ export default class Container extends GameObject {
   }
 
   /**
-   * Sans effet.
-   * A redéfinir dans les sous-classes.
+   * To override
    */
   protected async _create(): Promise<void> {
+    // To override
   }
 
   public set scene(scene: Scene) {

@@ -43,7 +43,7 @@ class PixiObjectImpl<T extends Container> extends GameObject {
   }
 
   protected async _create() {
-
+    // Nothing to do
   }
 
   protected async _destroy() {

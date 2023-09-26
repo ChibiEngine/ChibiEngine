@@ -1,6 +1,6 @@
 import Resource from "../resource/Resource";
 
-module Cache {
+namespace Cache {
   // Resource by path
   export const resources: Map<string, Resource> = new Map();
 

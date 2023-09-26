@@ -27,6 +27,7 @@ export class SequenceImpl<T extends GameObject = GameObject> extends Action<T> {
   }
 
   public _update(offset: number, target: GameObject) {
+    // Nothing to do
   }
 
   /**
@@ -54,14 +55,12 @@ export class SequenceImpl<T extends GameObject = GameObject> extends Action<T> {
         this.runNextAction();
       });
       this.target.play(action);
+    } else if (this.isIndefinitelyLooping() || this._currentLoop < this._loopCount) {
+      this._currentLoop++;
+      this.actionsToRun = this.actions.slice();
+      this.runNextAction();
     } else {
-      if (this.isIndefinitelyLooping() || this._currentLoop < this._loopCount) {
-        this._currentLoop++;
-        this.actionsToRun = this.actions.slice();
-        this.runNextAction();
-      } else {
-        this.finish();
-      }
+      this.finish();
     }
   }
 }
