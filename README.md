@@ -1,6 +1,7 @@
 # Chibi Engine (WIP)
 
 [![npm version](https://badge.fury.io/js/chibiengine.svg)](https://badge.fury.io/js/chibiengine)
+[![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=ChibiEngine_ChibiEngine&metric=sqale_rating)](https://sonarcloud.io/summary/new_code?id=ChibiEngine_ChibiEngine)
 
 Chibi Engine aims to offer a modern and simple approach to game development with web technologies. It takes advantage of TypeScript and ES6 features such as asynchronism, classes, and mixins for a flexible and maintainable programming methodology, inspired by popular game engines.
 
