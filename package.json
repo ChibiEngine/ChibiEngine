@@ -20,14 +20,19 @@
       }
     }
   },
+  "main": "lib/cjs/index.js",
   "module": "lib/esm/index.js",
   "types": "lib/esm/index.d.ts",
-  "files": [
-    "lib",
-    "dist"
-  ],
   "bundle": "dist/chibiengine.umd.cjs",
   "bundleModule": "dist/chibiengine.js",
+  "bundleOutput": {
+    "name": "chibiengine"
+  },
+  "files": [
+    "lib",
+    "dist",
+    "*.d.ts"
+  ],
   "scripts": {
     "build": "run-s build:index build:esm build:cjs build:vite",
     "build:vite": "vite build",
@@ -38,8 +43,7 @@
   },
   "dependencies": {
     "@types/css-font-loading-module": "^0.0.8",
-    "pixi.js": "~7.3.1",
-    "@pixi/colord": "^2.9.6"
+    "pixi.js": "~7.3.1"
   },
   "devDependencies": {
     "@types/jest": "^29.5.0",

@@ -1368,7 +1368,7 @@
   dependencies:
     "@pixi/colord" "^2.9.4"
 
-"@pixi/colord@^2.9.4", "@pixi/colord@^2.9.6":
+"@pixi/colord@^2.9.4":
   version "2.9.6"
   resolved "https://registry.yarnpkg.com/@pixi/colord/-/colord-2.9.6.tgz#7e4e7851480da6fd3cef4e331f008d60be7e1204"
   integrity sha512-nezytU2pw587fQstUu1AsJZDVEynjskwOL+kibwcdxsMBFqPsFFNA7xl0ii/gXuDi6M0xj3mfRJj8pBSc2jCfA==
