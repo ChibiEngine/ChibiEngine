@@ -27,6 +27,8 @@ import Rotation from "../component/Rotation";
  *   - Text
  */
 export default abstract class GameObject extends AbstractGameObject.With(Position, Size, Rotation) {
+  public id?: string;
+
   public _parent: Container;
   public abstract pixi: PixiContainer;
 

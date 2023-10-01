@@ -41,9 +41,11 @@ export default class Container extends GameObject {
    * Ajoute un enfant à ce noeud et charge ses dépendances si nécessaire (just-in-time loading)
    * This method is asynchronous and resolves when the dependency is loaded.
    * @param child
+   * @param id?
    */
-  public add<T extends GameObject>(child: T): T & PromiseLike<T> {
+  public add<T extends GameObject>(child: T, id?: string): T & PromiseLike<T> {
     if (child._parent) throw new Error("Child already has a parent");
+    child.id = id;
     child._parent = this;
     if(this.scene) child.scene = this.scene;
 
