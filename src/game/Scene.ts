@@ -1,6 +1,6 @@
 import Container from "../gameobjects/Container";
 import Game from "./Game";
-import Updatable, {FixedUpdatable, isFixedUpdatable, isUpdatable, isVariableUpdatable, VariableUpdatable} from "../gameobjects/Updatable";
+import {Updatable, FixedUpdatable, isFixedUpdatable, isUpdatable, isVariableUpdatable, VariableUpdatable} from "../gameobjects/Updatable";
 import Layer from "../camera/Layer";
 import type GameObject from "../gameobjects/GameObject";
 import RelativeArray from "../utils/RelativeArray";

@@ -30,9 +30,7 @@ export interface VariableUpdatable {
     variableUpdate(dt: number): void;
 }
 
-type Updatable = FixedUpdatable | VariableUpdatable;
-
-export default Updatable;
+export type Updatable = FixedUpdatable | VariableUpdatable;
 
 export function isUpdatable(object: any): object is Updatable {
     return isFixedUpdatable(object) || isVariableUpdatable(object)

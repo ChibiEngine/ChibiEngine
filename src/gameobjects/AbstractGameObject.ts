@@ -3,7 +3,7 @@ import Component, {AbstractComponent} from "../component/Component";
 import Loadable from "../loader/Loadable";
 
 import type Scene from "../game/Scene";
-import Updatable, {isUpdatable} from "./Updatable";
+import {Updatable, isUpdatable} from "./Updatable";
 import assignComponent from "./operations/assignComponent";
 import {ComponentProperties} from "../component/types/ComponentProperty";
 import Mixin, {ClassArrayType, ClassArrayTypeOmit, Mixed} from "../mixin/Mixin";

@@ -23,9 +23,11 @@ jobs:
       - run: npm version $GITHUB_REF_NAME -m "[RELEASE] %s"
       - run: yarn build
       - run: |
-          cp package.json dist
-          cp README.md dist
-      - run: cd dist && yarn publish
+          mkdir publish
+          cp -r dist publish
+          cp -r lib publish
+          cp package.json LICENSE README.md publish
+      - run: cd publish && yarn publish
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
       - run: git push origin HEAD:main

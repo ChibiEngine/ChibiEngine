@@ -3,12 +3,37 @@
   "version": "0.3.2-dev",
   "description": "Modern Web Game Engine based on PixiJS",
   "author": "Feavy",
+  "type": "module",
   "repository": {
     "type": "git",
     "url": "https://github.com/ChibiEngine/ChibiEngine.git"
   },
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./lib/esm/index.d.ts",
+        "default": "./lib/esm/index.js"
+      },
+      "require": {
+        "types": "./lib/cjs/index.d.ts",
+        "default": "./lib/cjs/index.js"
+      }
+    }
+  },
+  "module": "lib/esm/index.js",
+  "types": "lib/esm/index.d.ts",
+  "files": [
+    "lib",
+    "dist"
+  ],
+  "bundle": "dist/chibiengine.umd.cjs",
+  "bundleModule": "dist/chibiengine.js",
   "scripts": {
-    "build": "tsc",
+    "build": "run-s build:index build:esm build:cjs build:vite",
+    "build:vite": "vite build",
+    "build:index": "node scripts/generateIndexFiles.js",
+    "build:esm": "tsc --module ESNext --target es2020 --outDir lib/esm",
+    "build:cjs": "tsc --module commonjs --target es6 --outDir lib/cjs",
     "test": "jest"
   },
   "dependencies": {
@@ -17,9 +42,13 @@
   },
   "devDependencies": {
     "@types/jest": "^29.5.0",
+    "esbuild": "^0.19.4",
     "jest": "^29.5.0",
+    "npm-run-all": "^4.1.5",
     "ts-jest": "^29.0.5",
-    "typescript": "^5.1.6"
+    "ts-node": "^10.9.1",
+    "typescript": "^5.1.6",
+    "vite": "^4.4.9"
   },
   "resolutions": {
     "@babel/preset-env": "7.13.8"

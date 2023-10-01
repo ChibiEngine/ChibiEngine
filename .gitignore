@@ -1,3 +1,6 @@
 node_modules
 .idea
 /dist/
+/lib/
+/publish/
+/src/index.ts
