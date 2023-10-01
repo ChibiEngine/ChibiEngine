@@ -54,9 +54,9 @@ export default class Game extends Container {
     return this.sceneStack[this.sceneStack.length - 1];
   }
 
-  public addScene(scene: Scene) {
+  public addScene(scene: Scene, id?: string) {
     scene.game = this;
-    this.add(scene).then(() => {
+    this.add(scene, id).then(() => {
       this.sceneStack.push(scene);
     });
   }

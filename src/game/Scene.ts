@@ -23,8 +23,8 @@ export default abstract class Scene extends Container {
     }
   }
 
-  public add<T extends GameObject>(child: T): T & PromiseLike<T> {
-    const ret = super.add(child);
+  public add<T extends GameObject>(child: T, id?: string): T & PromiseLike<T> {
+    const ret = super.add(child, id);
     if(child instanceof Layer) {
       this.layers.push(child);
     }
