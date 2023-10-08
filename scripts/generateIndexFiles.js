@@ -16,7 +16,7 @@ const directoryPath = path.join(process.cwd(), './src'); // Replace with your di
 const indexFilePath = path.join(directoryPath, 'index.ts');
 
 // Use glob to find all TypeScript files recursively in the directory
-const files = glob.sync('**/*[!.d].ts', { cwd: directoryPath });
+const files = glob.sync('**/*.ts', { cwd: directoryPath });
 
 const ignoredFiles = [
     'ComponentProperty.ts',
