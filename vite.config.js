@@ -4,7 +4,7 @@ import { transform } from 'esbuild';
 
 export default defineConfig({
     // config options
-    plugins: [minifyEs()],
+    plugins: [replaceWithGlobalPIXI(), minifyEs()],
     build: {
         target: "modules",
         minify: "esbuild",
@@ -25,6 +25,44 @@ export default defineConfig({
         }
     }
 });
+
+function replaceWithGlobalPIXI() {
+    return {
+        name: 'replaceWithGlobalPIXI',
+        renderChunk: {
+            order: 'post',
+            async handler(code, chunk, outputOptions) {
+                if (outputOptions.format !== "es") {
+                    return code;
+                }
+
+                const pattern = /import \{ (.+) } from "pixi\.js";\n/g;
+
+                const matches = code.matchAll(pattern);
+
+                if (!matches) {
+                    console.log("no matches");
+                    return code;
+                }
+
+                console.log("matches", matches);
+
+                for (const match of matches) {
+                    console.log("match", match[1]);
+                    const imports = match[1].split(',').map(i => i.trim().split(' as '));
+                    console.log("imports", imports);
+                    let replacement = "const PIXI = window.PIXI;\n";
+                    for (const [importName, alias] of imports) {
+                        replacement += `const ${alias} = PIXI.${importName};\n`;
+                    }
+                    code = code.replace(match[0], replacement);
+                }
+
+                return code;
+            },
+        }
+    };
+}
 
 function minifyEs() {
     return {
