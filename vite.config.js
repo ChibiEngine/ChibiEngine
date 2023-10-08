@@ -13,7 +13,15 @@ export default defineConfig({
                 resolve(__dirname, "src/index.ts"),
             ],
             name: "chibiengine",
-            fileName: 'chibiengine'
+            fileName: 'chibiengine',
+        },
+        rollupOptions: {
+            external: ["pixi.js"],
+            output: {
+                globals: {
+                    "pixi.js": "PIXI"
+                }
+            }
         }
     }
 });
