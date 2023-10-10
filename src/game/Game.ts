@@ -13,26 +13,40 @@ interface GameConfig {
 }
 
 export default class Game extends Container {
-  public readonly pixi: PixiContainer = null;
+  public pixi: PixiContainer = null;
 
-  private readonly app: Application;
+  private app: Application;
   private readonly sceneStack: Scene[] = [];
 
   private readonly gameLoop: GameLoop = new GameLoop();
 
-  public readonly screen: Rectangle;
+  public screen: Rectangle;
 
-  public constructor(config: GameConfig) {
+  public constructor(public readonly config: GameConfig) {
     super();
-    this.app = new Application(config);
-    this.app.ticker.destroy();
-    document.body.appendChild(this.app.view as HTMLCanvasElement);
+  }
+
+  public async start(canvas?: HTMLCanvasElement | string) {
+    this.app = new Application( {
+      ...this.config,
+      view: typeof canvas === "string" ? document.getElementById(canvas) as HTMLCanvasElement : canvas,
+    });
+
+    if(typeof canvas === "undefined") {
+      document.body.appendChild(this.app.view as HTMLCanvasElement);
+    }
+
     this.pixi = this.app.stage;
-    this.gameLoop.start(this.updateScenes.bind(this));
     this.screen = new Rectangle(this.app.screen.x, this.app.screen.y, this.app.screen.width, this.app.screen.height);
+
     this.app.renderer.on("resize", () => {
       this.screen.set(this.app.screen.x, this.app.screen.y, this.app.screen.width, this.app.screen.height);
     });
+
+    this.app.ticker.destroy();
+    this.gameLoop.start(this.updateScenes.bind(this));
+
+    await this._create();
   }
 
   /**
