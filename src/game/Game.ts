@@ -4,6 +4,7 @@ import Scene from "./Scene";
 import Container from "../gameobjects/Container";
 import Rectangle from "../geom/rect/Rectangle";
 import GameLoop from "./GameLoop";
+import Event from "../event/Event";
 
 interface GameConfig {
   width: number;
@@ -21,6 +22,8 @@ export default class Game extends Container {
   private readonly gameLoop: GameLoop = new GameLoop();
 
   public screen: Rectangle;
+
+  private onStart: Event<this> = new Event();
 
   public constructor(public readonly config: GameConfig) {
     super();
@@ -47,6 +50,8 @@ export default class Game extends Container {
     this.gameLoop.start(this.updateScenes.bind(this));
 
     await this._create();
+
+    this.onStart.trigger(this);
   }
 
   /**
@@ -63,6 +68,8 @@ export default class Game extends Container {
     // To override
   }
 
+  // TODO : override add to use a default scene if none is present
+
   public currentScene(): Scene {
     if (this.sceneStack.length === 0) return null;
     return this.sceneStack[this.sceneStack.length - 1];
@@ -70,9 +77,11 @@ export default class Game extends Container {
 
   public addScene(scene: Scene, id?: string) {
     scene.game = this;
-    this.add(scene, id).then(() => {
-      this.sceneStack.push(scene);
-    });
+    this.onStart.subscribeOnce(() => {
+      this.add(scene, id).then(() => {
+        this.sceneStack.push(scene);
+      });
+    }).triggerNowIfValueExists();
   }
 
   private updateScenes(time: number, dt: number) {
