@@ -37,7 +37,9 @@
     "build": "run-s build:index build:esm build:cjs build:vite",
     "build:vite": "vite build",
     "build:index": "node scripts/generateIndexFiles.js",
-    "build:esm": "tsc --module ESNext --target es2020 --outDir lib/esm",
+    "build:esm": "run-s build:esm-tsc build:esm-fix",
+    "build:esm-tsc": "tsc --module ESNext --target es2020 --outDir lib/esm",
+    "build:esm-fix": "node scripts/esmImportsAddJsExtension.js",
     "build:cjs": "tsc --module commonjs --target es6 --outDir lib/cjs",
     "test": "jest"
   },

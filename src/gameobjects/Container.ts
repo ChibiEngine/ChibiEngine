@@ -11,7 +11,7 @@ import type Scene from "../game/Scene";
 // TODO : renommer en Container?
 export default class Container extends GameObject {
   public readonly pixi: PixiContainer;
-  private children: GameObject[] = [];
+  public readonly children: GameObject[] = [];
 
   public constructor(position: Position = Position.zero()) {
     super(position);
