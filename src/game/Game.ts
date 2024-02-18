@@ -47,11 +47,12 @@ export default class Game extends Container {
     });
 
     this.app.ticker.destroy();
-    this.gameLoop.start(this.updateScenes.bind(this));
 
     await this._create();
 
     this.onStart.trigger(this);
+
+    this.gameLoop.start(this.updateScenes.bind(this));
   }
 
   /**
@@ -75,12 +76,15 @@ export default class Game extends Container {
     return this.sceneStack[this.sceneStack.length - 1];
   }
 
+  public get scene(): Scene {
+    return this.currentScene();
+  }
+
   public addScene(scene: Scene, id?: string) {
     scene.game = this;
+    this.sceneStack.push(scene);
     this.onStart.subscribeOnce(() => {
-      this.add(scene, id).then(() => {
-        this.sceneStack.push(scene);
-      });
+      this.add(scene, id);
     }).triggerNowIfValueExists();
   }
 
@@ -88,6 +92,6 @@ export default class Game extends Container {
     for (const scene of this.sceneStack) {
       scene.updateScene(time, dt);
     }
-    this.app.render()
+    this.app.render();
   }
 }
