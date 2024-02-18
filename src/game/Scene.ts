@@ -31,10 +31,6 @@ export default abstract class Scene extends Container {
     return ret;
   }
 
-  public get scene() {
-    return this;
-  }
-
   public updateScene(time: number, dt: number) {
     for (let updatables of this.fixedUpdatableSet) {
       for (let updatable of updatables) {
