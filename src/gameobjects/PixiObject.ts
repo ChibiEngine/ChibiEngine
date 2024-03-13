@@ -1,11 +1,10 @@
 import { Container } from "pixi.js";
-
 import GameObject from "./GameObject";
 
 class PixiObjectImpl<T extends Container> extends GameObject {
   public pixi: T;
 
-  constructor(object: T) {
+  public constructor(object: T) {
     super();
     this.pixi = object;
     return new Proxy(this, {
@@ -39,7 +38,7 @@ class PixiObjectImpl<T extends Container> extends GameObject {
         }
         return true;
       }
-    })
+    });
   }
 
   protected async _create() {
@@ -49,10 +48,9 @@ class PixiObjectImpl<T extends Container> extends GameObject {
   protected async _destroy() {
     this.pixi.destroy();
   }
-
 }
 
-declare type PixiObject<T extends Container> = PixiObjectImpl<T> & T;
+declare type PixiObject<T extends Container> = PixiObjectImpl<T> & NoInfer<T>;
 
 const PixiObject: new <T extends Container>(object: T) => PixiObject<T> = PixiObjectImpl as any;
 export default PixiObject;

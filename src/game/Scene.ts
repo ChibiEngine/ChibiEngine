@@ -4,6 +4,8 @@ import {Updatable, FixedUpdatable, isFixedUpdatable, isUpdatable, isVariableUpda
 import Layer from "../camera/Layer";
 import type GameObject from "../gameobjects/GameObject";
 import RelativeArray from "../utils/RelativeArray";
+import type {Container as PixiContainer} from "pixi.js";
+import PixiObject from "../gameobjects/PixiObject";
 
 export default abstract class Scene extends Container {
   public game: Game;
@@ -23,12 +25,15 @@ export default abstract class Scene extends Container {
     }
   }
 
-  public add<T extends GameObject>(child: T, id?: string): T & PromiseLike<T> {
-    const ret = super.add(child, id);
-    if(child instanceof Layer) {
-      this.layers.push(child);
+  public add<T extends PixiContainer>(child: T, id?: string): PixiObject<T> & PromiseLike<PixiObject<T>>
+  public add<T extends GameObject>(child: T, id?: string): T & PromiseLike<T>
+  public add(child: PixiContainer | GameObject, id?: string): any {
+    const child2 = super.add<any>(child, id) as GameObject;
+    if(child2 instanceof Layer) {
+      this.layers.push(child2);
     }
-    return ret;
+
+    return child2;
   }
 
   public updateScene(time: number, dt: number) {

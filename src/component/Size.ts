@@ -1,4 +1,4 @@
-import {Container} from "pixi.js";
+import type {Container, Texture} from "pixi.js";
 
 import Event from "../event/Event";
 import AbstractGameObject from "../gameobjects/AbstractGameObject";
@@ -27,8 +27,15 @@ export default class Size extends TransitionableComponent<"size", ISize, Abstrac
     // @ts-ignore TODO: fix this
     this._pixi = target.pixi;
 
-    this.originalSize = { width: this._pixi.width/this._pixi.scale.x, height: this._pixi.height/this._pixi.scale.y };
-    this.set({ width: this.originalSize.width*this.scaleX, height: this.originalSize.height*this.scaleY });
+    if("texture" in this._pixi) {
+      (this._pixi.texture as Texture).once("update", () => {
+        this.originalSize = { width: this._pixi.width/this._pixi.scale.x, height: this._pixi.height/this._pixi.scale.y };
+        this.set({ width: this.originalSize.width*this.scaleX, height: this.originalSize.height*this.scaleY });
+      });
+    } else {
+      this.originalSize = { width: this._pixi.width/this._pixi.scale.x, height: this._pixi.height/this._pixi.scale.y };
+      this.set({ width: this.originalSize.width*this.scaleX, height: this.originalSize.height*this.scaleY });
+    }
 
     if(this.transitionMillis) {
       this.enableTransition();

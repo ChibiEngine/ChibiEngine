@@ -3,6 +3,7 @@ import { Container as PixiContainer } from "pixi.js";
 import GameObject from "./GameObject";
 import Position from "../component/Position";
 import type Scene from "../game/Scene";
+import PixiObject from "./PixiObject";
 
 /**
  * Noeud simple au sens conteneur PIXI : possède des enfants
@@ -41,28 +42,36 @@ export default class Container extends GameObject {
    * Ajoute un enfant à ce noeud et charge ses dépendances si nécessaire (just-in-time loading)
    * This method is asynchronous and resolves when the dependency is loaded.
    * @param child
-   * @param id?
    */
-  public add<T extends GameObject>(child: T, id?: string): T & PromiseLike<T> {
-    if (child._parent) throw new Error("Child already has a parent");
-    child.id = id;
-    child._parent = this;
-    if(this.scene) child.scene = this.scene;
+  public add<T extends PixiContainer>(child: T, id?: string): PixiObject<T> & PromiseLike<PixiObject<T>>
+  public add<T extends GameObject>(child: T, id?: string): T & PromiseLike<T>
+  public add(child: PixiContainer | GameObject, id?: string): any {
+    let child2: GameObject;
+    if(child instanceof PixiContainer) {
+      child2 = new PixiObject(child) satisfies GameObject;
+    } else {
+      child2 = child;
+    }
+
+    if (child2._parent) throw new Error("Child already has a parent");
+    child2.id = id;
+    child2._parent = this;
+    if(this.scene) child2.scene = this.scene;
 
     let index = this.children.length;
 
-    this.children.push(child);
+    this.children.push(child2);
 
     // pixi object can be present before object is loaded
     // Example: when creating a scene, the container is immediately available while populating it (create) can take time
-    if (child.pixi) {
+    if (child2.pixi) {
       if(index <= this.pixi.children.length) {
-        this.pixi.addChildAt(child.pixi, index);
+        this.pixi.addChildAt(child2.pixi, index);
       } else {
-        this.pixi.addChild(child.pixi);
+        this.pixi.addChild(child2.pixi);
       }
     } else {
-      child.onLoaded.subscribeOnce(node => {
+      child2.onLoaded.subscribeOnce(node => {
         if(index <= this.pixi.children.length) {
           this.pixi.addChildAt(node.pixi, index);
         } else {
@@ -72,10 +81,9 @@ export default class Container extends GameObject {
     }
 
     // after so onDependencyLoaded is called after the pixi objects has been added
-    this.load(child);
+    this.load(child2);
 
-    // @ts-ignore
-    return child;
+    return child2;
   }
 
   /**
