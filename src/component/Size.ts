@@ -30,6 +30,11 @@ export default class Size extends TransitionableComponent<"size", ISize, Abstrac
     this.originalSize = { width: this._pixi.width/this._pixi.scale.x, height: this._pixi.height/this._pixi.scale.y };
     this.set({ width: this.originalSize.width*this.scaleX, height: this.originalSize.height*this.scaleY });
 
+    this.onChange.subscribe((position) => {
+      // TODO : disable this listener when transition is set?
+      this.assign(position);
+    }).triggerNowIfValueExists();
+
     if(this.transitionMillis) {
       this.enableTransition();
     }

@@ -23,6 +23,11 @@ export default class Position extends TransitionableComponent<"position", IPosit
     // @ts-ignore
     this._pixi = target.pixi;
 
+    this.onChange.subscribe((position) => {
+      // TODO : disable this listener when transition is set?
+      this.assign(position);
+    }).triggerNowIfValueExists();
+
     this.set(this.current);
 
     if(this.transitionMillis) {
