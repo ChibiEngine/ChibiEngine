@@ -4,16 +4,19 @@ import getMethods from "../utils/getMethods";
 export class Mixed {
   protected mixin<T extends object>(target: T) {
     for (const method of getMethods(target)) {
-      if (method === "constructor") continue;
+      if (method in target || method === "constructor") continue;
+
       Object.defineProperty(this, method, {
         get: () => target[method],
-        configurable: true
+        set: (value) => target[method] = value
       });
     }
     for (const key in target) {
+      if (key in target) continue;
+
       Object.defineProperty(this, key, {
         value: target[key],
-        configurable: true
+        set: (value) => target[key] = value
       });
     }
     return target as any;
@@ -34,16 +37,8 @@ export type ClassArrayType<T> = T extends Array<Class<infer U>> ? U : never;
 export type ClassArrayTypeOmit<T, toOmit extends string> = ClassArrayType<T> & {[key in toOmit]: never};
 
 export default function Mixin<Base extends abstract new (...args: any) => any, A extends Array<Class<any>>>(Base: Base, ...classes: A): Class<InstanceType<Base> & UnionToIntersection<ClassArrayType<A>> & Mixed> {
-  abstract class MixClass extends Base { }
+  // @ts-ignore keep method protected
+  Base.prototype.mixin = Mixed.prototype.mixin;
 
-  const mixed = [Mixed, ...classes];
-
-  for (const m of mixed) {
-    if (!m) break;
-    for (const p of getMethods(m)) {
-      (MixClass.prototype)[p] = m.prototype[p];
-    }
-  }
-
-  return MixClass as any;
+  return Base;
 }
