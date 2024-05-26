@@ -1,25 +1,25 @@
 import { Sprite as PixiSprite } from "pixi.js";
 
-import Image from "../resource/Image";
+import Texture from "../resource/Texture";
 import GameObject from "./GameObject";
 import Position from "../component/Position";
 
 export default class Sprite extends GameObject {
   public pixi: PixiSprite;
 
-  public constructor(private readonly image: Image, x: number = 0, y: number = 0) {
+  public constructor(public readonly texture: Texture, x: number = 0, y: number = 0) {
     super(new Position(x, y));
   }
 
   public async _create(): Promise<void> {
-    const image = await this.load(this.image);
+    const image = await this.load(this.texture);
     this.pixi = new PixiSprite(image.pixi);
     this.setPosition(this.position);
   }
 
-  public setTexture(image: Image) {
-    this.load(image).then(img => {
-      this.pixi.texture = img.pixi;
+  public setTexture(texture: Texture) {
+    this.load(texture).then(texture1 => {
+      this.pixi.texture = texture1.pixi;
     });
     return this;
   }
