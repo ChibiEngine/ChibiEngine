@@ -16,7 +16,6 @@ export default class Container extends GameObject {
   public constructor(position: Position = Position.zero()) {
     super(position);
     this.pixi = new PixiContainer();
-    this.setPosition(position);
   }
 
   /**
