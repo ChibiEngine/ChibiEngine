@@ -16,7 +16,7 @@ interface GameConfig {
 export default class Game extends Container {
   public pixi: PixiContainer = null;
 
-  private app: Application;
+  private _pixiApp: Application;
   private readonly sceneStack: Scene[] = [];
 
   private readonly gameLoop: GameLoop = new GameLoop();
@@ -30,29 +30,33 @@ export default class Game extends Container {
   }
 
   public async start(canvas?: HTMLCanvasElement | string) {
-    this.app = new Application( {
+    this._pixiApp = new Application( {
       ...this.config,
       view: typeof canvas === "string" ? document.getElementById(canvas) as HTMLCanvasElement : canvas,
     });
 
     if(typeof canvas === "undefined") {
-      document.body.appendChild(this.app.view as HTMLCanvasElement);
+      document.body.appendChild(this._pixiApp.view as HTMLCanvasElement);
     }
 
-    this.pixi = this.app.stage;
-    this.screen = new Rectangle(this.app.screen.x, this.app.screen.y, this.app.screen.width, this.app.screen.height);
+    this.pixi = this._pixiApp.stage;
+    this.screen = new Rectangle(this._pixiApp.screen.x, this._pixiApp.screen.y, this._pixiApp.screen.width, this._pixiApp.screen.height);
 
-    this.app.renderer.on("resize", () => {
-      this.screen.set(this.app.screen.x, this.app.screen.y, this.app.screen.width, this.app.screen.height);
+    this._pixiApp.renderer.on("resize", () => {
+      this.screen.set(this._pixiApp.screen.x, this._pixiApp.screen.y, this._pixiApp.screen.width, this._pixiApp.screen.height);
     });
 
-    this.app.ticker.destroy();
+    this._pixiApp.ticker.destroy();
 
     await this._create();
 
     this.onStart.trigger(this);
 
     this.gameLoop.start(this.updateScenes.bind(this));
+  }
+
+  public get pixiApp(): Application {
+    return this._pixiApp;
   }
 
   /**
@@ -92,6 +96,6 @@ export default class Game extends Container {
     for (const scene of this.sceneStack) {
       scene.updateScene(time, dt);
     }
-    this.app.render();
+    this._pixiApp.render();
   }
 }
