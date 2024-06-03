@@ -44,7 +44,7 @@ export default class Container extends GameObject {
    */
   public add<T extends GameObject>(child: T, id?: string): T & PromiseLike<T> {
     if (child._parent) throw new Error("Child already has a parent");
-    child.id = id;
+    if(id !== undefined) child.id = id;
     child._parent = this;
     if(this.scene) child.scene = this.scene;
 
