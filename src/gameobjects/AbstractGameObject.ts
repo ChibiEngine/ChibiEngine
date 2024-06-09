@@ -50,7 +50,7 @@ export default abstract class AbstractGameObject extends Loadable {
       if(this.scene?.initialized) {
         this.scene.addUpdatable(component);
       } else {
-        this.updatableComponentsToAdd.push(component);
+        this.updatableComponentsToAdd.push(component as any);
       }
     }
     return assignComponent(this, component);

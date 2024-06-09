@@ -20,13 +20,16 @@ const files = glob.sync('**/*.ts', { cwd: directoryPath });
 
 const ignoredFiles = [
     'ComponentProperty.ts',
-    'IPosition.ts',
     'Positionable.ts',
-    'IRotation.ts',
+    'IPosition.ts',
     'Rotationable.ts',
+    'IRotation.ts',
+    'Scalable.ts',
+    'IScale.ts',
     'ISize.ts',
     'Sizeable.ts',
-    'Vec2.ts'
+    'Vec2.ts',
+    'Mixin.new.ts',
 ];
 
 // Generate export statements for each file

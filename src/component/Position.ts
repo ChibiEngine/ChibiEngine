@@ -49,7 +49,7 @@ export default class Position extends TransitionableComponent<"position", IPosit
     } else {
       this.set(position);
     }
-    return this;
+    return this.gameobject;
   }
 
   public get x() {

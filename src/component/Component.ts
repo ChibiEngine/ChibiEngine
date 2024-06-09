@@ -4,6 +4,8 @@ import AbstractGameObject from "../gameobjects/AbstractGameObject";
 export abstract class AbstractComponent<Name extends string, in T extends AbstractGameObject = AbstractGameObject> {
   public abstract readonly componentName: Name;
 
+  public gameobject: this;
+
   /**
    * To override.
    * Called when the component is added to a gameobject.

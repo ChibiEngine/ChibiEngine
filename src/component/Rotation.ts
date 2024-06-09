@@ -56,9 +56,10 @@ export default class Rotation extends TransitionableComponent<"rotation", IRotat
   }
 
   public setRotation(rotation: IRotation) {
+    // Note: this was the gameobject here.
+    // this.radians = rotation.radians; // TODO : why does it not work with this.set({radians: rotation.radians}) ? => because it calls set of Position!
     this.set(rotation);
-    // this.radians = rotation.radians; // TODO : why does it not work with this.set({radians: rotation.radians}) ?
-    return this;
+    return this.gameobject;
   }
 
   public static ofRadians(radians: number) {

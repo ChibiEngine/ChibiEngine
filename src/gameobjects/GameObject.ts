@@ -6,10 +6,7 @@ import {Updatable, isUpdatable} from "./Updatable";
 import {Class, ComponentClass, UnionToIntersection} from "../utils/type_utils";
 import AbstractGameObject from "./AbstractGameObject";
 import Position from "../component/Position";
-import Component from "../component/Component";
-import Mixin, {ClassArrayType, ClassArrayTypeOmit, Mixed} from "../mixin/Mixin";
-import {ComponentProperties} from "../component/types/ComponentProperty";
-import Size from "../component/Size";
+import Scale from "../component/Scale";
 import Rotation from "../component/Rotation";
 
 // Inspired by https://docs.cocos2d-x.org/api-ref/cplusplus/v4x/d3/d82/classcocos2d_1_1_node.html
@@ -26,7 +23,7 @@ import Rotation from "../component/Rotation";
  * - Sprite
  *   - Text
  */
-export default abstract class GameObject extends AbstractGameObject.With(Position, Size, Rotation) {
+export default abstract class GameObject extends AbstractGameObject.With(Position, Scale, Rotation) {
   public id?: string;
 
   public _parent: Container;
@@ -37,12 +34,12 @@ export default abstract class GameObject extends AbstractGameObject.With(Positio
 
   public constructor(
       position: Position = Position.zero(),
-      size: Size = new Size(),
+      scale: Scale = new Scale(),
       rotation: Rotation = new Rotation(),
   ) {
     super();
     this.addComponent(position);
-    this.addComponent(size);
+    this.addComponent(scale);
     this.addComponent(rotation);
   }
 
@@ -99,8 +96,5 @@ export default abstract class GameObject extends AbstractGameObject.With(Positio
     }
   }
 
-  public static With<T extends abstract new (...args: any) => any, A extends Array<Class<Component<string, InstanceType<T> & UnionToIntersection<ClassArrayType<A>>>>>>(this: T, ...classes: A):
-      ComponentClass<T, InstanceType<T> & UnionToIntersection<ClassArrayTypeOmit<A, "componentName">> & ComponentProperties<A> & Mixed> & {With: typeof GameObject.With} {
-    return Mixin(this, ...classes) as any;
-  }
+  public static With = AbstractGameObject.With;
 }
