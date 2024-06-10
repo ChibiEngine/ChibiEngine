@@ -56,11 +56,11 @@ export default class Scale extends TransitionableComponent<"scale", IScale, Abst
   }
 
   public get width() {
-    return this.originalSize.width * this.current.x;
+    return this.originalSize.width * Math.abs(this.current.x);
   }
 
   public get height() {
-    return this.originalSize.height * this.current.y;
+    return this.originalSize.height * Math.abs(this.current.y);
   }
 
   public set width(width: number) {
