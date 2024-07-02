@@ -2,6 +2,7 @@ import Event, {EventListener} from "../event/Event";
 import type Blob from "../resource/Blob";
 import Cache from "./Cache";
 import InstantEvent from "../event/InstantEvent";
+import makeProxy from "../utils/makeProxy";
 
 
 // Inspired by https://help.adobe.com/fr_FR/FlashPlatform/reference/actionscript/3/flash/display/LoaderInfo.html
@@ -50,12 +51,15 @@ export default abstract class Loadable {
         if(dependency.type === "resource") {
             // TODO: cast bizarre à revoir
             const fromCache = Cache.load(dependency as any);
-            Object.assign(dependency, fromCache);
-            dependency.dependants.push(this);
+            if(fromCache !== dependency) {
+                makeProxy(dependency, fromCache);
+            }            dependency.dependants.push(this);
             this.addBlob(...dependency.blobs);
         } else if (dependency.type === "blob") {
             const fromCache = Cache.load(dependency as any);
-            Object.assign(dependency, fromCache);
+            if(fromCache !== dependency) {
+                makeProxy(dependency, fromCache);
+            }
             dependency.dependants.push(this);
             this.addBlob(dependency as unknown as Blob);
         } else {
