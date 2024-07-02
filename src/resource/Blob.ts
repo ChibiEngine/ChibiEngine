@@ -84,6 +84,6 @@ export default class Blob extends Resource implements DomBlob {
     }
 
     protected async _destroy() {
-        throw new Error("Method not implemented.");
+        console.warn("destroy: Method not implemented.");
     }
 }
