@@ -7,19 +7,28 @@ import Position from "../component/Position";
 export default class Sprite extends GameObject {
   public pixi: PixiSprite;
 
-  public constructor(public readonly texture: Texture, x: number = 0, y: number = 0) {
+  public constructor(private _texture: Texture, x: number = 0, y: number = 0) {
     super(new Position(x, y));
+  }
+
+  public set texture(texture: Texture) {
+    this.setTexture(texture);
+  }
+
+  public get texture() {
+    return this._texture;
   }
 
   public async _create(): Promise<void> {
     const image = await this.load(this.texture);
     this.pixi = new PixiSprite(image.pixi);
-    this.setPosition(this.position);
+    this.setPosition(this.position); // useless?
   }
 
   public setTexture(texture: Texture) {
     this.load(texture).then(texture1 => {
       this.pixi.texture = texture1.pixi;
+      this._texture = texture;
     });
     return this;
   }
