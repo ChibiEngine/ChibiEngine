@@ -37,6 +37,12 @@ export default class Scale extends TransitionableComponent<"scale", IScale, Abst
     }
   }
 
+  protected updateOriginalSize() {
+    // @ts-ignore
+    this._pixi = this.target.pixi;
+    this.originalSize = {width: this._pixi.width / Math.abs(this._pixi.scale.x), height: this._pixi.height / Math.abs(this._pixi.scale.y)};
+  }
+
   public get x() {
     return this.current.x;
   }

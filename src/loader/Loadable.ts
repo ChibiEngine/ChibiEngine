@@ -42,7 +42,7 @@ export default abstract class Loadable {
     }
 
     /**
-     * Charge une dépendance (explicit loading)
+     * Load a dependency (explicit loading)
      * This method is asynchronous and resolves when the dependency is loaded.
      * @param dependency
      */
@@ -87,6 +87,7 @@ export default abstract class Loadable {
                 delete dependency.then;
                 resolve(dependency);
             });
+            return dependency;
         }
 
         //@ts-ignore

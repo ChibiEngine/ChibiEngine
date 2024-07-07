@@ -25,12 +25,14 @@ export default class Sprite extends GameObject {
     this.setPosition(this.position); // useless?
   }
 
-  public setTexture(texture: Texture) {
-    this.load(texture).then(texture1 => {
+  public async setTexture(texture: Texture) {
+    return this.load(texture).then(texture1 => {
       this.pixi.texture = texture1.pixi;
       this._texture = texture;
+      this.updateOriginalSize();
+      console.log("updated size")
+      return texture;
     });
-    return this;
   }
 
   public setAnchor(x: number, y: number) {
