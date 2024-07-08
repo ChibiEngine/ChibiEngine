@@ -1,6 +1,6 @@
 import { Sprite as PixiSprite } from "pixi.js";
 
-import Texture from "../resource/Texture";
+import Texture from "../resource/resources/Texture";
 import GameObject from "./GameObject";
 import Position from "../component/Position";
 
@@ -25,14 +25,14 @@ export default class Sprite extends GameObject {
     this.setPosition(this.position); // useless?
   }
 
-  public async setTexture(texture: Texture) {
-    return this.load(texture).then(texture1 => {
+  public setTexture(texture: Texture): this & PromiseLike<this> {
+    this.load(texture).then(texture1 => {
       this.pixi.texture = texture1.pixi;
       this._texture = texture;
       this.updateOriginalSize();
-      console.log("updated size")
-      return texture;
     });
+
+    return this as this & PromiseLike<this>;
   }
 
   public setAnchor(x: number, y: number) {

@@ -1,6 +1,6 @@
 import Event, {EventListener} from "../event/Event";
-import type Blob from "../resource/Blob";
-import Cache from "./Cache";
+import type Blob from "./resources/Blob";
+import ResourceManager from "./ResourceManager";
 import InstantEvent from "../event/InstantEvent";
 import makeProxy from "../utils/makeProxy";
 
@@ -9,12 +9,10 @@ import makeProxy from "../utils/makeProxy";
 // https://help.adobe.com/fr_FR/FlashPlatform/reference/actionscript/3/flash/display/Loader.html
 
 export default abstract class Loadable {
-    // public then?: (resolve: any, reject: any) => void;
-
     public abstract readonly type: string;
 
     public readonly onProgress: Event<this> = new Event<this>();
-    public readonly onLoaded: Event<this> = new InstantEvent<this>();
+    public readonly onLoaded: InstantEvent<this> = new InstantEvent<this>();
 
     public readonly dependencies: Loadable[] = [];
     public readonly dependants: Loadable[] = [];
@@ -26,14 +24,34 @@ export default abstract class Loadable {
 
     protected constructor() {
         this.onDependencyLoaded = this.onDependencyLoaded.bind(this);
+        this.setThenMethod();
+    }
+
+    private setThenMethod() {
+        // @ts-ignore
+        //
+        // TypeScript doesn't like awaiting a Thenable :
+        // If a class has a then() method it must conform to a valid PromiseLike signature
+        // But if we do so, TypeScript complains because the PromiseLike resolves to itself (indeed we want: await this.load(dep) === dep) (TS1062)
+        // The solution is not to declare a then() method and assign it dynamically to make TypeScript think it's not a Promise, so it resolves "await dependency" to the dependency itself (await 5 === 5)
+        // and then delete the then() method once it is resolved to avoid cyclic resolving
+        this.then = (resolve, _) => {
+            this.onLoaded.subscribeOnce(() => {
+                //@ts-ignore
+                delete this.then;
+                resolve(this);
+                this.setThenMethod();
+            });
+            return this;
+        }
     }
 
     public addBlob(...blobs: Blob[]) {
         for(const blob of blobs) {
-            blob.onProgress.subscribe(() => this.onProgress.trigger(this));
             for(const child of this.blobs) {
                 if(child.id === blob.id) return;
             }
+            blob.onProgress.subscribe(() => this.onProgress.trigger(this));
             this.blobs.push(blob);
             for (const dependant of this.dependants) {
                 dependant.addBlob(blob);
@@ -47,51 +65,30 @@ export default abstract class Loadable {
      * @param dependency
      */
     public load<T extends Loadable>(dependency: T): T & PromiseLike<T> {
-        // TODO : améliorer ce code moche
-        if(dependency.type === "resource") {
-            // TODO: cast bizarre à revoir
-            const fromCache = Cache.load(dependency as any);
-            if(fromCache !== dependency) {
-                makeProxy(dependency, fromCache);
-            }            dependency.dependants.push(this);
-            this.addBlob(...dependency.blobs);
-        } else if (dependency.type === "blob") {
-            const fromCache = Cache.load(dependency as any);
+        if(dependency.type === "resource" || dependency.type === "blob") {
+            const fromCache = ResourceManager.getOrCreate(dependency as any);
             if(fromCache !== dependency) {
                 makeProxy(dependency, fromCache);
             }
             dependency.dependants.push(this);
-            this.addBlob(dependency as unknown as Blob);
+            if(dependency.type === "resource") {
+                this.addBlob(...dependency.blobs);
+            } else {
+                this.addBlob(dependency as unknown as Blob);
+            }
         } else {
             dependency.dependants.push(this);
             dependency.create();
         }
 
-        if(!this._isCreated) {
-            // This object depends on dependency to be created
-            this.dependencies.push(dependency);
-            const listener = dependency.onLoaded.subscribe(this.onDependencyLoaded);
-            this.dependencyListeners.push(listener);
-        }
+        // This object depends on dependency to be created.
+        this.dependencies.push(dependency);
+        const listener = dependency.onLoaded.subscribe(this.onDependencyLoaded);
+        this.dependencyListeners.push(listener);
+        // Turn this back to unloaded.
+        this.onLoaded.reset();
 
-        // TypeScript doesn't like awaiting a Thenable :
-        // If a class has a then() method it must conform to a valid PromiseLike signature
-        // But if I do so, TypeScript complains because the PromiseLike resolves to itself (because we want: await this.load(dep) === dep)
-        // The solution is not to declare a then() method to make TypeScript think it's not a Promise, so it resolves "await dependency" to the dependency itself (await 5 === 5)
-        // and to delete the then() method once it is resolved to avoid cyclic resolving
-
-        //@ts-ignore
-        dependency.then = (resolve, _) => {
-            dependency.onLoaded.subscribeOnce(() => {
-                //@ts-ignore
-                delete dependency.then;
-                resolve(dependency);
-            });
-            return dependency;
-        }
-
-        //@ts-ignore
-        return dependency;
+        return dependency as T & PromiseLike<T>;
     }
 
     private onDependencyLoaded(_: Loadable) {
@@ -145,7 +142,7 @@ export default abstract class Loadable {
         if(this.isLoaded) {
             callback(this);
         } else {
-            this.onLoaded.subscribeOnce(callback, false);
+            this.onLoaded.subscribeOnce(callback);
         }
     }
 

@@ -1,5 +1,5 @@
-import Resource from "./Resource";
-import {DomBlob} from "../utils/dom";
+import Resource from "../Resource";
+import {DomBlob} from "../../utils/dom";
 
 //@ts-ignore TODO remove implements DomBlob ?
 export default class Blob extends Resource implements DomBlob {

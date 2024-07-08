@@ -1,8 +1,8 @@
 import { Texture as PixiTexture, Rectangle, SCALE_MODES } from "pixi.js";
 
-import Resource from "./Resource";
+import Resource from "../Resource";
+import {DomImage} from "../../utils/dom";
 import Blob from "./Blob";
-import {DomImage} from "../utils/dom";
 
 export interface ImageOptions {
   x?: number;

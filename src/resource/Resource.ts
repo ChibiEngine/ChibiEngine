@@ -1,5 +1,5 @@
 import Event from "../event/Event";
-import Loadable from "../loader/Loadable";
+import Loadable from "./Loadable";
 import Logger from "../utils/Logger";
 import debug = Logger.debug;
 import ReferenceCount from "./ReferenceCount";

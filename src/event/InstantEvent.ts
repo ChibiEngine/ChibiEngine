@@ -7,6 +7,10 @@ export default class InstantEvent<T> extends Event<T> {
   private loaded: boolean = false;
   private value: T;
 
+  public reset() {
+    this.loaded = false;
+  }
+
   public trigger(value: T) {
     super.trigger(value);
     this.loaded = true;

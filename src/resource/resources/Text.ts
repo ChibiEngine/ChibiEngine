@@ -1,4 +1,4 @@
-import Resource from "./Resource";
+import Resource from "../Resource";
 import Blob from "./Blob";
 
 export default class Text extends Resource {

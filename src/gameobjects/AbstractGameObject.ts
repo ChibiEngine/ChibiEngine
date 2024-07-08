@@ -1,6 +1,6 @@
 import Component, {AbstractComponent} from "../component/Component";
 
-import Loadable from "../loader/Loadable";
+import Loadable from "../resource/Loadable";
 
 import type Scene from "../game/Scene";
 import {Updatable, isUpdatable} from "./Updatable";
