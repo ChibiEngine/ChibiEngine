@@ -46,6 +46,10 @@ export default abstract class Loadable {
         }
     }
 
+    public asPromise(): this & PromiseLike<this> {
+        return this as this & PromiseLike<this>;
+    }
+
     public addBlob(...blobs: Blob[]) {
         for(const blob of blobs) {
             for(const child of this.blobs) {
