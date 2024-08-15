@@ -47,8 +47,8 @@ Currently, the main target is [PixiJS](https://github.com/pixijs/pixijs).
   - [ ] Lerp
   - [ ] Effects
 - [ ] Physics engine
-  - [ ] Wrapper of [planck.js](https://github.com/shakiba/planck.js/)
-  - [ ] Wrapper of [box2d-wasm](https://github.com/Birch-san/box2d-wasm) 🔮
+  - [ ] Wrapper of [rapier](https://github.com/dimforge/rapier) or [box2d-wasm](https://github.com/Birch-san/box2d-wasm) (to define)
+  - [ ] Wrapper of [planck.js](https://github.com/shakiba/planck.js/) ❓
 - [ ] Refactoring & code cleanup
 - [ ] Documentation
   - [ ] API Reference
