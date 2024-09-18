@@ -1,4 +1,4 @@
-import Event from "../../event/Event";
+import {Event} from "../../event/Event";
 import IRotation from "./IRotation";
 
 export default interface Rotationable {

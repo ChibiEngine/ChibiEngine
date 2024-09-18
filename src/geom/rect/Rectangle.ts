@@ -1,6 +1,6 @@
 import Sizeable from "../size/Sizeable";
 import Positionable from "../position/Positionable";
-import Event from "../../event/Event";
+import {Event} from "../../event/Event";
 import center from "../../gameobjects/positioning/center";
 import Position from "../../component/Position";
 import Size from "../size/Size";

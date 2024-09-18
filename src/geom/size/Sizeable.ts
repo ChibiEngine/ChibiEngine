@@ -1,4 +1,4 @@
-import Event from "../../event/Event";
+import {Event} from "../../event/Event";
 import ISize from "./ISize";
 
 export default interface Sizeable {

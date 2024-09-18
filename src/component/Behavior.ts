@@ -1,5 +1,5 @@
 import GameObject from "../gameobjects/GameObject";
-import Component from "./Component";
+import {Component} from "./Component";
 import {Class} from "../utils/Types";
 import {FixedUpdatable} from "../gameobjects/Updatable";
 

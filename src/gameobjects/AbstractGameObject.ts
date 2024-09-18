@@ -1,4 +1,4 @@
-import Component, {AbstractComponent} from "../component/Component";
+import {Component, AbstractComponent} from "../component/Component";
 
 import Loadable from "../resource/Loadable";
 
@@ -6,7 +6,7 @@ import type Scene from "../game/Scene";
 import {Updatable, isUpdatable} from "./Updatable";
 import assignComponent from "./operations/assignComponent";
 import {ComponentProperties} from "../component/types/ComponentProperty";
-import Mixin, {ClassArrayType, ClassArrayTypeOmit, Mixed} from "../mixin/Mixin";
+import {Mixin, ClassArrayType, ClassArrayTypeOmit, Mixed} from "../mixin/Mixin";
 import {Class, ComponentClass, UnionToIntersection} from "../utils/Types";
 
 // Inspired by https://docs.cocos2d-x.org/api-ref/cplusplus/v4x/d3/d82/classcocos2d_1_1_node.html

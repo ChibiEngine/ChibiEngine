@@ -1,4 +1,4 @@
-import Event, {EventListener} from "../event/Event";
+import {Event, EventListener} from "../event/Event";
 import type Blob from "./resources/Blob";
 import ResourceManager from "./ResourceManager";
 import InstantEvent from "../event/InstantEvent";

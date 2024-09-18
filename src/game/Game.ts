@@ -4,7 +4,7 @@ import Scene from "./Scene";
 import Container from "../gameobjects/Container";
 import Rectangle from "../geom/rect/Rectangle";
 import GameLoop from "./GameLoop";
-import Event from "../event/Event";
+import {Event} from "../event/Event";
 
 interface GameConfig {
   width: number;

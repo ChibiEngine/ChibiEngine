@@ -1,7 +1,7 @@
 import AbstractGameObject from "../gameobjects/AbstractGameObject";
 import GameObject from "../gameobjects/GameObject";
-import Component from "./Component";
-import Event from "../event/Event";
+import {Component} from "./Component";
+import {Event} from "../event/Event";
 import {VariableUpdatable} from "../gameobjects/Updatable";
 
 export default abstract class TransitionableComponent<Name extends string, T, Target extends AbstractGameObject = GameObject> extends Component<Name, Target> implements VariableUpdatable {

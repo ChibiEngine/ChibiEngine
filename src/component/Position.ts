@@ -1,6 +1,6 @@
 import { Container } from "pixi.js";
 
-import Event from "../event/Event";
+import {Event} from "../event/Event";
 import AbstractGameObject from "../gameobjects/AbstractGameObject";
 import Positionable from "../geom/position/Positionable";
 import TransitionableComponent from "./TransitionableComponent";

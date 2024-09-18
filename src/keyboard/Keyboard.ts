@@ -1,4 +1,4 @@
-import Event from "../event/Event";
+import {Event} from "../event/Event";
 
 namespace Keyboard {
     const _downKeys: Set<string> = new Set();

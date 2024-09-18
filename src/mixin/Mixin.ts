@@ -36,7 +36,7 @@ export type ClassArrayType<T> = T extends Array<Class<infer U>> ? U : never;
 
 export type ClassArrayTypeOmit<T, toOmit extends string> = ClassArrayType<T> & {[key in toOmit]: never};
 
-export default function Mixin<Base extends Class<any>, A extends Array<Class<any>>>(Base: Base, ...classes: A): Class<InstanceType<Base> & UnionToIntersection<ClassArrayType<A>> & Mixed> {
+export function Mixin<Base extends Class<any>, A extends Array<Class<any>>>(Base: Base, ...classes: A): Class<InstanceType<Base> & UnionToIntersection<ClassArrayType<A>> & Mixed> {
   // @ts-ignore keep method protected
   Base.prototype.mixin = Mixed.prototype.mixin;
 

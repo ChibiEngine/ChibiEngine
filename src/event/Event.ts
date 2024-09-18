@@ -1,3 +1,7 @@
+/**
+ * TODO: switch to eventemitter3
+ */
+
 class EventImpl<T> extends Function {
   public readonly dontProxyFunction: boolean = true;
 
@@ -83,10 +87,9 @@ class EventImpl<T> extends Function {
  * @param callback
  * @param instantTrigger If true and the event has already been triggered, the callback will be called immediately with the last value.
  */
-declare type Event<T> = EventImpl<T> & ((callback: (val: T) => void, instantTrigger?: boolean) => EventListener<T>);
+export declare type Event<T> = EventImpl<T> & ((callback: (val: T) => void, instantTrigger?: boolean) => EventListener<T>);
 
-const Event: new <T>(onAddListener?: boolean) => Event<T> = EventImpl as any;
-export default Event;
+export const Event: new <T>(onAddListener?: boolean) => Event<T> = EventImpl as any;
 
 export class EventListener<T> {
   constructor(private readonly event: EventImpl<T>, public readonly callback: (value: any) => void) {

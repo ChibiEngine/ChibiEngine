@@ -1,6 +1,6 @@
 import {Container} from "pixi.js";
 
-import Event from "../event/Event";
+import {Event} from "../event/Event";
 import AbstractGameObject from "../gameobjects/AbstractGameObject";
 import TransitionableComponent from "./TransitionableComponent";
 import ISize from "../geom/size/ISize";

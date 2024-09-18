@@ -1,7 +1,7 @@
-import Component from "./Component";
+import {Component} from "./Component";
 import GameObject from "../gameobjects/GameObject";
 import { Cursor } from "pixi.js";
-import Event from "../event/Event";
+import {Event} from "../event/Event";
 
 export default class Interactivity extends Component<"interactivity", GameObject> {
   public readonly componentName = "interactivity";

@@ -1,5 +1,5 @@
 import ISize from "./ISize";
-import Event from "../../event/Event";
+import {Event} from "../../event/Event";
 
 export default class Size implements ISize {
   private _width: number;

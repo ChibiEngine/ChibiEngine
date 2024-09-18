@@ -1,4 +1,4 @@
-import Event from "./Event";
+import {Event} from "./Event";
 
 /**
  * Event that is triggered immediately when subscribed if the event has been triggered in the past

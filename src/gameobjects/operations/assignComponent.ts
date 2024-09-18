@@ -1,4 +1,4 @@
-import Component from "../../component/Component";
+import {Component} from "../../component/Component";
 import getProperties from "../../utils/getProperties";
 import ComponentProperty from "../../component/types/ComponentProperty";
 import AbstractGameObject from "../AbstractGameObject";

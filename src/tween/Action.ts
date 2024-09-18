@@ -1,8 +1,8 @@
 import GameObject from "../gameobjects/GameObject";
 import EasingFunction from "../math/easing/EasingFunction";
 import Easing from "../math/easing/Easing";
-import Event from "../event/Event";
-import Component from "../component/Component";
+import {Event} from "../event/Event";
+import {Component} from "../component/Component";
 import {VariableUpdatable} from "../gameobjects/Updatable";
 
 export default abstract class Action<in T extends GameObject = GameObject> extends Component<"_action", T> implements VariableUpdatable {
