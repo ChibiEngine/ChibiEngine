@@ -1,13 +1,12 @@
-import { Container } from "pixi.js";
+import {Container} from "pixi.js";
 
 import GameObject from "./GameObject";
 
 class PixiObjectImpl<T extends Container> extends GameObject {
   public pixi: T;
 
-  constructor(object: T) {
+  constructor(private readonly object: T | ((self: GameObject) => (Promise<T> | T))) {
     super();
-    this.pixi = object;
     return new Proxy(this, {
       get(target, prop) {
         if(prop in target) {
@@ -43,7 +42,11 @@ class PixiObjectImpl<T extends Container> extends GameObject {
   }
 
   protected async _create() {
-    // Nothing to do
+    if(this.object instanceof Function) {
+      this.pixi = await this.object(this);
+    } else {
+      this.pixi = this.object;
+    }
   }
 
   protected async _destroy() {
@@ -52,7 +55,7 @@ class PixiObjectImpl<T extends Container> extends GameObject {
 
 }
 
-declare type PixiObject<T extends Container> = PixiObjectImpl<T> & T;
+declare type PixiObject<T extends Container> = PixiObjectImpl<T> & Omit<T, keyof PixiObjectImpl<T>>;
 
-const PixiObject: new <T extends Container>(object: T) => PixiObject<T> = PixiObjectImpl as any;
+const PixiObject: new <T extends Container>(object: T | ((self: GameObject) => (Promise<T> | T))) => PixiObject<T> = PixiObjectImpl as any;
 export default PixiObject;
