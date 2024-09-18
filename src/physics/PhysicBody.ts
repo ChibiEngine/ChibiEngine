@@ -1,7 +1,7 @@
 import GameObject from "../gameobjects/GameObject";
 import {FixedUpdatable} from "../gameobjects/Updatable";
 import Component from "../component/Component";
-import {Class} from "../utils/type_utils";
+import {Class} from "../utils/Types";
 
 export default class PhysicBody extends Component<"body"> implements FixedUpdatable {
     readonly componentName = "body";

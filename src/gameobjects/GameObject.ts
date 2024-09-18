@@ -3,7 +3,7 @@ import { Container as PixiContainer } from "pixi.js";
 import type Container from "./Container";
 import Action from "../tween/Action";
 import {Updatable, isUpdatable} from "./Updatable";
-import {Class, ComponentClass, UnionToIntersection} from "../utils/type_utils";
+import {Class} from "../utils/Types";
 import AbstractGameObject from "./AbstractGameObject";
 import Position from "../component/Position";
 import Scale from "../component/Scale";

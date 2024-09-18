@@ -1,5 +1,5 @@
 import {AbstractComponent} from "../../component/Component";
-import {Class, MergeIntersection} from "../../utils/type_utils";
+import {Class, MergeIntersection} from "../../utils/Types";
 
 type ComponentProperty<T> = T extends AbstractComponent<any> ? {
   [key in T["componentName"]]: T

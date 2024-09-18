@@ -7,7 +7,7 @@ import {Updatable, isUpdatable} from "./Updatable";
 import assignComponent from "./operations/assignComponent";
 import {ComponentProperties} from "../component/types/ComponentProperty";
 import Mixin, {ClassArrayType, ClassArrayTypeOmit, Mixed} from "../mixin/Mixin";
-import {Class, ComponentClass, UnionToIntersection} from "../utils/type_utils";
+import {Class, ComponentClass, UnionToIntersection} from "../utils/Types";
 
 // Inspired by https://docs.cocos2d-x.org/api-ref/cplusplus/v4x/d3/d82/classcocos2d_1_1_node.html
 
@@ -74,7 +74,7 @@ export default abstract class AbstractGameObject extends Loadable {
     return null;
   }
 
-  public static With<T extends abstract new (...args: any) => any, A extends Array<Class<AbstractComponent<string, InstanceType<T> & UnionToIntersection<ClassArrayType<A>>>>>>(this: T, ...classes: A):
+  public static With<T extends Class<any>, A extends Array<Class<AbstractComponent<string, InstanceType<T> & UnionToIntersection<ClassArrayType<A>>>>>>(this: T, ...classes: A):
       ComponentClass<T, InstanceType<T> & UnionToIntersection<ClassArrayTypeOmit<A, "componentName">> & ComponentProperties<A> & Mixed> & {With: typeof AbstractGameObject.With} {
     return Mixin(this, ...classes) as any;
   }
