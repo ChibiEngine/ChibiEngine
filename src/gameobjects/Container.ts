@@ -3,6 +3,7 @@ import { Container as PixiContainer } from "pixi.js";
 import GameObject from "./GameObject";
 import Position from "../component/Position";
 import type Scene from "../game/Scene";
+import Loadable from "../resource/Loadable";
 
 /**
  * Noeud simple au sens conteneur PIXI : possède des enfants
@@ -88,13 +89,21 @@ export default class Container extends GameObject {
   public remove(child: GameObject): boolean {
     const index = this.children.indexOf(child);
     if (index === -1) return false;
-    child._parent = null;
+    this.pixi.removeChild(child.pixi);
     this.children.splice(index, 1)[0].destroy();
+    child._parent = null;
     return true;
   }
 
   public async _destroy(): Promise<void> {
     this._destroyed = true;
     this.pixi.destroy();
+  }
+
+  protected willDestroyDependency(dependency: Loadable) {
+    if(dependency instanceof GameObject) {
+      this.pixi.removeChild(dependency.pixi);
+      dependency._parent = null;
+    }
   }
 }

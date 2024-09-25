@@ -119,12 +119,17 @@ export default abstract class Loadable {
      * Détruit l'objet et libère ses ressources.
      */
     public async destroy() {
+        await this._destroy();
         const promises = [];
         for(const dependency of this.dependencies) {
+            this.willDestroyDependency(dependency);
             promises.push(dependency.destroy());
         }
         await Promise.all(promises);
-        await this._destroy();
+    }
+
+    protected willDestroyDependency(dependency: Loadable) {
+        // To override
     }
 
     protected abstract _destroy(): Promise<void>;

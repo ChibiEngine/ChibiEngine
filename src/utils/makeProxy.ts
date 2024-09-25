@@ -7,6 +7,8 @@ import Resource from "../resource/Resource";
  * @param reference
  */
 export default function makeProxy<T extends Resource>(proxy: T, reference: T) {
+  if(proxy["!PROXY"]) return;
+
   proxy["!PROXY"] = true;
   // transform proxy into a proxy of reference
   for(const i in reference) {
