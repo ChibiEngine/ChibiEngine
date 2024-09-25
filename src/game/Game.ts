@@ -98,4 +98,12 @@ export default class Game extends Container {
     }
     this._pixiApp.render();
   }
+
+  public setScene(sceneClass: Scene) {
+    const previousScene = this.sceneStack.pop();
+    if(previousScene) {
+      this.remove(previousScene);
+    }
+    this.addScene(sceneClass);
+  }
 }
