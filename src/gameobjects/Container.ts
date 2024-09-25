@@ -13,6 +13,8 @@ export default class Container extends GameObject {
   public readonly pixi: PixiContainer;
   public readonly children: GameObject[] = [];
 
+  private _destroyed: boolean = false;
+
   public constructor(position: Position = Position.zero()) {
     super(position);
     this.pixi = new PixiContainer();
@@ -43,6 +45,7 @@ export default class Container extends GameObject {
    * @param id?
    */
   public add<T extends GameObject>(child: T, id?: string): T & PromiseLike<T> {
+    if (this._destroyed) throw new Error("Container has been destroyed");
     if (child._parent) throw new Error("Child already has a parent");
     if(id !== undefined) child.id = id;
     child._parent = this;
@@ -91,6 +94,7 @@ export default class Container extends GameObject {
   }
 
   public async _destroy(): Promise<void> {
+    this._destroyed = true;
     this.pixi.destroy();
   }
 }
