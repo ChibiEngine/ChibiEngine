@@ -1,3 +1,5 @@
+// types-only
+
 import {Event} from "../../event/Event";
 import ISize from "./ISize";
 

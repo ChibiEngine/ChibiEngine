@@ -20,15 +20,6 @@ const files = glob.sync('**/*.ts', { cwd: directoryPath });
 
 const ignoredFiles = [
     'ComponentProperty.ts',
-    'Positionable.ts',
-    'IPosition.ts',
-    'Rotationable.ts',
-    'IRotation.ts',
-    'Scalable.ts',
-    'IScale.ts',
-    'ISize.ts',
-    'Sizeable.ts',
-    'Vec2.ts',
     'Mixin.new.ts',
 ];
 
@@ -37,11 +28,13 @@ const exportStatements = files
     .filter((file) => !ignoredFiles.includes(file.substring(file.lastIndexOf('/') + 1)))
     .map((file) => {
   const pathName = file.replace(/\.ts$/, '');
-  if(!fs.readFileSync(path.resolve(directoryPath, file), { encoding: 'utf-8' }).includes('export default')) {
-    return `export * from './${pathName}';`;
+  const content = fs.readFileSync(path.resolve(directoryPath, file), { encoding: 'utf-8' });
+  const isTypesOnly = content.startsWith('// types-only');
+  if(!content.includes('export default')) {
+    return `export ${isTypesOnly ? "type" : ""} * from './${pathName}';`;
   }
   const fileName = pathName.split('/').pop();
-  return `export { default as ${fileName} } from './${pathName}';`
+  return `export ${isTypesOnly ? "type" : ""} { default as ${fileName} } from './${pathName}';`
 });
 
 // Write the export statements to the index.ts file
