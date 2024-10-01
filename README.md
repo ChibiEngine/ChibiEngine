@@ -30,7 +30,7 @@ Currently, the main target is [PixiJS](https://github.com/pixijs/pixijs).
   - [x] Basic implementation
   - [ ] Transitions between scenes
 - [x] Automated props interpolation (position, rotation, size)
-- [ ] Input ⚒️
+- [ ] Input
   - [x] Keyboard
   - [x] Mouse
   - [x] Touch
@@ -41,28 +41,29 @@ Currently, the main target is [PixiJS](https://github.com/pixijs/pixijs).
 - [x] Tweens and sequences (inspired by [Cocos2d-x](https://docs.cocos.com/cocos2d-x/manual/en/actions/getting_started.html))
   - [x] Easing functions ([penner](https://github.com/bcherny/penner) / [phaser](https://github.com/photonstorm/phaser/tree/master/src/math/easing))
   - [ ] Implement missing actions
-- [ ] Camera (inspired by [pixi-viewport](https://github.com/davidfig/pixi-viewport)) ⚒️
-  - [x] Bounds 
-  - [ ] Parallax ⚒️
-  - [ ] Lerp
+- [ ] Camera (inspired by [pixi-viewport](https://github.com/davidfig/pixi-viewport))
+  - [x] Bounds
+  - [x] Lerp
+  - [ ] Parallax
   - [ ] Effects
-- [ ] Physics engine
-  - [ ] Wrapper of [rapier](https://github.com/dimforge/rapier) or [box2d-wasm](https://github.com/Birch-san/box2d-wasm) (to define)
+- [ ] Physics engine ⚒️
+  - [ ] Wrapper of [box2d-wasm](https://github.com/Birch-san/box2d-wasm) ⚒️
   - [ ] Wrapper of [planck.js](https://github.com/shakiba/planck.js/) ❓
 - [ ] Refactoring & code cleanup
+- [ ] Separate ChibiEngine common API and Pixi implementation
 - [ ] Documentation
   - [ ] API Reference
-  - [ ] Getting Started
-- [ ] Custom animation engine
-  - [ ] JSON Animation format
+  - [ ] Guide
+- [ ] Simple animations (scaling, rotation, translation, tinting of elements)
+  - [ ] JSON Animation format (defines skins, skin parts and animations)
   - [ ] Frame-by-frame element integration
+  - [ ] Mesh transformation 🔮
   - [ ] Animation editor 🔮
 - [ ] Tilemap
 - [ ] Masks
 - [ ] Meshes
 - [ ] Dynamic node loading (prefab) ❓
-- [ ] Atlas generation at runtime (for optimization) 🔮
-    - [ ] Or ahead-of-time at compile-time? Or with a CLI?
+- [ ] Atlas generation tool CLI (for optimization) ❓
 - [ ] 3D support with [babylon.js](https://github.com/BabylonJS/Babylon.js) or [three.js](https://github.com/mrdoob/three.js) 🔮
 - [ ] Native Desktop/Android/iOS version with [cocos2d-x](https://github.com/cocos2d/cocos2d-x) 🔮
 
