@@ -13,7 +13,7 @@ export interface ImageOptions {
 }
 
 export default class Texture extends Resource {
-  public pixi: PixiTexture;
+  public pixi: PixiTexture = null;
   private readonly baseImage: Texture;
   private readonly frame: Rectangle;
   private readonly pixelScale: boolean;
