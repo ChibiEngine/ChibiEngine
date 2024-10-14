@@ -3,6 +3,7 @@ import type Blob from "./resources/Blob";
 import ResourceManager from "./ResourceManager";
 import InstantEvent from "../event/InstantEvent";
 import makeProxy from "../utils/makeProxy";
+import CompletablePromise from "../utils/CompletablePromise";
 
 
 // Inspired by https://help.adobe.com/fr_FR/FlashPlatform/reference/actionscript/3/flash/display/LoaderInfo.html
@@ -13,6 +14,8 @@ export default abstract class Loadable {
 
     public readonly onProgress: Event<this> = new Event<this>();
     public readonly onLoaded: InstantEvent<this> = new InstantEvent<this>();
+
+    public readonly dependenciesLoadedPromise: CompletablePromise<void> = new CompletablePromise();
 
     public readonly dependencies: Loadable[] = [];
     public readonly dependants: Loadable[] = [];
@@ -25,6 +28,7 @@ export default abstract class Loadable {
     protected constructor() {
         this.onDependencyLoaded = this.onDependencyLoaded.bind(this);
         this.setThenMethod();
+        this.dependenciesLoadedPromise.complete();
     }
 
     private setThenMethod() {
@@ -95,6 +99,7 @@ export default abstract class Loadable {
         this.dependencyListeners.push(listener);
         // Turn this back to unloaded.
         this.onLoaded.reset();
+        this.dependenciesLoadedPromise.reset();
 
         return dependency as T & PromiseLike<T>;
     }
@@ -104,9 +109,14 @@ export default abstract class Loadable {
             this.onLoaded.trigger(this);
             this.dependencyListeners.forEach(e => e.unsubscribe());
         }
+        console.log(this.dependencies.map(dep => [dep, dep.isLoaded]));
+        if(this.allDependenciesLoaded()) {
+            this.dependenciesLoadedPromise.complete();
+        }
     }
 
     public async create() {
+        console.log("create", this);
         this.loadingStart();
         await this._create()
         this.loadingEnd();
@@ -146,7 +156,9 @@ export default abstract class Loadable {
         if(this.allDependenciesLoaded()) {
             this.onLoaded.trigger(this);
             this.dependencyListeners.forEach(e => e.unsubscribe());
+            this.dependenciesLoadedPromise.complete();
         }
+        console.log("loadingEnd", this);
     }
 
     public whenLoaded(callback: (loadable: this) => void) {

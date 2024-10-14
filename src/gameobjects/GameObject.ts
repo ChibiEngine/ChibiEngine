@@ -48,11 +48,9 @@ export default abstract class GameObject extends AbstractGameObject.With(Positio
 
     // Set first to be sure other components are applied first
     // TODO : should only set _isCreated to true when all components are applied ?
-    this.whenLoaded(() => {
-      for (const component of this.components) {
-        component.apply(this);
-      }
-    });
+
+    const componentApplyPromises: Promise<void>[] = [];
+
     await this._create();
 
     const scene = this.scene;
@@ -61,7 +59,24 @@ export default abstract class GameObject extends AbstractGameObject.With(Positio
     }
     this.created = true;
 
+
+    for (const component of this.components) {
+      if(!component.immediateApply) {
+        componentApplyPromises.push(component.apply(this));
+      }
+    }
+
+    await this.dependenciesLoadedPromise;
+
+    // Pb: some dependencies may not be loaded yet when applying components
+    await Promise.all(componentApplyPromises);
+
     this.loadingEnd();
+
+    for(const component of this.updatableComponentsToAdd) {
+      this.scene.addUpdatable(component);
+    }
+    this.updatableComponentsToAdd.length = 0;
   }
 
   //// LIFE CYCLE ////
