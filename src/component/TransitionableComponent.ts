@@ -5,6 +5,9 @@ import {Event} from "../event/Event";
 import {VariableUpdatable} from "../gameobjects/Updatable";
 
 export default abstract class TransitionableComponent<Name extends string, T, Target extends AbstractGameObject = GameObject> extends Component<Name, Target> implements VariableUpdatable {
+  /**
+   * Transitionable Components add themselves to update list only when transition is enabled
+   */
   public dontAddToUpdateList = true;
   protected elapsed: number = 0;
 
@@ -43,6 +46,7 @@ export default abstract class TransitionableComponent<Name extends string, T, Ta
     /* TODO: automatically deduce interval from parent update rate?
        It supposes that the parent updates the component position in its update method
      */
+    this.dontAddToUpdateList = millis === 0;
     this.transitionMillis = millis;
     if(!this.target) {
       return;

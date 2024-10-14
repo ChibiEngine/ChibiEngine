@@ -45,8 +45,8 @@ export default class Interactivity extends Component<"interactivity", GameObject
     super();
   }
 
-  public apply(target: GameObject) {
-    super.apply(target);
+  public async apply(target: GameObject) {
+    await super.apply(target);
 
     this.target = target;
 

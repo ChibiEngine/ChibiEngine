@@ -36,7 +36,7 @@ export default class Sprite extends GameObject {
   }
 
   public setAnchor(x: number, y: number) {
-    this.whenLoaded(() => {
+    this.whenCreated(() => {
       this.pixi.anchor.set(x, y);
     });
     return this;

@@ -1,6 +1,7 @@
 /**
  * TODO: switch to eventemitter3
  */
+import CompletablePromise from "../utils/CompletablePromise";
 
 class EventImpl<T> extends Function {
   public readonly dontProxyFunction: boolean = true;
@@ -10,6 +11,9 @@ class EventImpl<T> extends Function {
   lastValue: T = undefined;
 
   public readonly onAddListener: Event<EventListener<T>>;
+
+  // TODO : CompletablePromise<T> breaks typing
+  private readonly promise: CompletablePromise<any> = new CompletablePromise();
 
   constructor(onAddListener: boolean = true) {
     super();
@@ -27,7 +31,11 @@ class EventImpl<T> extends Function {
 
         return target.subscribe(callback, instantTrigger);
       }
-    })
+    });
+  }
+
+  public asPromise(): Promise<T> {
+    return this.promise.promise;
   }
 
   /**
@@ -75,11 +83,13 @@ class EventImpl<T> extends Function {
     for (const listener of listeners) {
       listener.callback(value);
     }
+    this.promise.complete(value);
     this.lastValue = value;
   }
 
-  public forget() {
+  public reset() {
     this.lastValue = undefined;
+    this.promise.reset();
   }
 }
 

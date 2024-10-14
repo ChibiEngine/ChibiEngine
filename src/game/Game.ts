@@ -27,6 +27,7 @@ export default class Game extends Container {
 
   public constructor(public readonly config: GameConfig) {
     super();
+    console.log("Game", this);
   }
 
   public async start(canvas?: HTMLCanvasElement | string) {
@@ -76,6 +77,7 @@ export default class Game extends Container {
   // TODO : override add to use a default scene if none is present
 
   public currentScene(): Scene {
+    if(!this.sceneStack) return undefined;
     if (this.sceneStack.length === 0) return null;
     return this.sceneStack[this.sceneStack.length - 1];
   }

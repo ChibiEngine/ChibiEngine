@@ -32,10 +32,10 @@ export default abstract class AbstractGameObject extends Loadable {
 
   public set scene(scene: Scene) {
     this._scene = scene;
-    for(const component of this.updatableComponentsToAdd) {
-      this._scene.addUpdatable(component);
-    }
-    this.updatableComponentsToAdd.length = 0;
+    // for(const component of this.updatableComponentsToAdd) {
+    //   this._scene.addUpdatable(component);
+    // }
+    // this.updatableComponentsToAdd.length = 0;
   }
 
   //// COMPONENTS ////
@@ -43,12 +43,14 @@ export default abstract class AbstractGameObject extends Loadable {
   public addComponent<C extends Component<string, this>>(component: C) {
     this.components.push(component);
     component.setTarget(this);
-    if(this.created) {
+    if(this.created || component.immediateApply) {
       component.apply(this);
     }
-    if (isUpdatable(component) && !component.dontAddToUpdateList) {
+    if (isUpdatable(component)) {
       if(this.scene?.initialized) {
-        this.scene.addUpdatable(component);
+        console.log("Adding updatable component", this.created);
+        this.updatableComponentsToAdd.push(component as any);
+        // this.scene.addUpdatable(component);
       } else {
         this.updatableComponentsToAdd.push(component as any);
       }

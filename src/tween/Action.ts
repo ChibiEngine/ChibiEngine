@@ -34,7 +34,7 @@ export default abstract class Action<in T extends GameObject = GameObject> exten
     // TODO: implement
   }
 
-  public apply(target: T) {
+  public async apply(target: T) {
     this.target = target;
     this._run(target);
   }

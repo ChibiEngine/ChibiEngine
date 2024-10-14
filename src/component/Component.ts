@@ -5,6 +5,11 @@ export abstract class AbstractComponent<Name extends string, in T extends Abstra
   public abstract readonly componentName: Name;
 
   /**
+   * If true, the component will be applied even if the gameobject is not created yet.
+   */
+  public immediateApply = false;
+
+  /**
    * Reference to the gameobject that the component is attached to.
    */
   private _gameobject: any;
@@ -34,7 +39,7 @@ export abstract class AbstractComponent<Name extends string, in T extends Abstra
    * Called when the gameobject is loaded and ready to apply the component.
    * @param target
    */
-  public apply(target: T): void {
+  public async apply(target: T): Promise<void> {
     // To override
   }
 

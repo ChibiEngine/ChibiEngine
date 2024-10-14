@@ -3,27 +3,59 @@ import type Blob from "./resources/Blob";
 import ResourceManager from "./ResourceManager";
 import InstantEvent from "../event/InstantEvent";
 import makeProxy from "../utils/makeProxy";
+import CompletablePromise from "../utils/CompletablePromise";
 
+/*
+Loading cycle :
+
+createStart()
+      |
+   _create()
+      |
+add dependencies...
+      |
+  load start
+      |
+load dependencies...
+      |
+  load end
+      |
+  create end
+      |
+   loaded
+ */
 
 // Inspired by https://help.adobe.com/fr_FR/FlashPlatform/reference/actionscript/3/flash/display/LoaderInfo.html
 // https://help.adobe.com/fr_FR/FlashPlatform/reference/actionscript/3/flash/display/Loader.html
 
 export default abstract class Loadable {
+    private get indent() {
+        let indent = "";
+        let parent = this.dependants[0];
+        while(parent) {
+            indent += "  ";
+            parent = parent.dependants[0];
+        }
+        return indent;
+    }
+
     public abstract readonly type: string;
 
     public readonly onProgress: Event<this> = new Event<this>();
-    public readonly onLoaded: InstantEvent<this> = new InstantEvent<this>();
+    public readonly onLoaded: Event<this> = new InstantEvent<this>();
+    public readonly onCreated: Event<this> = new Event<this>();
+    public readonly onDependenciesLoaded: Event<this> = new Event<this>();
 
     public readonly dependencies: Loadable[] = [];
     public readonly dependants: Loadable[] = [];
     public readonly blobs: Blob[] = [];
-    private readonly dependencyListeners: EventListener<any>[] = [];
 
     private _isCreating: boolean = false;
     private _isCreated: boolean = false;
 
     protected constructor() {
         this.onDependencyLoaded = this.onDependencyLoaded.bind(this);
+        this.onDependenciesLoaded.trigger(this);
         this.setThenMethod();
     }
 
@@ -73,6 +105,8 @@ export default abstract class Loadable {
      * @param dependency
      */
     public load<T extends Loadable>(dependency: T): T & PromiseLike<T> {
+        console.log(this.indent + this.constructor.name, "load()", dependency.constructor.name);
+
         if(dependency.type === "resource" || dependency.type === "blob") {
             const fromCache = ResourceManager.getOrCreate(dependency as any);
             if(fromCache !== dependency) {
@@ -91,25 +125,34 @@ export default abstract class Loadable {
 
         // This object depends on dependency to be created.
         this.dependencies.push(dependency);
-        const listener = dependency.onLoaded.subscribe(this.onDependencyLoaded);
-        this.dependencyListeners.push(listener);
         // Turn this back to unloaded.
+        this.onDependenciesLoaded.reset();
         this.onLoaded.reset();
+
+        dependency.loaded.then(() => this.onDependencyLoaded(dependency));
+        console.log(this.indent + this.constructor.name, "reset");
 
         return dependency as T & PromiseLike<T>;
     }
 
     private onDependencyLoaded(_: Loadable) {
-        if(this.isLoaded) {
-            this.onLoaded.trigger(this);
-            this.dependencyListeners.forEach(e => e.unsubscribe());
+        if(this.allDependenciesLoaded()) {
+            console.log(this.indent + this.constructor.name, "allDependenciesLoaded()");
+            //@ts-ignore
+            delete this.then; // meh
+            this.onDependenciesLoaded.trigger(this);
+            this.setThenMethod();
+            if(this._isCreated) {
+                this.onLoaded.trigger(this);
+            }
         }
     }
 
     public async create() {
-        this.loadingStart();
+        this.createStart();
         await this._create()
-        this.loadingEnd();
+        await this.onDependenciesLoaded.asPromise();
+        this.createEnd();
     }
 
     // TODO: pass the scene as parameter ?
@@ -134,28 +177,30 @@ export default abstract class Loadable {
 
     protected abstract _destroy(): Promise<void>;
 
-    protected loadingStart() {
+    protected createStart() {
+        console.log(this.indent + this.constructor.name, "createStart()");
         this._isCreating = true;
         this._isCreated = false;
     }
 
-    protected loadingEnd() {
+    protected createEnd() {
+        console.log(this.indent + this.constructor.name, "createEnd()");
         this._isCreating = false;
         this._isCreated = true;
 
-        if(this.allDependenciesLoaded()) {
+        this.onCreated.trigger(this);
+
+        if(this.allDependenciesLoaded()) { // should always be true
+            console.log(this.indent + this.constructor.name, "allDependenciesLoaded()");
             this.onLoaded.trigger(this);
-            this.dependencyListeners.forEach(e => e.unsubscribe());
         }
     }
 
-    public whenLoaded(callback: (loadable: this) => void) {
-        // TODO : duplicates onLoaded event?
-        // this should be handled by the event itself
-        if(this.isLoaded) {
+    public whenCreated(callback: (created: this) => void) {
+        if(this._isCreated) {
             callback(this);
         } else {
-            this.onLoaded.subscribeOnce(callback);
+            this.onCreated.subscribeOnce(callback);
         }
     }
 
