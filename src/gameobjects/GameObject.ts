@@ -44,7 +44,7 @@ export default abstract class GameObject extends AbstractGameObject.With(Positio
   }
 
   public async create(): Promise<void> {
-    this.loadingStart();
+    this.createStart();
 
     // Set first to be sure other components are applied first
     // TODO : should only set _isCreated to true when all components are applied ?
@@ -66,12 +66,12 @@ export default abstract class GameObject extends AbstractGameObject.With(Positio
       }
     }
 
-    await this.dependenciesLoadedPromise;
+    await this.onDependenciesLoaded.asPromise();
 
     // Pb: some dependencies may not be loaded yet when applying components
     await Promise.all(componentApplyPromises);
 
-    this.loadingEnd();
+    this.createEnd();
 
     for(const component of this.updatableComponentsToAdd) {
       this.scene.addUpdatable(component);
