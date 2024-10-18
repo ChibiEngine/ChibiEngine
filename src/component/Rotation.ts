@@ -18,7 +18,7 @@ export default class Rotation extends TransitionableComponent<"rotation", IRotat
     super({radians: radians});
   }
 
-  public apply(target: AbstractGameObject): void {
+  public async apply(target: AbstractGameObject) {
     this.target = target;
     // @ts-ignore TODO: fix this
     this._pixi = target.pixi;
