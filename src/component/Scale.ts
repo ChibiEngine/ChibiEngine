@@ -30,7 +30,7 @@ export default class Scale extends TransitionableComponent<"scale", IScale, Abst
     this.onChange.subscribe((position) => {
       // TODO : disable this listener when transition is set?
       this.assign(position);
-    }).triggerNowIfValueExists();
+    });
 
     if (this.transitionMillis) {
       this.enableTransition();

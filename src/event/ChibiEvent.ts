@@ -41,12 +41,12 @@ class ChibiEventImpl<T> extends Function {
   /**
    *
    * @param callback
-   * @param instantTrigger If true the callback will be called immediately with the last known value (or undefined).
+   * @param instantTrigger If true the callback will be called immediately with the last known value if present.
    */
-  public subscribe(callback: (value: T) => void, instantTrigger: boolean = false): EventListener<T> {
+  public subscribe(callback: (value: T) => void, instantTrigger: boolean = true): EventListener<T> {
     const listener = new EventListener(this, callback);
     this.listeners.push(listener);
-    if(instantTrigger) {
+    if(this.lastValue && instantTrigger) {
       callback(this.lastValue);
     }
     this.onAddListener?.trigger(listener);
@@ -56,15 +56,15 @@ class ChibiEventImpl<T> extends Function {
   /**
    *
    * @param callback
-   * @param instantTrigger If true the callback will be called immediately with the last known value (or undefined).   */
-  public subscribeOnce(callback: (value: T) => void, instantTrigger: boolean = false): EventListener<T> {
+   * @param instantTrigger If true the callback will be called immediately with the last known value if present.   */
+  public subscribeOnce(callback: (value: T) => void, instantTrigger: boolean = true): EventListener<T> {
     const once = (value: T) => {
       this.unsubscribe(listener);
       callback(value);
     };
     const listener = new EventListener<T>(this, once);
     this.listeners.push(listener);
-    if(instantTrigger) {
+    if(this.lastValue && instantTrigger) {
       callback(this.lastValue);
     }
     this.onAddListener?.trigger(listener);
@@ -110,15 +110,6 @@ export class EventListener<T> {
    */
   public triggerNow() {
     this.callback(this.event.lastValue);
-  }
-
-  /**
-   * Triggers the callback if the event has already been triggered.
-   */
-  public triggerNowIfValueExists() {
-    if(this.event.lastValue !== undefined) {
-      this.callback(this.event.lastValue);
-    }
   }
 
   /**

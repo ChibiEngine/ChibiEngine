@@ -98,7 +98,7 @@ export default class Interactivity extends Component<"interactivity", GameObject
     // Add the listener lazily
     event.onAddListener.subscribeOnce(() => {
       this.target.pixi.on(eventName, event.trigger.bind(event));
-    }).triggerNowIfValueExists();
+    });
   }
 
 }

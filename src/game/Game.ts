@@ -92,7 +92,7 @@ export default class Game extends Container {
     this.sceneStack.push(scene);
     this.onStart.subscribeOnce(() => {
       this.add(scene, id);
-    }).triggerNowIfValueExists();
+    });
   }
 
   private updateScenes(time: number, dt: number) {

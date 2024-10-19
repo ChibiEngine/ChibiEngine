@@ -71,7 +71,7 @@ export default class Container extends GameObject {
         } else {
           this.pixi.addChild(node.pixi);
         }
-      }).triggerNowIfValueExists();
+      });
     }
 
     // Ensure child has not already been loaded
