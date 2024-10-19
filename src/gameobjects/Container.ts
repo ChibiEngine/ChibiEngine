@@ -71,11 +71,14 @@ export default class Container extends GameObject {
         } else {
           this.pixi.addChild(node.pixi);
         }
-      });
+      }).triggerNowIfValueExists();
     }
 
-    // after so onDependencyLoaded is called after the pixi objects have been added
-    this.load(child);
+    // Ensure child has not already been loaded
+    if(!child.isLoaded && !child.isLoading) {
+      // after so onDependencyLoaded is called after the pixi objects have been added
+      this.load(child);
+    }
 
     if(this.addedToScene) {
       child.onLoaded.subscribeOnce(() => {

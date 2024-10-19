@@ -29,7 +29,6 @@ export default class Game extends Container {
 
   public constructor(public readonly config: GameConfig) {
     super();
-    console.log("Game", this);
   }
 
   public async start(canvas?: HTMLCanvasElement | string) {

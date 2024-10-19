@@ -31,8 +31,6 @@ export default abstract class GameObject extends AbstractGameObject.With(Positio
   public _parent: Container;
   public abstract pixi: PixiContainer;
 
-  public addedToScene = false;
-
   public onAddedToScene: ChibiEvent<this> = new ChibiEvent();
 
   public constructor(
@@ -58,6 +56,8 @@ export default abstract class GameObject extends AbstractGameObject.With(Positio
         componentApplyPromises.push(component.apply(this));
       }
     }
+
+    this.componentsApplied = true;
 
     /* Need to be after components apply to avoid cyclic awaiting
     E.g. Scene (+ PhysicsWorld) waits for all dependencies to be loaded

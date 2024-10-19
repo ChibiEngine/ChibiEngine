@@ -43,9 +43,6 @@ export default abstract class TransitionableComponent<Name extends string, T, Ta
   }
 
   public setTransition(millis: number) {
-    /* TODO: automatically deduce interval from parent update rate?
-       It supposes that the parent updates the component position in its update method
-     */
     this.dontAddToUpdateList = millis === 0;
     this.transitionMillis = millis;
     if(!this.target) {
@@ -63,10 +60,12 @@ export default abstract class TransitionableComponent<Name extends string, T, Ta
   }
 
   protected enableTransition() {
+    if(!this.target.scene) return;
     this.target.scene.addUpdatable(this);
   }
 
   public disableTransition() {
+    if(!this.target.scene) return;
     this.target.scene.removeUpdatable(this);
   }
 

@@ -39,8 +39,8 @@ export default abstract class Loadable {
     public readonly dependants: Loadable[] = [];
     public readonly blobs: Blob[] = [];
 
-    private _isCreating: boolean = false;
-    private _isCreated: boolean = false;
+    public _isCreating: boolean = false;
+    public _isCreated: boolean = false;
 
     protected constructor() {
         this.onDependencyLoaded = this.onDependencyLoaded.bind(this);
