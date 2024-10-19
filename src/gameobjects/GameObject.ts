@@ -71,9 +71,14 @@ export default abstract class GameObject extends AbstractGameObject.With(Positio
     this.onLoaded.trigger(this);
   }
 
-  public addToScene(scene: Scene) {
+  public addToScene(scene: Scene, triggerEvent: boolean = true) {
     this.addedToScene = true;
     this.scene = scene;
+
+    if(triggerEvent) {
+      this.onAddedToScene.trigger(this);
+    }
+
     if (isUpdatable(this)) {
       scene.addUpdatable(this as Updatable);
     }
@@ -83,7 +88,6 @@ export default abstract class GameObject extends AbstractGameObject.With(Positio
     }
 
     this.updatableComponentsToAdd.length = 0;
-    this.onAddedToScene.trigger(this);
   }
 
   //// LIFE CYCLE ////

@@ -93,12 +93,14 @@ export default class Container extends GameObject {
   public addToScene(scene: Scene) {
     this.scene = scene;
     this.addedToScene = true;
+    this.onAddedToScene.trigger(this);
+
     for(const child of this.children) {
       if(child.addedToScene) continue; // Already added to scene, no need to trigger the event
 
       child.addToScene(scene);
     }
-    super.addToScene(scene);
+    super.addToScene(scene, false);
   }
 
   /**
