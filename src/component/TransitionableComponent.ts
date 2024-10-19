@@ -55,6 +55,14 @@ export default abstract class TransitionableComponent<Name extends string, T, Ta
     }
   }
 
+  /**
+   * Set transition rate in Hz
+   * @param rate rate in Hz
+   */
+  public setTransitionRate(rate: number) {
+    this.setTransition(1000 / rate);
+  }
+
   public get transitionEnabled() {
     return this.transitionMillis > 0;
   }
