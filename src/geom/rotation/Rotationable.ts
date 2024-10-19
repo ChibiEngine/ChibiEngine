@@ -1,10 +1,10 @@
 // types-only
 
-import {Event} from "../../event/Event";
+import {ChibiEvent} from "../../event/ChibiEvent";
 import IRotation from "./IRotation";
 
 export default interface Rotationable {
   radians: number;
   degrees: number;
-  onRotationChange: Event<IRotation>;
+  onRotationChange: ChibiEvent<IRotation>;
 }

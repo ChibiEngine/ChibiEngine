@@ -1,9 +1,8 @@
-import {Event, EventListener} from "../event/Event";
+import {ChibiEvent} from "../event/ChibiEvent";
 import type Blob from "./resources/Blob";
 import ResourceManager from "./ResourceManager";
 import InstantEvent from "../event/InstantEvent";
 import makeProxy from "../utils/makeProxy";
-import CompletablePromise from "../utils/CompletablePromise";
 
 /*
 Loading cycle :
@@ -29,22 +28,12 @@ load dependencies...
 // https://help.adobe.com/fr_FR/FlashPlatform/reference/actionscript/3/flash/display/Loader.html
 
 export default abstract class Loadable {
-    private get indent() {
-        let indent = "";
-        let parent = this.dependants[0];
-        while(parent) {
-            indent += "  ";
-            parent = parent.dependants[0];
-        }
-        return indent;
-    }
-
     public abstract readonly type: string;
 
-    public readonly onProgress: Event<this> = new Event<this>();
-    public readonly onLoaded: Event<this> = new InstantEvent<this>();
-    public readonly onCreated: Event<this> = new Event<this>();
-    public readonly onDependenciesLoaded: Event<this> = new Event<this>();
+    public readonly onProgress: ChibiEvent<this> = new ChibiEvent<this>();
+    public readonly onLoaded: ChibiEvent<this> = new InstantEvent<this>();
+    public readonly onCreated: ChibiEvent<this> = new ChibiEvent<this>();
+    public readonly onDependenciesLoaded: ChibiEvent<Loadable[]> = new ChibiEvent<Loadable[]>();
 
     public readonly dependencies: Loadable[] = [];
     public readonly dependants: Loadable[] = [];
@@ -55,7 +44,7 @@ export default abstract class Loadable {
 
     protected constructor() {
         this.onDependencyLoaded = this.onDependencyLoaded.bind(this);
-        this.onDependenciesLoaded.trigger(this);
+        this.onDependenciesLoaded.trigger([]);
         this.setThenMethod();
     }
 
@@ -105,8 +94,6 @@ export default abstract class Loadable {
      * @param dependency
      */
     public load<T extends Loadable>(dependency: T): T & PromiseLike<T> {
-        console.log(this.indent + this.constructor.name, "load()", dependency.constructor.name);
-
         if(dependency.type === "resource" || dependency.type === "blob") {
             const fromCache = ResourceManager.getOrCreate(dependency as any);
             if(fromCache !== dependency) {
@@ -130,18 +117,13 @@ export default abstract class Loadable {
         this.onLoaded.reset();
 
         dependency.loaded.then(() => this.onDependencyLoaded(dependency));
-        console.log(this.indent + this.constructor.name, "reset");
 
         return dependency as T & PromiseLike<T>;
     }
 
     private onDependencyLoaded(_: Loadable) {
         if(this.allDependenciesLoaded()) {
-            console.log(this.indent + this.constructor.name, "allDependenciesLoaded()");
-            //@ts-ignore
-            delete this.then; // meh
-            this.onDependenciesLoaded.trigger(this);
-            this.setThenMethod();
+            this.onDependenciesLoaded.trigger(this.dependencies.slice(0));
             if(this._isCreated) {
                 this.onLoaded.trigger(this);
             }
@@ -178,20 +160,17 @@ export default abstract class Loadable {
     protected abstract _destroy(): Promise<void>;
 
     protected createStart() {
-        console.log(this.indent + this.constructor.name, "createStart()");
         this._isCreating = true;
         this._isCreated = false;
     }
 
     protected createEnd() {
-        console.log(this.indent + this.constructor.name, "createEnd()");
         this._isCreating = false;
         this._isCreated = true;
 
         this.onCreated.trigger(this);
 
         if(this.allDependenciesLoaded()) { // should always be true
-            console.log(this.indent + this.constructor.name, "allDependenciesLoaded()");
             this.onLoaded.trigger(this);
         }
     }

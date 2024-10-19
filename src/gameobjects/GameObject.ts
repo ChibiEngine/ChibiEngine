@@ -8,6 +8,8 @@ import AbstractGameObject from "./AbstractGameObject";
 import Position from "../component/Position";
 import Scale from "../component/Scale";
 import Rotation from "../component/Rotation";
+import Scene from "../game/Scene";
+import {ChibiEvent} from "../event/ChibiEvent";
 
 // Inspired by https://docs.cocos2d-x.org/api-ref/cplusplus/v4x/d3/d82/classcocos2d_1_1_node.html
 
@@ -29,6 +31,10 @@ export default abstract class GameObject extends AbstractGameObject.With(Positio
   public _parent: Container;
   public abstract pixi: PixiContainer;
 
+  public addedToScene = false;
+
+  public onAddedToScene: ChibiEvent<this> = new ChibiEvent();
+
   public constructor(
       position: Position = Position.zero(),
       scale: Scale = new Scale(),
@@ -43,90 +49,30 @@ export default abstract class GameObject extends AbstractGameObject.With(Positio
   public async create(): Promise<void> {
     this.createStart();
 
-    // Set first to be sure other components are applied first
-    // TODO : should only set _isCreated to true when all components are applied ?
-
     const componentApplyPromises: Promise<void>[] = [];
 
     await this._create();
 
     for (const component of this.components) {
       if(!component.immediateApply) {
-        componentApplyPromises.push(component.apply(this)); // TODO: differentiate apply vs postApply (ran after dependencies are loaded)?
-                                                            // Or let the user do the await he need in apply?
+        componentApplyPromises.push(component.apply(this));
       }
     }
 
-    console.log(this.indent + this.constructor.name, "await onDependenciesLoaded()", this.dependencies);
+    /* Need to be after components apply to avoid cyclic awaiting
+    E.g. Scene (+ PhysicsWorld) waits for all dependencies to be loaded
+    But these dependencies have PhysicsBody which waits for the Scene PhysicsWorld to be applied (which would never happen if apply was called after onDependenciesLoaded)
+     */
     await this.onDependenciesLoaded.asPromise();
-    console.log(this.indent + this.constructor.name, "onDependenciesLoaded()");
-    // Pb: some dependencies may not be loaded yet when applying components
+
     await Promise.all(componentApplyPromises);
 
     this.createEnd();
+  }
 
-    // TODO: pb, updatable should be added when the object is added to the scene, not when it's being loaded + components (eg. PhysicsBody) should not be applied
-    // What if the object being loaded do .add calls?
-    // Need separation between loading and adding to scene
-    // Each object has an added flag that is equals to parent's added flag
-    // Only scenes have added=true by default
-    // When the object is added, added is set to parent's added
-    // If added is true, calls onAdded which will add updatables and apply components
-    // When the object is added, if it has parents, its onAdded method is called
-    // onAdded
-    // But some components may need to be applied before the object is added. apply vs postApply
-    // addedToScene == not orphan
-    /*
-    scene (addedToScene = true)
-
-
-    const container = this.load(new class extends Container { // addedToScene = false
-      public async create() {
-        const sprite = this.add(new Sprite(...)); // addedToScene = false
-          public add(object) {
-            object.parent = this;
-            object.addedToScene = this.addedToScene;
-            if(!object.created) {
-              object.create();
-            }
-            if(object.addedToScene) {
-              object.addToScene();
-            }
-          }
-          public addToScene(scene: Scene) {
-            this.scene = scene;
-            for(const child of this.children) {
-              child.addToScene(scene);
-            }
-            for(const component of this.components) {
-              component.postApply(scene);
-            }
-            // Add updatables...
-          }
-      }
-    }());
-
-    Lifecycle :
-
-    create
-      - _create
-      - apply
-    addToScene
-      - triggers onAddedToScene event
-      - update
-
-    Or better than postApply:
-
-    public async apply(target: GameObject) {
-      // do stuff
-
-      target.onAddedToScene(() => {
-        // do post apply stuff
-      });
-    }
-
-     */
-    const scene = this.scene;
+  public addToScene(scene: Scene) {
+    this.addedToScene = true;
+    this.scene = scene;
     if (isUpdatable(this)) {
       scene.addUpdatable(this as Updatable);
     }
@@ -136,6 +82,7 @@ export default abstract class GameObject extends AbstractGameObject.With(Positio
     }
 
     this.updatableComponentsToAdd.length = 0;
+    this.onAddedToScene.trigger(this);
   }
 
   //// LIFE CYCLE ////

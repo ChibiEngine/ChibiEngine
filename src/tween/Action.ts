@@ -1,7 +1,7 @@
 import GameObject from "../gameobjects/GameObject";
 import EasingFunction from "../math/easing/EasingFunction";
 import Easing from "../math/easing/Easing";
-import {Event} from "../event/Event";
+import {ChibiEvent} from "../event/ChibiEvent";
 import {Component} from "../component/Component";
 import {VariableUpdatable} from "../gameobjects/Updatable";
 
@@ -14,7 +14,7 @@ export default abstract class Action<in T extends GameObject = GameObject> exten
   public _duration = 1000;
   protected _easing: EasingFunction = Easing.linear;
 
-  public onFinish: Event<null> = new Event();
+  public onFinish: ChibiEvent<null> = new ChibiEvent();
 
   public duration(duration: number) {
     this._duration = duration;

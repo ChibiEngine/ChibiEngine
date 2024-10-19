@@ -1,9 +1,9 @@
-import {Event} from "./Event";
+import {ChibiEvent} from "./ChibiEvent";
 
 /**
  * Event that is triggered immediately when subscribed if the event has been triggered in the past
  */
-export default class InstantEvent<T> extends Event<T> {
+export default class InstantEvent<T> extends ChibiEvent<T> {
   private loaded: boolean = false;
   private value: T;
 

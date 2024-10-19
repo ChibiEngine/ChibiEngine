@@ -1,6 +1,6 @@
 import {Container} from "pixi.js";
 
-import {Event} from "../event/Event";
+import {ChibiEvent} from "../event/ChibiEvent";
 import AbstractGameObject from "../gameobjects/AbstractGameObject";
 import TransitionableComponent from "./TransitionableComponent";
 import IRotation from "../geom/rotation/IRotation";
@@ -74,7 +74,7 @@ export default class Rotation extends TransitionableComponent<"rotation", IRotat
     return new Rotation(0);
   }
 
-  public get onRotationChange(): Event<IRotation> {
+  public get onRotationChange(): ChibiEvent<IRotation> {
     return this.onChange;
   }
 

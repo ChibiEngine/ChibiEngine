@@ -1,6 +1,6 @@
 import {Container} from "pixi.js";
 
-import {Event} from "../event/Event";
+import {ChibiEvent} from "../event/ChibiEvent";
 import AbstractGameObject from "../gameobjects/AbstractGameObject";
 import TransitionableComponent from "./TransitionableComponent";
 import ISize from "../geom/size/ISize";
@@ -121,7 +121,7 @@ export default class Scale extends TransitionableComponent<"scale", IScale, Abst
     return new Scale(this.current.x, this.current.y);
   }
 
-  public get onScaleChange(): Event<this> {
+  public get onScaleChange(): ChibiEvent<this> {
     return this.onChange;
   }
 

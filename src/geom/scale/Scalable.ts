@@ -1,10 +1,10 @@
 // types-only
 
-import {Event} from "../../event/Event";
+import {ChibiEvent} from "../../event/ChibiEvent";
 import IScale from "./IScale";
 
 export default interface Scalable {
   x: number;
   y: number;
-  onScaleChange: Event<IScale>;
+  onScaleChange: ChibiEvent<IScale>;
 }

@@ -1,6 +1,6 @@
 import { Container } from "pixi.js";
 
-import {Event} from "../event/Event";
+import {ChibiEvent} from "../event/ChibiEvent";
 import AbstractGameObject from "../gameobjects/AbstractGameObject";
 import Positionable from "../geom/position/Positionable";
 import TransitionableComponent from "./TransitionableComponent";
@@ -35,7 +35,7 @@ export default class Position extends TransitionableComponent<"position", IPosit
     }
   }
 
-  public get onPositionChange(): Event<IPosition> {
+  public get onPositionChange(): ChibiEvent<IPosition> {
     return this.onChange;
   }
 

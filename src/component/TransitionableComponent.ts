@@ -1,7 +1,7 @@
 import AbstractGameObject from "../gameobjects/AbstractGameObject";
 import GameObject from "../gameobjects/GameObject";
 import {Component} from "./Component";
-import {Event} from "../event/Event";
+import {ChibiEvent} from "../event/ChibiEvent";
 import {VariableUpdatable} from "../gameobjects/Updatable";
 
 export default abstract class TransitionableComponent<Name extends string, T, Target extends AbstractGameObject = GameObject> extends Component<Name, Target> implements VariableUpdatable {
@@ -25,10 +25,10 @@ export default abstract class TransitionableComponent<Name extends string, T, Ta
    */
   protected to: T;
 
-  public readonly onChange: Event<this> = new Event();
+  public readonly onChange: ChibiEvent<this> = new ChibiEvent();
 
   // Disabled for now, don't know the overhead of this
-  // public readonly onExactValueChange: Event<T> = new Event();
+  // public readonly onExactValueChange: Event<T> = new ChibiEvent();
 
   public abstract target: Target;
 

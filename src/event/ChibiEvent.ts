@@ -3,14 +3,14 @@
  */
 import CompletablePromise from "../utils/CompletablePromise";
 
-class EventImpl<T> extends Function {
+class ChibiEventImpl<T> extends Function {
   public readonly dontProxyFunction: boolean = true;
 
   private listeners: EventListener<T>[] = [];
 
   lastValue: T = undefined;
 
-  public readonly onAddListener: Event<EventListener<T>>;
+  public readonly onAddListener: ChibiEvent<EventListener<T>>;
 
   // TODO : CompletablePromise<T> breaks typing
   private readonly promise: CompletablePromise<any> = new CompletablePromise();
@@ -18,7 +18,7 @@ class EventImpl<T> extends Function {
   constructor(onAddListener: boolean = true) {
     super();
     if(onAddListener) {
-      this.onAddListener = new Event(false);
+      this.onAddListener = new ChibiEvent(false);
     }
     return new Proxy(this, {
       apply (target, thisArg, args) {
@@ -97,12 +97,12 @@ class EventImpl<T> extends Function {
  * @param callback
  * @param instantTrigger If true and the event has already been triggered, the callback will be called immediately with the last value.
  */
-export declare type Event<T> = EventImpl<T> & ((callback: (val: T) => void, instantTrigger?: boolean) => EventListener<T>);
+export declare type ChibiEvent<T> = ChibiEventImpl<T> & ((callback: (val: T) => void, instantTrigger?: boolean) => EventListener<T>);
 
-export const Event: new <T>(onAddListener?: boolean) => Event<T> = EventImpl as any;
+export const ChibiEvent: new <T>(onAddListener?: boolean) => ChibiEvent<T> = ChibiEventImpl as any;
 
 export class EventListener<T> {
-  constructor(private readonly event: EventImpl<T>, public readonly callback: (value: any) => void) {
+  constructor(private readonly event: ChibiEventImpl<T>, public readonly callback: (value: any) => void) {
   }
 
   /**

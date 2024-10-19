@@ -1,4 +1,4 @@
-import {Event} from "../event/Event";
+import {ChibiEvent} from "../event/ChibiEvent";
 import Loadable from "./Loadable";
 import Logger from "../utils/Logger";
 import debug = Logger.debug;
@@ -11,7 +11,7 @@ export default abstract class Resource extends Loadable {
   public readonly id: string;
   private readonly _path: string;
 
-  public readonly onDestroy: Event<this> = new Event();
+  public readonly onDestroy: ChibiEvent<this> = new ChibiEvent();
 
   protected constructor(path: string, ...args: any[]) {
     super();
