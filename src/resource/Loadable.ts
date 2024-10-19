@@ -1,7 +1,6 @@
 import {ChibiEvent} from "../event/ChibiEvent";
 import type Blob from "./resources/Blob";
 import ResourceManager from "./ResourceManager";
-import InstantEvent from "../event/InstantEvent";
 import makeProxy from "../utils/makeProxy";
 
 /*
@@ -31,7 +30,7 @@ export default abstract class Loadable {
     public abstract readonly type: string;
 
     public readonly onProgress: ChibiEvent<this> = new ChibiEvent<this>();
-    public readonly onLoaded: ChibiEvent<this> = new InstantEvent<this>();
+    public readonly onLoaded: ChibiEvent<this> = new ChibiEvent<this>();
     public readonly onCreated: ChibiEvent<this> = new ChibiEvent<this>();
     public readonly onDependenciesLoaded: ChibiEvent<Loadable[]> = new ChibiEvent<Loadable[]>();
 
@@ -116,7 +115,7 @@ export default abstract class Loadable {
         this.onDependenciesLoaded.reset();
         this.onLoaded.reset();
 
-        dependency.loaded.then(() => this.onDependencyLoaded(dependency));
+        dependency.onLoaded.subscribe(() => this.onDependencyLoaded(dependency));
 
         return dependency as T & PromiseLike<T>;
     }
@@ -133,8 +132,11 @@ export default abstract class Loadable {
     public async create() {
         this.createStart();
         await this._create()
-        await this.onDependenciesLoaded.asPromise();
         this.createEnd();
+
+        await this.onDependenciesLoaded.asPromise();
+
+        this.onLoaded.trigger(this);
     }
 
     // TODO: pass the scene as parameter ?
@@ -169,10 +171,6 @@ export default abstract class Loadable {
         this._isCreated = true;
 
         this.onCreated.trigger(this);
-
-        if(this.allDependenciesLoaded()) { // should always be true
-            this.onLoaded.trigger(this);
-        }
     }
 
     public whenCreated(callback: (created: this) => void) {

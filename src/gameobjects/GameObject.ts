@@ -59,6 +59,7 @@ export default abstract class GameObject extends AbstractGameObject.With(Positio
 
     this.componentsApplied = true;
 
+    this.createEnd();
     /* Need to be after components apply to avoid cyclic awaiting
     E.g. Scene (+ PhysicsWorld) waits for all dependencies to be loaded
     But these dependencies have PhysicsBody which waits for the Scene PhysicsWorld to be applied (which would never happen if apply was called after onDependenciesLoaded)
@@ -67,7 +68,7 @@ export default abstract class GameObject extends AbstractGameObject.With(Positio
 
     await Promise.all(componentApplyPromises);
 
-    this.createEnd();
+    this.onLoaded.trigger(this);
   }
 
   public addToScene(scene: Scene) {
