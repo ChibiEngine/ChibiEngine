@@ -1,6 +1,6 @@
 import { Container } from "pixi.js";
 
-import {Event} from "../event/Event";
+import {ChibiEvent} from "../event/ChibiEvent";
 import AbstractGameObject from "../gameobjects/AbstractGameObject";
 import Positionable from "../geom/position/Positionable";
 import TransitionableComponent from "./TransitionableComponent";
@@ -18,7 +18,7 @@ export default class Position extends TransitionableComponent<"position", IPosit
     super({ x, y});
   }
 
-  public apply(target: AbstractGameObject): void {
+  public async apply(target: AbstractGameObject) {
     this.target = target;
     // @ts-ignore
     this._pixi = target.pixi;
@@ -26,7 +26,7 @@ export default class Position extends TransitionableComponent<"position", IPosit
     this.onChange.subscribe((position) => {
       // TODO : disable this listener when transition is set?
       this.assign(position);
-    }).triggerNowIfValueExists();
+    });
 
     this.set(this.current);
 
@@ -35,7 +35,7 @@ export default class Position extends TransitionableComponent<"position", IPosit
     }
   }
 
-  public get onPositionChange(): Event<IPosition> {
+  public get onPositionChange(): ChibiEvent<IPosition> {
     return this.onChange;
   }
 

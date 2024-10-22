@@ -34,7 +34,7 @@ export abstract class AbstractComponent<Name extends string, in T extends Abstra
    * Called when the gameobject is loaded and ready to apply the component.
    * @param target
    */
-  public apply(target: T): void {
+  public async apply(target: T): Promise<void> {
     // To override
   }
 

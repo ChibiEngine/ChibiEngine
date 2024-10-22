@@ -4,7 +4,7 @@ import Scene from "./Scene";
 import Container from "../gameobjects/Container";
 import Rectangle from "../geom/rect/Rectangle";
 import GameLoop from "./GameLoop";
-import {Event} from "../event/Event";
+import {ChibiEvent} from "../event/ChibiEvent";
 
 interface GameConfig {
   width: number;
@@ -23,7 +23,9 @@ export default class Game extends Container {
 
   public screen: Rectangle;
 
-  private onStart: Event<this> = new Event();
+  private onStart: ChibiEvent<this> = new ChibiEvent();
+
+  public addedToScene = true;
 
   public constructor(public readonly config: GameConfig) {
     super();
@@ -76,6 +78,7 @@ export default class Game extends Container {
   // TODO : override add to use a default scene if none is present
 
   public currentScene(): Scene {
+    if(!this.sceneStack) return undefined;
     if (this.sceneStack.length === 0) return null;
     return this.sceneStack[this.sceneStack.length - 1];
   }
@@ -89,7 +92,7 @@ export default class Game extends Container {
     this.sceneStack.push(scene);
     this.onStart.subscribeOnce(() => {
       this.add(scene, id);
-    }).triggerNowIfValueExists();
+    });
   }
 
   private updateScenes(time: number, dt: number) {

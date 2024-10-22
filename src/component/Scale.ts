@@ -1,6 +1,6 @@
 import {Container} from "pixi.js";
 
-import {Event} from "../event/Event";
+import {ChibiEvent} from "../event/ChibiEvent";
 import AbstractGameObject from "../gameobjects/AbstractGameObject";
 import TransitionableComponent from "./TransitionableComponent";
 import ISize from "../geom/size/ISize";
@@ -20,7 +20,7 @@ export default class Scale extends TransitionableComponent<"scale", IScale, Abst
     super({x: 1, y: 1});
   }
 
-  public apply(target: AbstractGameObject): void {
+  public async apply(target: AbstractGameObject) {
     this.target = target;
     // @ts-ignore TODO: fix this
     this._pixi = target.pixi;
@@ -30,7 +30,7 @@ export default class Scale extends TransitionableComponent<"scale", IScale, Abst
     this.onChange.subscribe((position) => {
       // TODO : disable this listener when transition is set?
       this.assign(position);
-    }).triggerNowIfValueExists();
+    });
 
     if (this.transitionMillis) {
       this.enableTransition();
@@ -121,7 +121,7 @@ export default class Scale extends TransitionableComponent<"scale", IScale, Abst
     return new Scale(this.current.x, this.current.y);
   }
 
-  public get onScaleChange(): Event<this> {
+  public get onScaleChange(): ChibiEvent<this> {
     return this.onChange;
   }
 

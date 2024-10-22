@@ -1,11 +1,11 @@
 import ISize from "./ISize";
-import {Event} from "../../event/Event";
+import {ChibiEvent} from "../../event/ChibiEvent";
 
 export default class Size implements ISize {
   private _width: number;
   private _height: number;
 
-  public readonly onChange: Event<ISize> = new Event();
+  public readonly onChange: ChibiEvent<ISize> = new ChibiEvent();
 
   public constructor(width: number, height: number) {
     this._width = width;

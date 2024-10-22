@@ -1,20 +1,24 @@
 /**
  * TODO: switch to eventemitter3
  */
+import CompletablePromise from "../utils/CompletablePromise";
 
-class EventImpl<T> extends Function {
+class ChibiEventImpl<T> extends Function {
   public readonly dontProxyFunction: boolean = true;
 
   private listeners: EventListener<T>[] = [];
 
   lastValue: T = undefined;
 
-  public readonly onAddListener: Event<EventListener<T>>;
+  public readonly onAddListener: ChibiEvent<EventListener<T>>;
+
+  // TODO : CompletablePromise<T> breaks typing
+  private readonly promise: CompletablePromise<any> = new CompletablePromise();
 
   constructor(onAddListener: boolean = true) {
     super();
     if(onAddListener) {
-      this.onAddListener = new Event(false);
+      this.onAddListener = new ChibiEvent(false);
     }
     return new Proxy(this, {
       apply (target, thisArg, args) {
@@ -27,18 +31,22 @@ class EventImpl<T> extends Function {
 
         return target.subscribe(callback, instantTrigger);
       }
-    })
+    });
+  }
+
+  public asPromise(): Promise<T> {
+    return this.promise.promise;
   }
 
   /**
    *
    * @param callback
-   * @param instantTrigger If true the callback will be called immediately with the last known value (or undefined).
+   * @param instantTrigger If true the callback will be called immediately with the last known value if present.
    */
-  public subscribe(callback: (value: T) => void, instantTrigger: boolean = false): EventListener<T> {
+  public subscribe(callback: (value: T) => void, instantTrigger: boolean = true): EventListener<T> {
     const listener = new EventListener(this, callback);
     this.listeners.push(listener);
-    if(instantTrigger) {
+    if(this.lastValue && instantTrigger) {
       callback(this.lastValue);
     }
     this.onAddListener?.trigger(listener);
@@ -48,15 +56,15 @@ class EventImpl<T> extends Function {
   /**
    *
    * @param callback
-   * @param instantTrigger If true the callback will be called immediately with the last known value (or undefined).   */
-  public subscribeOnce(callback: (value: T) => void, instantTrigger: boolean = false): EventListener<T> {
+   * @param instantTrigger If true the callback will be called immediately with the last known value if present.   */
+  public subscribeOnce(callback: (value: T) => void, instantTrigger: boolean = true): EventListener<T> {
     const once = (value: T) => {
       this.unsubscribe(listener);
       callback(value);
     };
     const listener = new EventListener<T>(this, once);
     this.listeners.push(listener);
-    if(instantTrigger) {
+    if(this.lastValue && instantTrigger) {
       callback(this.lastValue);
     }
     this.onAddListener?.trigger(listener);
@@ -75,11 +83,13 @@ class EventImpl<T> extends Function {
     for (const listener of listeners) {
       listener.callback(value);
     }
+    this.promise.complete(value);
     this.lastValue = value;
   }
 
-  public forget() {
+  public reset() {
     this.lastValue = undefined;
+    this.promise.reset();
   }
 }
 
@@ -87,12 +97,12 @@ class EventImpl<T> extends Function {
  * @param callback
  * @param instantTrigger If true and the event has already been triggered, the callback will be called immediately with the last value.
  */
-export declare type Event<T> = EventImpl<T> & ((callback: (val: T) => void, instantTrigger?: boolean) => EventListener<T>);
+export declare type ChibiEvent<T> = ChibiEventImpl<T> & ((callback: (val: T) => void, instantTrigger?: boolean) => EventListener<T>);
 
-export const Event: new <T>(onAddListener?: boolean) => Event<T> = EventImpl as any;
+export const ChibiEvent: new <T>(onAddListener?: boolean) => ChibiEvent<T> = ChibiEventImpl as any;
 
 export class EventListener<T> {
-  constructor(private readonly event: EventImpl<T>, public readonly callback: (value: any) => void) {
+  constructor(private readonly event: ChibiEventImpl<T>, public readonly callback: (value: any) => void) {
   }
 
   /**
@@ -100,15 +110,6 @@ export class EventListener<T> {
    */
   public triggerNow() {
     this.callback(this.event.lastValue);
-  }
-
-  /**
-   * Triggers the callback if the event has already been triggered.
-   */
-  public triggerNowIfValueExists() {
-    if(this.event.lastValue !== undefined) {
-      this.callback(this.event.lastValue);
-    }
   }
 
   /**

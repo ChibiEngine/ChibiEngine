@@ -1,6 +1,6 @@
 import Sizeable from "../size/Sizeable";
 import Positionable from "../position/Positionable";
-import {Event} from "../../event/Event";
+import {ChibiEvent} from "../../event/ChibiEvent";
 import center from "../../gameobjects/positioning/center";
 import Position from "../../component/Position";
 import Size from "../size/Size";
@@ -10,8 +10,8 @@ export default class Rectangle implements Sizeable, Positionable {
     public readonly position: Position;
     public readonly size: Size;
 
-    public readonly onSizeChange: Event<ISize>;
-    public readonly onPositionChange: Event<Position>;
+    public readonly onSizeChange: ChibiEvent<ISize>;
+    public readonly onPositionChange: ChibiEvent<Position>;
 
     constructor(x: number, y: number, width: number, height: number) {
         this.position = new Position(x, y);

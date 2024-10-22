@@ -8,6 +8,8 @@ import AbstractGameObject from "./AbstractGameObject";
 import Position from "../component/Position";
 import Scale from "../component/Scale";
 import Rotation from "../component/Rotation";
+import Scene from "../game/Scene";
+import {ChibiEvent} from "../event/ChibiEvent";
 
 // Inspired by https://docs.cocos2d-x.org/api-ref/cplusplus/v4x/d3/d82/classcocos2d_1_1_node.html
 
@@ -29,8 +31,7 @@ export default abstract class GameObject extends AbstractGameObject.With(Positio
   public _parent: Container;
   public abstract pixi: PixiContainer;
 
-  // TODO : reuse parent _isCreated attribute
-  protected created = false;
+  public onAddedToScene: ChibiEvent<this> = new ChibiEvent();
 
   public constructor(
       position: Position = Position.zero(),
@@ -44,24 +45,47 @@ export default abstract class GameObject extends AbstractGameObject.With(Positio
   }
 
   public async create(): Promise<void> {
-    this.loadingStart();
+    this.createStart();
 
-    // Set first to be sure other components are applied first
-    // TODO : should only set _isCreated to true when all components are applied ?
-    this.whenLoaded(() => {
-      for (const component of this.components) {
-        component.apply(this);
-      }
-    });
+    const componentApplyPromises: Promise<void>[] = [];
+
     await this._create();
 
-    const scene = this.scene;
-    if (isUpdatable(this) && !this.dontAddToUpdateList) {
+    for (const component of this.components) {
+      componentApplyPromises.push(component.apply(this));
+    }
+
+    this.componentsApplied = true;
+
+    this.createEnd();
+    /* Need to be after components apply to avoid cyclic awaiting
+    E.g. Scene (+ PhysicsWorld) waits for all dependencies to be loaded
+    But these dependencies have PhysicsBody which waits for the Scene PhysicsWorld to be applied (which would never happen if apply was called after onDependenciesLoaded)
+     */
+    await this.onDependenciesLoaded.asPromise();
+
+    await Promise.all(componentApplyPromises);
+
+    this.onLoaded.trigger(this);
+  }
+
+  public addToScene(scene: Scene, triggerEvent: boolean = true) {
+    this.addedToScene = true;
+    this.scene = scene;
+
+    if(triggerEvent) {
+      this.onAddedToScene.trigger(this);
+    }
+
+    if (isUpdatable(this)) {
       scene.addUpdatable(this as Updatable);
     }
-    this.created = true;
 
-    this.loadingEnd();
+    for(const component of this.updatableComponentsToAdd) {
+      this.scene.addUpdatable(component);
+    }
+
+    this.updatableComponentsToAdd.length = 0;
   }
 
   //// LIFE CYCLE ////

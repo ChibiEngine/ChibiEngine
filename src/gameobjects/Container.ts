@@ -74,11 +74,33 @@ export default class Container extends GameObject {
       });
     }
 
-    // after so onDependencyLoaded is called after the pixi objects has been added
-    this.load(child);
+    // Ensure child has not already been loaded
+    if(!child.isLoaded && !child.isLoading) {
+      // after so onDependencyLoaded is called after the pixi objects have been added
+      this.load(child);
+    }
+
+    if(this.addedToScene) {
+      child.onLoaded.subscribeOnce(() => {
+          child.addToScene(this.scene);
+      });
+    }
 
     // @ts-ignore
     return child;
+  }
+
+  public addToScene(scene: Scene) {
+    this.scene = scene;
+    this.addedToScene = true;
+    this.onAddedToScene.trigger(this);
+
+    for(const child of this.children) {
+      if(child.addedToScene) continue; // Already added to scene, no need to trigger the event
+
+      child.addToScene(scene);
+    }
+    super.addToScene(scene, false);
   }
 
   /**

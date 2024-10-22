@@ -57,6 +57,8 @@ export default abstract class Scene extends Container {
   }
 
   public addUpdatable(param: Updatable) {
+    if(param.dontAddToUpdateList) return;
+    
     param.updateCallOrder = param.updateCallOrder || 0;
     if(isFixedUpdatable(param)) {
       if(param.updateRate === undefined) {

@@ -1,10 +1,13 @@
 import AbstractGameObject from "../gameobjects/AbstractGameObject";
 import GameObject from "../gameobjects/GameObject";
 import {Component} from "./Component";
-import {Event} from "../event/Event";
+import {ChibiEvent} from "../event/ChibiEvent";
 import {VariableUpdatable} from "../gameobjects/Updatable";
 
 export default abstract class TransitionableComponent<Name extends string, T, Target extends AbstractGameObject = GameObject> extends Component<Name, Target> implements VariableUpdatable {
+  /**
+   * Transitionable Components add themselves to update list only when transition is enabled
+   */
   public dontAddToUpdateList = true;
   protected elapsed: number = 0;
 
@@ -22,10 +25,10 @@ export default abstract class TransitionableComponent<Name extends string, T, Ta
    */
   protected to: T;
 
-  public readonly onChange: Event<this> = new Event();
+  public readonly onChange: ChibiEvent<this> = new ChibiEvent();
 
   // Disabled for now, don't know the overhead of this
-  // public readonly onExactValueChange: Event<T> = new Event();
+  // public readonly onExactValueChange: Event<T> = new ChibiEvent();
 
   public abstract target: Target;
 
@@ -40,9 +43,7 @@ export default abstract class TransitionableComponent<Name extends string, T, Ta
   }
 
   public setTransition(millis: number) {
-    /* TODO: automatically deduce interval from parent update rate?
-       It supposes that the parent updates the component position in its update method
-     */
+    this.dontAddToUpdateList = millis === 0;
     this.transitionMillis = millis;
     if(!this.target) {
       return;
@@ -54,15 +55,25 @@ export default abstract class TransitionableComponent<Name extends string, T, Ta
     }
   }
 
+  /**
+   * Set transition rate in Hz
+   * @param rate rate in Hz
+   */
+  public setTransitionRate(rate: number) {
+    this.setTransition(1000 / rate);
+  }
+
   public get transitionEnabled() {
     return this.transitionMillis > 0;
   }
 
   protected enableTransition() {
+    if(!this.target.scene) return;
     this.target.scene.addUpdatable(this);
   }
 
   public disableTransition() {
+    if(!this.target.scene) return;
     this.target.scene.removeUpdatable(this);
   }
 

@@ -1,9 +1,27 @@
-import {Event, EventListener} from "../event/Event";
+import {ChibiEvent} from "../event/ChibiEvent";
 import type Blob from "./resources/Blob";
 import ResourceManager from "./ResourceManager";
-import InstantEvent from "../event/InstantEvent";
 import makeProxy from "../utils/makeProxy";
 
+/*
+Loading cycle :
+
+createStart()
+      |
+   _create()
+      |
+add dependencies...
+      |
+  load start
+      |
+load dependencies...
+      |
+  load end
+      |
+  create end
+      |
+   loaded
+ */
 
 // Inspired by https://help.adobe.com/fr_FR/FlashPlatform/reference/actionscript/3/flash/display/LoaderInfo.html
 // https://help.adobe.com/fr_FR/FlashPlatform/reference/actionscript/3/flash/display/Loader.html
@@ -11,19 +29,21 @@ import makeProxy from "../utils/makeProxy";
 export default abstract class Loadable {
     public abstract readonly type: string;
 
-    public readonly onProgress: Event<this> = new Event<this>();
-    public readonly onLoaded: InstantEvent<this> = new InstantEvent<this>();
+    public readonly onProgress: ChibiEvent<this> = new ChibiEvent<this>();
+    public readonly onLoaded: ChibiEvent<this> = new ChibiEvent<this>();
+    public readonly onCreated: ChibiEvent<this> = new ChibiEvent<this>();
+    public readonly onDependenciesLoaded: ChibiEvent<Loadable[]> = new ChibiEvent<Loadable[]>();
 
     public readonly dependencies: Loadable[] = [];
     public readonly dependants: Loadable[] = [];
     public readonly blobs: Blob[] = [];
-    private readonly dependencyListeners: EventListener<any>[] = [];
 
-    private _isCreating: boolean = false;
-    private _isCreated: boolean = false;
+    public _isCreating: boolean = false;
+    public _isCreated: boolean = false;
 
     protected constructor() {
         this.onDependencyLoaded = this.onDependencyLoaded.bind(this);
+        this.onDependenciesLoaded.trigger([]);
         this.setThenMethod();
     }
 
@@ -91,25 +111,32 @@ export default abstract class Loadable {
 
         // This object depends on dependency to be created.
         this.dependencies.push(dependency);
-        const listener = dependency.onLoaded.subscribe(this.onDependencyLoaded);
-        this.dependencyListeners.push(listener);
         // Turn this back to unloaded.
+        this.onDependenciesLoaded.reset();
         this.onLoaded.reset();
+
+        dependency.onLoaded.subscribe(() => this.onDependencyLoaded(dependency));
 
         return dependency as T & PromiseLike<T>;
     }
 
     private onDependencyLoaded(_: Loadable) {
-        if(this.isLoaded) {
-            this.onLoaded.trigger(this);
-            this.dependencyListeners.forEach(e => e.unsubscribe());
+        if(this.allDependenciesLoaded()) {
+            this.onDependenciesLoaded.trigger(this.dependencies.slice(0));
+            if(this._isCreated) {
+                this.onLoaded.trigger(this);
+            }
         }
     }
 
     public async create() {
-        this.loadingStart();
+        this.createStart();
         await this._create()
-        this.loadingEnd();
+        this.createEnd();
+
+        await this.onDependenciesLoaded.asPromise();
+
+        this.onLoaded.trigger(this);
     }
 
     // TODO: pass the scene as parameter ?
@@ -134,28 +161,23 @@ export default abstract class Loadable {
 
     protected abstract _destroy(): Promise<void>;
 
-    protected loadingStart() {
+    protected createStart() {
         this._isCreating = true;
         this._isCreated = false;
     }
 
-    protected loadingEnd() {
+    protected createEnd() {
         this._isCreating = false;
         this._isCreated = true;
 
-        if(this.allDependenciesLoaded()) {
-            this.onLoaded.trigger(this);
-            this.dependencyListeners.forEach(e => e.unsubscribe());
-        }
+        this.onCreated.trigger(this);
     }
 
-    public whenLoaded(callback: (loadable: this) => void) {
-        // TODO : duplicates onLoaded event?
-        // this should be handled by the event itself
-        if(this.isLoaded) {
+    public whenCreated(callback: (created: this) => void) {
+        if(this._isCreated) {
             callback(this);
         } else {
-            this.onLoaded.subscribeOnce(callback);
+            this.onCreated.subscribeOnce(callback);
         }
     }
 

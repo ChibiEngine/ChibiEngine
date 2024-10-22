@@ -1,12 +1,12 @@
-import {Event} from "../event/Event";
+import {ChibiEvent} from "../event/ChibiEvent";
 
 namespace Keyboard {
     const _downKeys: Set<string> = new Set();
     const _downKeysTime: Map<string, number> = new Map();
 
-    export const onKeyDown: Event<KeyboardEvent> = new Event();
-    export const onKeyUp: Event<KeyboardEvent> = new Event();
-    export const onKeyPressed: Event<KeyboardEvent> = new Event();
+    export const onKeyDown: ChibiEvent<KeyboardEvent> = new ChibiEvent();
+    export const onKeyUp: ChibiEvent<KeyboardEvent> = new ChibiEvent();
+    export const onKeyPressed: ChibiEvent<KeyboardEvent> = new ChibiEvent();
 
     document.addEventListener("keydown", (e: KeyboardEvent) => {
         if(_downKeys.has(e.key)) {

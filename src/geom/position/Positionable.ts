@@ -1,10 +1,10 @@
 // types-only
 
-import {Event} from "../../event/Event";
+import {ChibiEvent} from "../../event/ChibiEvent";
 import IPosition from "./IPosition";
 
 export default interface Positionable {
   x: number;
   y: number;
-  onPositionChange: Event<IPosition>;
+  onPositionChange: ChibiEvent<IPosition>;
 }

@@ -1,6 +1,6 @@
 import {Container} from "pixi.js";
 
-import {Event} from "../event/Event";
+import {ChibiEvent} from "../event/ChibiEvent";
 import AbstractGameObject from "../gameobjects/AbstractGameObject";
 import TransitionableComponent from "./TransitionableComponent";
 import IRotation from "../geom/rotation/IRotation";
@@ -18,7 +18,7 @@ export default class Rotation extends TransitionableComponent<"rotation", IRotat
     super({radians: radians});
   }
 
-  public apply(target: AbstractGameObject): void {
+  public async apply(target: AbstractGameObject) {
     this.target = target;
     // @ts-ignore TODO: fix this
     this._pixi = target.pixi;
@@ -28,7 +28,7 @@ export default class Rotation extends TransitionableComponent<"rotation", IRotat
     this.onChange.subscribe((position) => {
       // TODO : disable this listener when transition is set?
       this.assign(position);
-    }).triggerNowIfValueExists();
+    });
 
     if (this.transitionMillis) {
       this.enableTransition();
@@ -74,7 +74,7 @@ export default class Rotation extends TransitionableComponent<"rotation", IRotat
     return new Rotation(0);
   }
 
-  public get onRotationChange(): Event<IRotation> {
+  public get onRotationChange(): ChibiEvent<IRotation> {
     return this.onChange;
   }
 
