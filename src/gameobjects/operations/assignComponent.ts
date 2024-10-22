@@ -5,7 +5,7 @@ import AbstractGameObject from "../AbstractGameObject";
 
 const ignore = ["constructor", "apply", "update", "variableUpdate", "componentName", "dontAddToUpdateList"];
 
-export default function assignComponent<O extends AbstractGameObject, C extends Component<string, O>>(target: O, component: C): Omit<O & C & ComponentProperty<C>, "componentName"> {
+export default function assignComponent<O extends AbstractGameObject, C extends Component<string, O>>(target: O, component: C): O & Omit<C, "componentName"> & ComponentProperty<C> {
   // @ts-ignore
   component.gameobject = target;
 
