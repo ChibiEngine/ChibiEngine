@@ -5,11 +5,6 @@ export abstract class AbstractComponent<Name extends string, in T extends Abstra
   public abstract readonly componentName: Name;
 
   /**
-   * If true, the component will be applied even if the gameobject is not created yet.
-   */
-  public immediateApply = false;
-
-  /**
    * Reference to the gameobject that the component is attached to.
    */
   private _gameobject: any;

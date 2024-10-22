@@ -41,7 +41,7 @@ export default abstract class AbstractGameObject extends Loadable {
   public addComponent<C extends Component<string, this>>(component: C) {
     this.components.push(component);
     component.setTarget(this);
-    if(this.created || this.componentsApplied || component.immediateApply) {
+    if(this.created || this.componentsApplied) {
       component.apply(this);
     }
     if (isUpdatable(component)) {

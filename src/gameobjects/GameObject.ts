@@ -52,9 +52,7 @@ export default abstract class GameObject extends AbstractGameObject.With(Positio
     await this._create();
 
     for (const component of this.components) {
-      if(!component.immediateApply) {
-        componentApplyPromises.push(component.apply(this));
-      }
+      componentApplyPromises.push(component.apply(this));
     }
 
     this.componentsApplied = true;
