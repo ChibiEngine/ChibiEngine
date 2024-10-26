@@ -34,7 +34,7 @@ export default abstract class GameObject extends AbstractGameObject.With(Positio
   public onAddedToScene = new ChibiEvent<GameObject>();
 
   public constructor(
-      position: Position = Position.zero(),
+      position: Position = new Position(),
       scale: Scale = new Scale(),
       rotation: Rotation = new Rotation(),
   ) {

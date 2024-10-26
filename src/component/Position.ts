@@ -14,7 +14,7 @@ export default class Position extends TransitionableComponent<"position", IPosit
   public target: AbstractGameObject;
   public _pixi: Container;
 
-  public constructor(x: number, y: number) {
+  public constructor(x: number = 0, y: number = x) {
     super({ x, y});
   }
 
