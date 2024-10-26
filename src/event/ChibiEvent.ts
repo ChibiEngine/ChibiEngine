@@ -12,15 +12,12 @@ class ChibiEventImpl<A extends Array<any>> extends Function {
 
   public lastValue: A = undefined;
 
-  public readonly onAddListener: ChibiEvent<EventListener<ChibiEventImpl<A>>>;
+  private _onAddListener: ChibiEvent<EventListener<ChibiEventImpl<A>>>;
 
   private readonly promise: CompletablePromise<A> = new CompletablePromise();
 
-  constructor(onAddListener: boolean = true) {
+  constructor() {
     super();
-    if(onAddListener) {
-      this.onAddListener = new ChibiEvent<EventListener<ChibiEventImpl<A>>>(false);
-    }
     return new Proxy(this, {
       apply (target, thisArg, args) {
         const callback = args[0];
@@ -33,6 +30,13 @@ class ChibiEventImpl<A extends Array<any>> extends Function {
         return target.subscribe(callback, instantTrigger);
       }
     });
+  }
+
+  public get onAddListener() {
+    if (!this._onAddListener) {
+      this._onAddListener = new ChibiEvent();
+    }
+    return this._onAddListener;
   }
 
   public asPromise(): Promise<A> {
@@ -57,7 +61,7 @@ class ChibiEventImpl<A extends Array<any>> extends Function {
     if(this.lastValue && instantTrigger) {
       callback(...this.lastValue);
     }
-    this.onAddListener?.trigger(listener);
+    this._onAddListener?.trigger(listener);
     return listener;
   }
 
@@ -78,7 +82,7 @@ class ChibiEventImpl<A extends Array<any>> extends Function {
     if(this.lastValue && instantTrigger) {
       callback(...this.lastValue);
     }
-    this.onAddListener?.trigger(listener);
+    this._onAddListener?.trigger(listener);
     return listener;
   }
 
