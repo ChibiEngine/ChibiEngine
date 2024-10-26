@@ -25,7 +25,7 @@ export default abstract class TransitionableComponent<Name extends string, T, Ta
    */
   protected to: T;
 
-  public readonly onChange: ChibiEvent<this> = new ChibiEvent();
+  public readonly onChange = new ChibiEvent<T, false>();
 
   // Disabled for now, don't know the overhead of this
   // public readonly onExactValueChange: Event<T> = new ChibiEvent();
@@ -88,7 +88,7 @@ export default abstract class TransitionableComponent<Name extends string, T, Ta
       this.to = value;
       this.elapsed = 0;
     }
-    this.onChange.trigger(this);
+    this.onChange.trigger(value);
   }
 
   public interpolateDt(dt: number): T {

@@ -29,10 +29,10 @@ load dependencies...
 export default abstract class Loadable {
     public abstract readonly type: string;
 
-    public readonly onProgress: ChibiEvent<this> = new ChibiEvent<this>();
-    public readonly onLoaded: ChibiEvent<this> = new ChibiEvent<this>();
-    public readonly onCreated: ChibiEvent<this> = new ChibiEvent<this>();
-    public readonly onDependenciesLoaded: ChibiEvent<Loadable[]> = new ChibiEvent<Loadable[]>();
+    public readonly onProgress = new ChibiEvent<Loadable>();
+    public readonly onLoaded = new ChibiEvent<Loadable>();
+    public readonly onCreated = new ChibiEvent<Loadable>();
+    public readonly onDependenciesLoaded = new ChibiEvent<Loadable[]>();
 
     public readonly dependencies: Loadable[] = [];
     public readonly dependants: Loadable[] = [];
@@ -173,7 +173,7 @@ export default abstract class Loadable {
         this.onCreated.trigger(this);
     }
 
-    public whenCreated(callback: (created: this) => void) {
+    public whenCreated(callback: (created: Loadable) => void) {
         if(this._isCreated) {
             callback(this);
         } else {
