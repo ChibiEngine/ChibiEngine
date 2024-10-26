@@ -25,7 +25,7 @@ export default abstract class TransitionableComponent<Name extends string, T, Ta
    */
   protected to: T;
 
-  public readonly onChange = new ChibiEvent<T, false>();
+  public readonly onChange = new ChibiEvent<T>();
 
   // Disabled for now, don't know the overhead of this
   // public readonly onExactValueChange: Event<T> = new ChibiEvent();

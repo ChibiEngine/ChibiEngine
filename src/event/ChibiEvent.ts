@@ -3,25 +3,23 @@
  */
 import CompletablePromise from "../utils/CompletablePromise";
 
-type Args<A, M extends boolean> = M extends true ? (A extends Array<any> ? A : [A]) : [A];
-
-class ChibiEventImpl<A, MULTI_ARGS extends boolean = false> extends Function {
-  public static readonly Multi: typeof ChibiEventMultiImpl;
+class ChibiEventImpl<A extends Array<any>> extends Function {
+  public static readonly Multi: typeof ChibiMultiEvent = ChibiEventImpl as any;
 
   public readonly dontProxyFunction: boolean = true;
 
-  private listeners: EventListener<ChibiEventImpl<A, MULTI_ARGS>>[] = [];
+  private listeners: EventListener<ChibiEventImpl<A>>[] = [];
 
-  public lastValue: Args<A, MULTI_ARGS> = undefined;
+  public lastValue: A = undefined;
 
-  public readonly onAddListener: ChibiEvent<EventListener<ChibiEventImpl<A, MULTI_ARGS>>>;
+  public readonly onAddListener: ChibiEvent<EventListener<ChibiEventImpl<A>>>;
 
-  private readonly promise: CompletablePromise<Args<A, MULTI_ARGS>> = new CompletablePromise();
+  private readonly promise: CompletablePromise<A> = new CompletablePromise();
 
   constructor(onAddListener: boolean = true) {
     super();
     if(onAddListener) {
-      this.onAddListener = new ChibiEvent<EventListener<ChibiEventImpl<A, MULTI_ARGS>>>(false);
+      this.onAddListener = new ChibiEvent<EventListener<ChibiEventImpl<A>>>(false);
     }
     return new Proxy(this, {
       apply (target, thisArg, args) {
@@ -37,7 +35,7 @@ class ChibiEventImpl<A, MULTI_ARGS extends boolean = false> extends Function {
     });
   }
 
-  public asPromise(): Promise<Args<A, MULTI_ARGS>> {
+  public asPromise(): Promise<A> {
     return this.promise.promise;
   }
 
@@ -46,14 +44,14 @@ class ChibiEventImpl<A, MULTI_ARGS extends boolean = false> extends Function {
    * @param callback
    * @param instantTrigger If true the callback will be called immediately with the last known value if present.
    */
-  public subscribe(callback: ((...args: Args<A, MULTI_ARGS>) => void) | EventListener<ChibiEventImpl<A, MULTI_ARGS>>, instantTrigger: boolean = true): EventListener<ChibiEventImpl<A, MULTI_ARGS>> {
-    let listener: EventListener<ChibiEventImpl<A, MULTI_ARGS>>;
+  public subscribe(callback: ((...args: A) => void) | EventListener<ChibiEventImpl<A>>, instantTrigger: boolean = true): EventListener<ChibiEventImpl<A>> {
+    let listener: EventListener<ChibiEventImpl<A>>;
     if(typeof callback !== "function") {
       this.listeners.push(callback);
       listener = callback;
       callback = callback.callback;
     } else {
-      listener = new EventListener<ChibiEventImpl<A, MULTI_ARGS>>(this, callback);
+      listener = new EventListener<ChibiEventImpl<A>>(this, callback);
       this.listeners.push(listener);
     }
     if(this.lastValue && instantTrigger) {
@@ -67,15 +65,15 @@ class ChibiEventImpl<A, MULTI_ARGS extends boolean = false> extends Function {
    *
    * @param callback
    * @param instantTrigger If true the callback will be called immediately with the last known value if present.   */
-  public subscribeOnce(callback: ((...args: Args<A, MULTI_ARGS>) => void) | EventListener<ChibiEventImpl<A, MULTI_ARGS>>, instantTrigger: boolean = true): EventListener<ChibiEventImpl<A, MULTI_ARGS>> {
+  public subscribeOnce(callback: ((...args: A) => void) | EventListener<ChibiEventImpl<A>>, instantTrigger: boolean = true): EventListener<ChibiEventImpl<A>> {
     if(typeof callback !== "function") {
       callback = callback.callback;
     }
-    const once = (...value: Args<A, MULTI_ARGS>) => {
+    const once = (...value: A) => {
       this.unsubscribe(listener);
       callback(...value);
     };
-    const listener = new EventListener<ChibiEventImpl<A, MULTI_ARGS>>(this, once);
+    const listener = new EventListener<ChibiEventImpl<A>>(this, once);
     this.listeners.push(listener);
     if(this.lastValue && instantTrigger) {
       callback(...this.lastValue);
@@ -84,7 +82,7 @@ class ChibiEventImpl<A, MULTI_ARGS extends boolean = false> extends Function {
     return listener;
   }
 
-  public unsubscribe(listener: ((...args: Args<A, MULTI_ARGS>) => void) | EventListener<ChibiEventImpl<A, MULTI_ARGS>>) {
+  public unsubscribe(listener: ((...args: A) => void) | EventListener<ChibiEventImpl<A>>) {
     let sizeBefore = this.listeners.length;
 
     if (listener instanceof EventListener) {
@@ -96,7 +94,7 @@ class ChibiEventImpl<A, MULTI_ARGS extends boolean = false> extends Function {
     return sizeBefore !== this.listeners.length;
   }
 
-  public trigger(...args: Args<A, MULTI_ARGS>) {
+  public trigger(...args: A) {
     const listeners = this.listeners.slice();
     for (const listener of listeners) {
       listener.callback(...args);
@@ -111,28 +109,27 @@ class ChibiEventImpl<A, MULTI_ARGS extends boolean = false> extends Function {
   }
 }
 
-class ChibiEventMultiImpl<A> extends ChibiEventImpl<A, true> {
-}
+/**
+ * @param callback
+ * @param instantTrigger If true and the event has already been triggered, the callback will be called immediately with the last value.
+ */
+export declare type ChibiEvent<A> = ChibiEventImpl<[A]> & ((callback: (...args: [A]) => void, instantTrigger?: boolean) => EventListener<ChibiEventImpl<[A]>>);
 
-Object.defineProperty(ChibiEventImpl, "Multi", {
-  value: ChibiEventMultiImpl
-});
+export const ChibiEvent: (new <A>(onAddListener?: boolean) => ChibiEvent<A>) & {
+  Multi: new <B extends Array<any>>(onAddListener?: boolean) => ChibiMultiEvent<B>;
+} = ChibiEventImpl as any;
 
 /**
  * @param callback
  * @param instantTrigger If true and the event has already been triggered, the callback will be called immediately with the last value.
  */
-export declare type ChibiEvent<A, MULTI_ARGS extends boolean = false> = ChibiEventImpl<A, MULTI_ARGS> & ((callback: (...args: Args<A, MULTI_ARGS>) => void, instantTrigger?: boolean) => EventListener<ChibiEvent<A, MULTI_ARGS>>);
+export declare type ChibiMultiEvent<A extends Array<any>> = ChibiEventImpl<A> & ((callback: (...args: A) => void, instantTrigger?: boolean) => EventListener<ChibiEvent<A>>);
 
-export declare type ChibiEventMulti<A> = ChibiEvent<A, true>;
+export const ChibiMultiEvent: (new <A extends Array<any>>(onAddListener?: boolean) => ChibiMultiEvent<A>) = ChibiEventImpl as any;
 
-export const ChibiEvent: (new <A, MULTI_ARGS extends boolean = false>(onAddListener?: boolean) => ChibiEvent<A, MULTI_ARGS>) & {
-  Multi: new <A>(onAddListener?: boolean) => ChibiEventMulti<A>;
-} = ChibiEventImpl as any;
+type EventArgs<E extends ChibiEventImpl<any>> = E extends ChibiEventImpl<infer A> ? A : never;
 
-type EventArgs<E> = E extends ChibiEventImpl<infer A, infer B> ? Args<A, B> : never;
-
-export class EventListener<E extends ChibiEventImpl<any, any>> {
+export class EventListener<E extends ChibiEventImpl<any>> {
   constructor(private readonly event: E, public readonly callback: (...args: EventArgs<E>) => void) {
   }
 

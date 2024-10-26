@@ -5,13 +5,14 @@ import center from "../../gameobjects/positioning/center";
 import Position from "../../component/Position";
 import Size from "../size/Size";
 import ISize from "../size/ISize";
+import IPosition from "../position/IPosition";
 
 export default class Rectangle implements Sizeable, Positionable {
     public readonly position: Position;
     public readonly size: Size;
 
     public readonly onSizeChange: ChibiEvent<ISize>;
-    public readonly onPositionChange: ChibiEvent<Position>;
+    public readonly onPositionChange: ChibiEvent<IPosition>;
 
     constructor(x: number, y: number, width: number, height: number) {
         this.position = new Position(x, y);

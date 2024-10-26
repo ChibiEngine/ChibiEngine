@@ -31,7 +31,7 @@ export default abstract class GameObject extends AbstractGameObject.With(Positio
   public _parent: Container;
   public abstract pixi: PixiContainer;
 
-  public onAddedToScene: ChibiEvent<this> = new ChibiEvent();
+  public onAddedToScene = new ChibiEvent<GameObject>();
 
   public constructor(
       position: Position = Position.zero(),
