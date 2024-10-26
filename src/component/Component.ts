@@ -38,6 +38,10 @@ export abstract class AbstractComponent<Name extends string, in T extends Abstra
     // To override
   }
 
+  public async destroy(): Promise<void> {
+    // To override
+  }
+
   // Alternative to contravariance that may be broken https://github.com/microsoft/TypeScript/issues/53798
   // #invariantStructuralHint = undefined as unknown as (x: T) => void
 }

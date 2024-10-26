@@ -58,6 +58,7 @@ export default abstract class AbstractGameObject extends Loadable {
     const index = this.components.indexOf(component);
     if (index === -1) return false;
     this.components.splice(index, 1);
+    component.destroy();
     if (isUpdatable(component)) {
       this.scene.removeUpdatable(component);
     }
