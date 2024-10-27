@@ -21,7 +21,7 @@ class ChibiEventImpl<A extends Array<any>> extends Function {
     return new Proxy(this, {
       apply (target, thisArg, args) {
         const callback = args[0];
-        const instantTrigger = args[1] || false;
+        const instantTrigger = args[1];
         // An empty call is treated as a read
         if (!callback || typeof callback !== "function") {
           throw new Error("Event must be called with a callback parameter.");
