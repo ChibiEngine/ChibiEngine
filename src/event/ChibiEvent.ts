@@ -8,11 +8,13 @@ class ChibiEventImpl<A extends Array<any>> extends Function {
 
   public readonly dontProxyFunction: boolean = true;
 
-  private listeners: EventListener<ChibiEventImpl<A>>[] = [];
+  // readonly
+  public listeners: EventListener<ChibiEventImpl<A>>[] = [];
 
   public lastValue: A = undefined;
 
   private _onAddListener: ChibiEvent<EventListener<ChibiEventImpl<A>>>;
+  private _onRemoveListener: ChibiEvent<EventListener<ChibiEventImpl<A>>>;
 
   private readonly promise: CompletablePromise<A> = new CompletablePromise();
 
@@ -37,6 +39,13 @@ class ChibiEventImpl<A extends Array<any>> extends Function {
       this._onAddListener = new ChibiEvent();
     }
     return this._onAddListener;
+  }
+
+  public get onRemoveListener() {
+    if (!this._onRemoveListener) {
+      this._onRemoveListener = new ChibiEvent();
+    }
+    return this._onRemoveListener;
   }
 
   public asPromise(): Promise<A> {
@@ -87,15 +96,17 @@ class ChibiEventImpl<A extends Array<any>> extends Function {
   }
 
   public unsubscribe(listener: ((...args: A) => void) | EventListener<ChibiEventImpl<A>>) {
-    let sizeBefore = this.listeners.length;
+    let index = this.listeners.findIndex(l => l === listener || l.callback === listener);
 
-    if (listener instanceof EventListener) {
-      this.listeners = this.listeners.filter(l => l !== listener);
-    } else {
-      this.listeners = this.listeners.filter(l => l.callback !== listener);
+    if(index === -1) {
+      return false;
     }
 
-    return sizeBefore !== this.listeners.length;
+    listener = this.listeners[index];
+    this.listeners.splice(index, 1);
+
+    this._onRemoveListener?.trigger(listener);
+    return true;
   }
 
   public trigger(...args: A) {
@@ -127,7 +138,7 @@ export const ChibiEvent: (new <A>(onAddListener?: boolean) => ChibiEvent<A>) & {
  * @param callback
  * @param instantTrigger If true and the event has already been triggered, the callback will be called immediately with the last value.
  */
-export declare type ChibiMultiEvent<A extends Array<any>> = ChibiEventImpl<A> & ((callback: (...args: A) => void, instantTrigger?: boolean) => EventListener<ChibiEvent<A>>);
+export declare type ChibiMultiEvent<A extends Array<any>> = ChibiEventImpl<A> & ((callback: (...args: A) => void, instantTrigger?: boolean) => EventListener<ChibiEventImpl<A>>);
 
 export const ChibiMultiEvent: (new <A extends Array<any>>(onAddListener?: boolean) => ChibiMultiEvent<A>) = ChibiEventImpl as any;
 
