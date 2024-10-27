@@ -67,9 +67,9 @@ export default class Container extends GameObject {
     } else {
       child.onLoaded.subscribeOnce(node => {
         if(index <= this.pixi.children.length) {
-          this.pixi.addChildAt(node.pixi, index);
+          this.pixi.addChildAt(child.pixi, index);
         } else {
-          this.pixi.addChild(node.pixi);
+          this.pixi.addChild(child.pixi);
         }
       });
     }
