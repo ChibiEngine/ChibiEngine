@@ -4,6 +4,8 @@
 import CompletablePromise from "../utils/CompletablePromise";
 
 class ChibiEventImpl<A extends Array<any>> extends Function {
+  private bindToComponent = false;
+
   public static readonly Multi: typeof ChibiMultiEvent = ChibiEventImpl as any;
 
   public readonly dontProxyFunction: boolean = true;
