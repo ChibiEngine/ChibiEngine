@@ -14,7 +14,7 @@ export default abstract class Action<in T extends GameObject = GameObject> exten
   public _duration = 1000;
   protected _easing: EasingFunction = Easing.linear;
 
-  public onFinish: ChibiEvent<null> = new ChibiEvent();
+  public onFinish: ChibiEvent<[null]> = new ChibiEvent();
 
   public duration(duration: number) {
     this._duration = duration;

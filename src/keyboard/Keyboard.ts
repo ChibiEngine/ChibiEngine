@@ -4,9 +4,9 @@ namespace Keyboard {
     const _downKeys: Set<string> = new Set();
     const _downKeysTime: Map<string, number> = new Map();
 
-    export const onKeyDown: ChibiEvent<KeyboardEvent> = new ChibiEvent();
-    export const onKeyUp: ChibiEvent<KeyboardEvent> = new ChibiEvent();
-    export const onKeyPressed: ChibiEvent<KeyboardEvent> = new ChibiEvent();
+    export const onKeyDown: ChibiEvent<[KeyboardEvent]> = new ChibiEvent();
+    export const onKeyUp: ChibiEvent<[KeyboardEvent]> = new ChibiEvent();
+    export const onKeyPressed: ChibiEvent<[KeyboardEvent]> = new ChibiEvent();
 
     document.addEventListener("keydown", (e: KeyboardEvent) => {
         if(_downKeys.has(e.key)) {

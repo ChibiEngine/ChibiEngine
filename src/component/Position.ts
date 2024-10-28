@@ -35,7 +35,7 @@ export default class Position extends TransitionableComponent<"position", IPosit
     }
   }
 
-  public get onPositionChange(): ChibiEvent<IPosition> {
+  public get onPositionChange(): ChibiEvent<[IPosition]> {
     return this.onChange;
   }
 

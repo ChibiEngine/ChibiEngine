@@ -5,7 +5,7 @@ export default class Size implements ISize {
   private _width: number;
   private _height: number;
 
-  public readonly onChange: ChibiEvent<ISize> = new ChibiEvent();
+  public readonly onChange: ChibiEvent<[ISize]> = new ChibiEvent();
 
   public constructor(width: number, height: number) {
     this._width = width;

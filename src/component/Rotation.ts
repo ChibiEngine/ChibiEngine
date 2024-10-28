@@ -74,7 +74,7 @@ export default class Rotation extends TransitionableComponent<"rotation", IRotat
     return new Rotation(0);
   }
 
-  public get onRotationChange(): ChibiEvent<IRotation> {
+  public get onRotationChange(): ChibiEvent<[IRotation]> {
     return this.onChange;
   }
 

@@ -29,10 +29,10 @@ load dependencies...
 export default abstract class Loadable {
     public abstract readonly type: string;
 
-    public readonly onProgress = new ChibiEvent<Loadable>();
-    public readonly onLoaded = new ChibiEvent<Loadable>();
-    public readonly onCreated = new ChibiEvent<Loadable>();
-    public readonly onDependenciesLoaded = new ChibiEvent<Loadable[]>();
+    public readonly onProgress = new ChibiEvent<[Loadable]>();
+    public readonly onLoaded = new ChibiEvent<[Loadable]>();
+    public readonly onCreated = new ChibiEvent<[Loadable]>();
+    public readonly onDependenciesLoaded = new ChibiEvent<[Loadable[]]>();
 
     public readonly dependencies: Loadable[] = [];
     public readonly dependants: Loadable[] = [];

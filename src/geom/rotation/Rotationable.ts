@@ -6,5 +6,5 @@ import IRotation from "./IRotation";
 export default interface Rotationable {
   radians: number;
   degrees: number;
-  onRotationChange: ChibiEvent<IRotation>;
+  onRotationChange: ChibiEvent<[IRotation]>;
 }

@@ -121,7 +121,7 @@ export default class Scale extends TransitionableComponent<"scale", IScale, Abst
     return new Scale(this.current.x, this.current.y);
   }
 
-  public get onScaleChange(): ChibiEvent<IScale> {
+  public get onScaleChange(): ChibiEvent<[IScale]> {
     return this.onChange;
   }
 
