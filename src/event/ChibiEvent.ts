@@ -31,14 +31,14 @@ export class ChibiEvent<A extends Array<any>> extends ExtensibleFunction {
 
   public get onAddListener() {
     if (!this._onAddListener) {
-      this._onAddListener = new ChibiEvent();
+      this._onAddListener = new ChibiEvent<[ChibiEventListener<ChibiEvent<A>>]>();
     }
     return this._onAddListener;
   }
 
   public get onRemoveListener() {
     if (!this._onRemoveListener) {
-      this._onRemoveListener = new ChibiEvent();
+      this._onRemoveListener = new ChibiEvent<[ChibiEventListener<ChibiEvent<A>>]>();
     }
     return this._onRemoveListener;
   }
