@@ -49,10 +49,6 @@ export default abstract class GameObject extends AbstractGameObject.With(Positio
 
     await this._create();
 
-    for (const component of this.components) {
-      componentApplyPromises.push(component.apply(this));
-    }
-
     this.createEnd();
     /* Need to be after components apply to avoid cyclic awaiting
     E.g. Scene (+ PhysicsWorld) waits for all dependencies to be loaded
