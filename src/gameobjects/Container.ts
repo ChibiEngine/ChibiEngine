@@ -50,7 +50,6 @@ export default class Container extends GameObject {
     if (child._parent) throw new Error("Child already has a parent");
     if(id !== undefined) child.id = id;
     child._parent = this;
-    if(this.scene) child.scene = this.scene;
 
     let index = this.children.length;
 
@@ -88,16 +87,6 @@ export default class Container extends GameObject {
 
     // @ts-ignore
     return child;
-  }
-
-  public addToScene(scene: Scene) {
-    for(const child of this.children) {
-      if(child.scene) continue; // Already added to scene, no need to trigger the event
-
-      child.scene = scene;
-    }
-    // Set and triggers the event after??
-    this.scene = scene;
   }
 
   /**

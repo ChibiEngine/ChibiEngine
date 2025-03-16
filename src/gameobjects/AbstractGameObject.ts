@@ -36,7 +36,14 @@ export default abstract class AbstractGameObject extends Loadable {
       scene.addUpdatable(this as Updatable);
     }
 
+    this._addToScene(scene);
     this.onAddedToScene.trigger(this);
+  }
+
+  //////////////////////
+
+  protected _addToScene(scene: Scene) {
+    // to override
   }
 
   //// COMPONENTS ////
@@ -49,6 +56,8 @@ export default abstract class AbstractGameObject extends Loadable {
       if(isUpdatable(component)) {
         this.scene.addUpdatable(component);
       }
+    });
+    this.onCreated(() => {
       component.apply(this)
     });
     return assignComponent(this, component);
