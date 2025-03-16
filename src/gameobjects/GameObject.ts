@@ -31,10 +31,8 @@ export default abstract class GameObject extends AbstractGameObject.With(Positio
   public _parent: Container;
   public abstract pixi: PixiContainer;
 
-  public onAddedToScene: ChibiEvent<this> = new ChibiEvent();
-
   public constructor(
-      position: Position = Position.zero(),
+      position: Position = new Position(),
       scale: Scale = new Scale(),
       rotation: Rotation = new Rotation(),
   ) {
@@ -51,12 +49,6 @@ export default abstract class GameObject extends AbstractGameObject.With(Positio
 
     await this._create();
 
-    for (const component of this.components) {
-      componentApplyPromises.push(component.apply(this));
-    }
-
-    this.componentsApplied = true;
-
     this.createEnd();
     /* Need to be after components apply to avoid cyclic awaiting
     E.g. Scene (+ PhysicsWorld) waits for all dependencies to be loaded
@@ -67,25 +59,6 @@ export default abstract class GameObject extends AbstractGameObject.With(Positio
     await Promise.all(componentApplyPromises);
 
     this.onLoaded.trigger(this);
-  }
-
-  public addToScene(scene: Scene, triggerEvent: boolean = true) {
-    this.addedToScene = true;
-    this.scene = scene;
-
-    if(triggerEvent) {
-      this.onAddedToScene.trigger(this);
-    }
-
-    if (isUpdatable(this)) {
-      scene.addUpdatable(this as Updatable);
-    }
-
-    for(const component of this.updatableComponentsToAdd) {
-      this.scene.addUpdatable(component);
-    }
-
-    this.updatableComponentsToAdd.length = 0;
   }
 
   //// LIFE CYCLE ////
@@ -123,10 +96,10 @@ export default abstract class GameObject extends AbstractGameObject.With(Positio
   public static With = AbstractGameObject.With;
 
   public async destroy(): Promise<void> {
+    for(const component of this.components) {
+      this.removeComponent(component);
+    }
     if (this.scene) {
-      for(const component of this.components) {
-        this.removeComponent(component);
-      }
       if(isUpdatable(this)) {
         this.scene.removeUpdatable(this as Updatable);
       }

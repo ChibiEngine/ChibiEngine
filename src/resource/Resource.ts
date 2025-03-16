@@ -11,7 +11,7 @@ export default abstract class Resource extends Loadable {
   public readonly id: string;
   private readonly _path: string;
 
-  public readonly onDestroy: ChibiEvent<this> = new ChibiEvent();
+  public readonly onDestroy: ChibiEvent<[this]> = new ChibiEvent();
 
   protected constructor(path: string, ...args: any[]) {
     super();

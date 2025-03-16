@@ -20,8 +20,9 @@ export default function assignComponent<O extends AbstractGameObject, C extends 
       Object.defineProperty(target, key, { get, set });
     } else if("value" in descriptor) {
       if(typeof descriptor.value === "function") {
+        const bindToComponent = "bindToComponent" in descriptor.value ? descriptor.value.bindToComponent : true;
         // @ts-ignore
-        target[key] = descriptor.value.bind(component);
+        target[key] = bindToComponent ? descriptor.value.bind(component) : descriptor.value;
       } else {
         Object.defineProperty(target, key, {
         // @ts-ignore

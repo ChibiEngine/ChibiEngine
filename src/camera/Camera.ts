@@ -3,12 +3,15 @@ import GameObject from "../gameobjects/GameObject";
 import {VariableUpdatable} from "../gameobjects/Updatable";
 import ConstrainedPosition from "../component/ConstrainedPosition";
 import Linear from "../math/easing/Linear";
+import Rectangle from "../geom/rect/Rectangle";
+import Scene from "../game/Scene";
 
 export default class Camera extends Container.With(ConstrainedPosition) implements VariableUpdatable {
   public readonly updateCallOrder = 1;
 
   private readonly _offset = {x: 0, y: 0};
   private readonly _lerp = {x: 1, y: 1};
+  private bounds: Rectangle | undefined;
 
   private following: GameObject;
 
@@ -16,8 +19,11 @@ export default class Camera extends Container.With(ConstrainedPosition) implemen
     super(new ConstrainedPosition(0, 0));
   }
 
-  protected async _create(): Promise<void> {
-    const scene = this.scene;
+  protected _addToScene(scene: Scene) {
+    if(this.bounds) {
+      const {x1, y1, x2, y2} = this.bounds;
+      this.setBounds(x1, y1, x2, y2);
+    }
 
     this.position.onChange(pos => {
       // TODO : use scene size instead of screen size
@@ -49,12 +55,14 @@ export default class Camera extends Container.With(ConstrainedPosition) implemen
   }
 
   public setBounds(x1: number, y1: number, x2: number, y2: number) {
-    this.position.setPositionBounds(x1 + this.scene.game.screen.width / 2,
+    this.bounds = new Rectangle(x1, y1, x2 - x1, y2 - y1);
+    if(this.scene) {
+      this.position.setPositionBounds(x1 + this.scene.game.screen.width / 2,
         y1 + this.scene.game.screen.height / 2,
         x2 - this.scene.game.screen.width / 2,
         y2 - this.scene.game.screen.height / 2
-    );
-
+      );
+    }
     return this;
   }
 

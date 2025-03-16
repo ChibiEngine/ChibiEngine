@@ -10,35 +10,35 @@ export default class Interactivity extends Component<"interactivity", GameObject
 
   private target: GameObject;
 
-  public onClick: ChibiEvent<MouseEvent> = new ChibiEvent();
-  public onRightClick: ChibiEvent<MouseEvent> = new ChibiEvent();
-  public onRightDown: ChibiEvent<MouseEvent> = new ChibiEvent();
-  public onRightUp: ChibiEvent<MouseEvent> = new ChibiEvent();
-  public onTap: ChibiEvent<MouseEvent> = new ChibiEvent();
+  public onClick: ChibiEvent<[MouseEvent]> = new ChibiEvent();
+  public onRightClick: ChibiEvent<[MouseEvent]> = new ChibiEvent();
+  public onRightDown: ChibiEvent<[MouseEvent]> = new ChibiEvent();
+  public onRightUp: ChibiEvent<[MouseEvent]> = new ChibiEvent();
+  public onTap: ChibiEvent<[MouseEvent]> = new ChibiEvent();
 
-  public onWheel: ChibiEvent<WheelEvent> = new ChibiEvent();
+  public onWheel: ChibiEvent<[WheelEvent]> = new ChibiEvent();
 
-  public onMouseDown: ChibiEvent<MouseEvent> = new ChibiEvent();
-  public onMouseUp: ChibiEvent<MouseEvent> = new ChibiEvent();
-  public onMouseMove: ChibiEvent<MouseEvent> = new ChibiEvent();
-  public onMouseOver: ChibiEvent<MouseEvent> = new ChibiEvent();
-  public onMouseLeave: ChibiEvent<MouseEvent> = new ChibiEvent();
-  public onMouseEnter: ChibiEvent<MouseEvent> = new ChibiEvent();
+  public onMouseDown: ChibiEvent<[MouseEvent]> = new ChibiEvent();
+  public onMouseUp: ChibiEvent<[MouseEvent]> = new ChibiEvent();
+  public onMouseMove: ChibiEvent<[MouseEvent]> = new ChibiEvent();
+  public onMouseOver: ChibiEvent<[MouseEvent]> = new ChibiEvent();
+  public onMouseLeave: ChibiEvent<[MouseEvent]> = new ChibiEvent();
+  public onMouseEnter: ChibiEvent<[MouseEvent]> = new ChibiEvent();
 
-  public onPointerDown: ChibiEvent<PointerEvent> = new ChibiEvent();
-  public onPointerUp: ChibiEvent<PointerEvent> = new ChibiEvent();
-  public onPointerTap: ChibiEvent<PointerEvent> = new ChibiEvent();
-  public onPointerMove: ChibiEvent<PointerEvent> = new ChibiEvent();
-  public onPointerOver: ChibiEvent<PointerEvent> = new ChibiEvent();
-  public onPointerEnter: ChibiEvent<PointerEvent> = new ChibiEvent();
-  public onPointerLeave: ChibiEvent<PointerEvent> = new ChibiEvent();
-  public onPointerCancel: ChibiEvent<PointerEvent> = new ChibiEvent();
+  public onPointerDown: ChibiEvent<[PointerEvent]> = new ChibiEvent();
+  public onPointerUp: ChibiEvent<[PointerEvent]> = new ChibiEvent();
+  public onPointerTap: ChibiEvent<[PointerEvent]> = new ChibiEvent();
+  public onPointerMove: ChibiEvent<[PointerEvent]> = new ChibiEvent();
+  public onPointerOver: ChibiEvent<[PointerEvent]> = new ChibiEvent();
+  public onPointerEnter: ChibiEvent<[PointerEvent]> = new ChibiEvent();
+  public onPointerLeave: ChibiEvent<[PointerEvent]> = new ChibiEvent();
+  public onPointerCancel: ChibiEvent<[PointerEvent]> = new ChibiEvent();
 
-  public onTouchStart: ChibiEvent<TouchEvent> = new ChibiEvent();
-  public onTouchEnd: ChibiEvent<TouchEvent> = new ChibiEvent();
-  public onTouchEndOutside: ChibiEvent<TouchEvent> = new ChibiEvent();
-  public onTouchMove: ChibiEvent<TouchEvent> = new ChibiEvent();
-  public onTouchCancel: ChibiEvent<TouchEvent> = new ChibiEvent();
+  public onTouchStart: ChibiEvent<[TouchEvent]> = new ChibiEvent();
+  public onTouchEnd: ChibiEvent<[TouchEvent]> = new ChibiEvent();
+  public onTouchEndOutside: ChibiEvent<[TouchEvent]> = new ChibiEvent();
+  public onTouchMove: ChibiEvent<[TouchEvent]> = new ChibiEvent();
+  public onTouchCancel: ChibiEvent<[TouchEvent]> = new ChibiEvent();
 
 
   public constructor() {
@@ -94,7 +94,7 @@ export default class Interactivity extends Component<"interactivity", GameObject
     return this;
   }
 
-  private bindEvent(eventName: string, event: ChibiEvent<any>) {
+  private bindEvent(eventName: string, event: ChibiEvent<[any]>) {
     // Add the listener lazily
     event.onAddListener.subscribeOnce(() => {
       this.target.pixi.on(eventName, event.trigger.bind(event));

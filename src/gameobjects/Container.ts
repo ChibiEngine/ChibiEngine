@@ -50,7 +50,6 @@ export default class Container extends GameObject {
     if (child._parent) throw new Error("Child already has a parent");
     if(id !== undefined) child.id = id;
     child._parent = this;
-    if(this.scene) child.scene = this.scene;
 
     let index = this.children.length;
 
@@ -67,9 +66,9 @@ export default class Container extends GameObject {
     } else {
       child.onLoaded.subscribeOnce(node => {
         if(index <= this.pixi.children.length) {
-          this.pixi.addChildAt(node.pixi, index);
+          this.pixi.addChildAt(child.pixi, index);
         } else {
-          this.pixi.addChild(node.pixi);
+          this.pixi.addChild(child.pixi);
         }
       });
     }
@@ -80,27 +79,14 @@ export default class Container extends GameObject {
       this.load(child);
     }
 
-    if(this.addedToScene) {
+    if(this.scene) {
       child.onLoaded.subscribeOnce(() => {
-          child.addToScene(this.scene);
+        child.scene = this.scene;
       });
     }
 
     // @ts-ignore
     return child;
-  }
-
-  public addToScene(scene: Scene) {
-    this.scene = scene;
-    this.addedToScene = true;
-    this.onAddedToScene.trigger(this);
-
-    for(const child of this.children) {
-      if(child.addedToScene) continue; // Already added to scene, no need to trigger the event
-
-      child.addToScene(scene);
-    }
-    super.addToScene(scene, false);
   }
 
   /**

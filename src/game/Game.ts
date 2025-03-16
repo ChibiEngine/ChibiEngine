@@ -23,7 +23,7 @@ export default class Game extends Container {
 
   public screen: Rectangle;
 
-  private onStart: ChibiEvent<this> = new ChibiEvent();
+  private onStart: ChibiEvent<[this]> = new ChibiEvent();
 
   public addedToScene = true;
 

@@ -1,5 +1,6 @@
 import GameObject from "../gameobjects/GameObject";
 import AbstractGameObject from "../gameobjects/AbstractGameObject";
+import type Scene from "../game/Scene";
 
 export abstract class AbstractComponent<Name extends string, in T extends AbstractGameObject = AbstractGameObject> {
   public abstract readonly componentName: Name;
@@ -31,10 +32,32 @@ export abstract class AbstractComponent<Name extends string, in T extends Abstra
 
   /**
    * To override.
-   * Called when the gameobject is loaded and ready to apply the component.
+   * Called immediately when addComponent is called on target game object.
+   * @param target
+   */
+  public async preApply(target: T): Promise<void> {
+    // To override
+  }
+
+  /**
+   * To override.
+   * Called when the game object is loaded and ready to apply the component.
    * @param target
    */
   public async apply(target: T): Promise<void> {
+    // To override
+  }
+
+  /**
+   * To override.
+   * Called when the game object is added to the scene.
+   * @param target
+   */
+  public async postApply(target: T): Promise<void> {
+    // To override
+  }
+
+  public async destroy(): Promise<void> {
     // To override
   }
 
