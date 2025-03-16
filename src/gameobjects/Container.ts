@@ -80,9 +80,9 @@ export default class Container extends GameObject {
       this.load(child);
     }
 
-    if(this.addedToScene) {
+    if(this.scene) {
       child.onLoaded.subscribeOnce(() => {
-          child.addToScene(this.scene);
+        child.scene = this.scene;
       });
     }
 
@@ -91,16 +91,13 @@ export default class Container extends GameObject {
   }
 
   public addToScene(scene: Scene) {
-    this.scene = scene;
-    this.addedToScene = true;
-    this.onAddedToScene.trigger(this);
-
     for(const child of this.children) {
-      if(child.addedToScene) continue; // Already added to scene, no need to trigger the event
+      if(child.scene) continue; // Already added to scene, no need to trigger the event
 
-      child.addToScene(scene);
+      child.scene = scene;
     }
-    super.addToScene(scene, false);
+    // Set and triggers the event after??
+    this.scene = scene;
   }
 
   /**

@@ -8,17 +8,14 @@ import assignComponent from "./operations/assignComponent";
 import {ComponentProperties} from "../component/types/ComponentProperty";
 import {Mixin, ClassArrayType, ClassArrayTypeOmit, Mixed} from "../mixin/Mixin";
 import {Class, ComponentClass, UnionToIntersection} from "../utils/Types";
+import {ChibiEvent} from "../event/ChibiEvent";
 
 // Inspired by https://docs.cocos2d-x.org/api-ref/cplusplus/v4x/d3/d82/classcocos2d_1_1_node.html
 
 export default abstract class AbstractGameObject extends Loadable {
   type = "gameobject";
   protected components: Component<string, any>[] = [];
-  protected updatableComponentsToAdd: (Component<string, any> & Updatable)[] = [];
-
-  protected componentsApplied = false;
-  public addedToScene = false;
-  protected created = false;
+  public onAddedToScene = new ChibiEvent<[AbstractGameObject]>();
 
   private _scene: Scene;
 
@@ -34,6 +31,12 @@ export default abstract class AbstractGameObject extends Loadable {
 
   public set scene(scene: Scene) {
     this._scene = scene;
+
+    if (isUpdatable(this)) {
+      scene.addUpdatable(this as Updatable);
+    }
+
+    this.onAddedToScene.trigger(this);
   }
 
   //// COMPONENTS ////
@@ -41,16 +44,13 @@ export default abstract class AbstractGameObject extends Loadable {
   public addComponent<C extends Component<string, this>>(component: C) {
     this.components.push(component);
     component.setTarget(this);
-    if(this.created || this.componentsApplied) {
-      component.apply(this);
-    }
-    if (isUpdatable(component)) {
-      if(this.addedToScene) {
+    component.preApply(this);
+    this.onAddedToScene(() => {
+      if(isUpdatable(component)) {
         this.scene.addUpdatable(component);
-      } else {
-        this.updatableComponentsToAdd.push(component as any);
       }
-    }
+      component.apply(this)
+    });
     return assignComponent(this, component);
   }
 
