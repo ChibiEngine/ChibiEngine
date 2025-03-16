@@ -4,7 +4,11 @@ import getMethods from "../utils/getMethods";
 export class Mixed {
   protected mixin<T extends object>(target: T) {
     for (const method of getMethods(target)) {
-      if (method in target || method === "constructor") continue;
+      if(method in this) {
+        console.warn(`mixin: Method ${method.toString()} is already defined in ${this}`);
+        continue;
+      }
+      if (method === "constructor") continue;
 
       Object.defineProperty(this, method, {
         get: () => target[method],
@@ -12,7 +16,10 @@ export class Mixed {
       });
     }
     for (const key in target) {
-      if (key in target) continue;
+      if(key in this) {
+        console.warn(`mixin: Property ${key.toString()} is already defined in ${this}`);
+        continue;
+      }
 
       Object.defineProperty(this, key, {
         value: target[key],
