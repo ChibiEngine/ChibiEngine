@@ -15,7 +15,7 @@ import {ChibiEvent} from "../event/ChibiEvent";
 export default abstract class AbstractGameObject extends Loadable {
   type = "gameobject";
   protected components: Component<string, any>[] = [];
-  public onAddedToScene = new ChibiEvent<[AbstractGameObject]>();
+  public onAddedToScene = new ChibiEvent<[AbstractGameObject, Scene]>();
 
   private _scene: Scene;
 
@@ -37,7 +37,7 @@ export default abstract class AbstractGameObject extends Loadable {
     }
 
     this._addToScene(scene);
-    this.onAddedToScene.trigger(this);
+    this.onAddedToScene.trigger(this, scene);
   }
 
   //////////////////////
