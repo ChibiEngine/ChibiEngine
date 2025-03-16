@@ -15,4 +15,5 @@ jobs:
           registry-url: 'https://registry.npmjs.org'
           cache: 'yarn'
       - run: yarn install
+      - run: yarn debug
       - run: yarn build

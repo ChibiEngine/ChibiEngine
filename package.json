@@ -41,7 +41,8 @@
     "build:esm-tsc": "tsc --module ESNext --target es2020 --outDir lib/esm",
     "build:esm-fix": "node scripts/esmImportsAddJsExtension.js",
     "build:cjs": "tsc --module commonjs --target es6 --outDir lib/cjs",
-    "test": "jest"
+    "test": "jest",
+    "debug": "tsc --version"
   },
   "dependencies": {
     "@types/css-font-loading-module": "^0.0.8",
