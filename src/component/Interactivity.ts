@@ -96,9 +96,13 @@ export default class Interactivity extends Component<"interactivity", GameObject
 
   private bindEvent(eventName: string, event: ChibiEvent<[any]>) {
     // Add the listener lazily
-    event.onAddListener.subscribeOnce(() => {
+    if(event.listeners.length > 0) {
       this.target.pixi.on(eventName, event.trigger.bind(event));
-    });
+    } else {
+      event.onAddListener.subscribeOnce(() => {
+        this.target.pixi.on(eventName, event.trigger.bind(event));
+      });
+    }
   }
 
 }
