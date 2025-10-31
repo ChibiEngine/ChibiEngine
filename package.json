@@ -1,6 +1,6 @@
 {
   "name": "chibiengine",
-  "version": "0.11.2",
+  "version": "0.12.0",
   "description": "Modern Web Game Engine based on PixiJS",
   "author": "Feavy",
   "type": "module",
