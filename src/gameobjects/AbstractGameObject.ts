@@ -51,11 +51,11 @@ export default abstract class AbstractGameObject extends Loadable {
   public addComponent<C extends Component<string, this>>(component: C) {
     this.components.push(component);
     component.setTarget(this);
-    component.preApply(this).then(() => {
+    component.initialize(this).then(() => {
       this.onCreated(async () => {
-        await component.apply(this)
+        await component.preApply(this);
         this.onAddedToScene(async (_: unknown, scene: Scene) => {
-          await component.postApply(this);
+          await component.apply(this);
           if(isUpdatable(component)) {
             this.scene.addUpdatable(component);
           }

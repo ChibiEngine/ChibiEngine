@@ -18,7 +18,7 @@ export default class Position extends TransitionableComponent<"position", IPosit
     super({ x, y});
   }
 
-  public async apply(target: AbstractGameObject) {
+  public async preApply(target: AbstractGameObject) {
     this.target = target;
     // @ts-ignore
     this._pixi = target.pixi;

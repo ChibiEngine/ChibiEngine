@@ -20,7 +20,7 @@ export default class Scale extends TransitionableComponent<"scale", IScale, Abst
     super({x: 1, y: 1});
   }
 
-  public async apply(target: AbstractGameObject) {
+  public async preApply(target: AbstractGameObject) {
     this.target = target;
     // @ts-ignore TODO: fix this
     this._pixi = target.pixi;

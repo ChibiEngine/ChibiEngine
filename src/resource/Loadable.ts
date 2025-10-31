@@ -66,12 +66,12 @@ export default abstract class Loadable {
         }
     }
 
-    public asPromise(): this & PromiseLike<this> {
+    public promise(): this & PromiseLike<this> {
         return this as this & PromiseLike<this>;
     }
 
     public get loaded(): this & PromiseLike<this> {
-        return this.asPromise();
+        return this.promise();
     }
 
     public addBlob(...blobs: Blob[]) {
@@ -134,7 +134,7 @@ export default abstract class Loadable {
         await this._create()
         this.createEnd();
 
-        await this.onDependenciesLoaded.asPromise();
+        await this.onDependenciesLoaded.promise();
 
         this.onLoaded.trigger(this);
     }

@@ -35,7 +35,7 @@ export abstract class AbstractComponent<Name extends string, in T extends Abstra
    * Called immediately when addComponent is called on target game object.
    * @param target
    */
-  public async preApply(target: T): Promise<void> {
+  public async initialize(target: T): Promise<void> {
     // To override
   }
 
@@ -44,7 +44,7 @@ export abstract class AbstractComponent<Name extends string, in T extends Abstra
    * Called when the game object is loaded and ready to apply the component.
    * @param target
    */
-  public async apply(target: T): Promise<void> {
+  public async preApply(target: T): Promise<void> {
     // To override
   }
 
@@ -53,7 +53,7 @@ export abstract class AbstractComponent<Name extends string, in T extends Abstra
    * Called when the game object is added to the scene.
    * @param target
    */
-  public async postApply(target: T): Promise<void> {
+  public async apply(target: T): Promise<void> {
     // To override
   }
 

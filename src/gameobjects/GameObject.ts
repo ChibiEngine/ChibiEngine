@@ -54,7 +54,7 @@ export default abstract class GameObject extends AbstractGameObject.With(Positio
     E.g. Scene (+ PhysicsWorld) waits for all dependencies to be loaded
     But these dependencies have PhysicsBody which waits for the Scene PhysicsWorld to be applied (which would never happen if apply was called after onDependenciesLoaded)
      */
-    await this.onDependenciesLoaded.asPromise();
+    await this.onDependenciesLoaded.promise();
 
     await Promise.all(componentApplyPromises);
 

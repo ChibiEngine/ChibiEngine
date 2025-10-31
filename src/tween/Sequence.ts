@@ -21,9 +21,19 @@ export class SequenceImpl<T extends GameObject = GameObject> extends Action<T> {
     return this;
   }
 
-  public _run(target: GameObject) {
-    this.actionsToRun = this.actions.slice();
-    this.runNextAction();
+  public async _run(target: GameObject) {
+    let index: number = 0;
+    while(this._currentLoop <= this._loopCount || this.isIndefinitelyLooping()) {
+      const action = this.actions[index++];
+      if(action) {
+        this.target.play(action);
+        await action.onFinish.nextValuePromise();
+      } else {
+        index = 0;
+        this._currentLoop++;
+      }
+    }
+    this.finish();
   }
 
   public _update(offset: number, target: GameObject) {
@@ -45,23 +55,6 @@ export class SequenceImpl<T extends GameObject = GameObject> extends Action<T> {
 
   public isIndefinitelyLooping(): boolean {
     return this._loopCount === -1;
-  }
-
-
-  public runNextAction() {
-    const action = this.actionsToRun.shift();
-    if (action) {
-      action.onFinish.subscribeOnce(() => {
-        this.runNextAction();
-      });
-      this.target.play(action);
-    } else if (this.isIndefinitelyLooping() || this._currentLoop < this._loopCount) {
-      this._currentLoop++;
-      this.actionsToRun = this.actions.slice();
-      this.runNextAction();
-    } else {
-      this.finish();
-    }
   }
 }
 

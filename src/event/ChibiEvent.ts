@@ -21,7 +21,7 @@ export class ChibiEvent<A extends Array<any>> extends ExtensibleFunction {
   private _onAddListener: ChibiEvent<[ChibiEventListener<ChibiEvent<A>>]>;
   private _onRemoveListener: ChibiEvent<[ChibiEventListener<ChibiEvent<A>>]>;
 
-  private readonly promise: CompletablePromise<A> = new CompletablePromise();
+  private readonly _promise: CompletablePromise<A> = new CompletablePromise();
 
   constructor() {
     super((callback: (...args: any[]) => void) => {
@@ -43,8 +43,15 @@ export class ChibiEvent<A extends Array<any>> extends ExtensibleFunction {
     return this._onRemoveListener;
   }
 
-  public asPromise(): Promise<A> {
-    return this.promise.promise;
+  public promise(): Promise<A> {
+    if(this.lastValue) {
+      return Promise.resolve(this.lastValue);
+    }
+    return this.nextValuePromise();
+  }
+
+  public nextValuePromise(): Promise<A> {
+    return this._promise.promise;
   }
 
   /**
@@ -109,13 +116,14 @@ export class ChibiEvent<A extends Array<any>> extends ExtensibleFunction {
     for (const listener of listeners) {
       listener.callback(...args);
     }
-    this.promise.complete(args);
+    this._promise.complete(args);
+    this._promise.reset();
     this.lastValue = args;
   }
 
   public reset() {
     this.lastValue = undefined;
-    this.promise.reset();
+    this._promise.reset();
   }
 }
 
