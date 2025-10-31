@@ -5,7 +5,7 @@ import {ActionArrayType, UnionToIntersection} from "../utils/Types";
 export class SequenceImpl<T extends GameObject = GameObject> extends Action<T> {
 
   private readonly actions: Action<any>[] = [];
-  private actionsToRun: Action<any>[];
+  private readonly actionsToRun: Action<any>[];
 
   private _loopCount: number = 1;
   private _currentLoop: number = 1;
@@ -21,19 +21,21 @@ export class SequenceImpl<T extends GameObject = GameObject> extends Action<T> {
     return this;
   }
 
-  public async _run(target: GameObject) {
-    let index: number = 0;
-    while(this._currentLoop <= this._loopCount || this.isIndefinitelyLooping()) {
-      const action = this.actions[index++];
-      if(action) {
-        this.target.play(action);
-        await action.onFinish.nextValuePromise();
-      } else {
-        index = 0;
-        this._currentLoop++;
+  public _run(_: GameObject) {
+    (async () => {
+      let index: number = 0;
+      while(this._currentLoop <= this._loopCount || this.isIndefinitelyLooping()) {
+        const action = this.actions[index++];
+        if(action) {
+          this.target.play(action);
+          await action.onFinish.nextValuePromise();
+        } else {
+          index = 0;
+          this._currentLoop++;
+        }
       }
-    }
-    this.finish();
+      this.finish();
+    })();
   }
 
   public _update(offset: number, target: GameObject) {
