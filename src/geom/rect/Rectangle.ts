@@ -6,6 +6,7 @@ import Position from "../../component/Position";
 import Size from "../size/Size";
 import ISize from "../size/ISize";
 import IPosition from "../position/IPosition";
+import IBounds from "./IBounds";
 
 export default class Rectangle implements Sizeable, Positionable {
     public readonly position: Position;
@@ -76,5 +77,18 @@ export default class Rectangle implements Sizeable, Positionable {
 
     public get bottom() {
         return this.y + this.height;
+    }
+
+    public toBounds(): IBounds {
+        return {
+            x1: this.x1,
+            y1: this.y1,
+            x2: this.x2,
+            y2: this.y2
+        };
+    }
+
+    public static fromBounds(bounds: IBounds): Rectangle {
+        return new Rectangle(bounds.x1, bounds.y1, bounds.x2 - bounds.x1, bounds.y2 - bounds.y1);
     }
 };

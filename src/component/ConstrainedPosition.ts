@@ -1,6 +1,8 @@
 import IPosition from "../geom/position/IPosition";
 import Rectangle from "../geom/rect/Rectangle";
 import Position from "./Position";
+import IRectangle from "../geom/rect/IRectangle";
+import IBounds from "../geom/rect/IBounds";
 
 export default class ConstrainedPosition extends Position {
   private _positionBounds: Rectangle = null;
@@ -9,8 +11,16 @@ export default class ConstrainedPosition extends Position {
     super(x, y);
   }
 
+  public set bounds(bounds: IBounds) {
+    this._positionBounds = Rectangle.fromBounds(bounds);
+  }
+
+  public get bounds(): IBounds {
+    return this._positionBounds.toBounds();
+  }
+
   public setPositionBounds(x1: number, y1: number, x2: number, y2: number) {
-    this._positionBounds = new Rectangle(x1, y1, x2-x1, y2-y1);
+    this._positionBounds = Rectangle.fromBounds({ x1, y1, x2, y2 });
     return this;
   }
 
@@ -38,7 +48,7 @@ export default class ConstrainedPosition extends Position {
     return this.current.y;
   }
 
-  public set(x: number|IPosition, y: number = 0) {
+  public set(x: number | IPosition, y: number = 0) {
     if(typeof x === "number") {
       if(this._positionBounds) {
         x = Math.max(this._positionBounds.left, Math.min(this._positionBounds.right, x));
