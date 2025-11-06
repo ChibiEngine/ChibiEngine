@@ -11,7 +11,7 @@ export default class Camera extends Container.With(ConstrainedPosition) implemen
 
   private readonly _offset = {x: 0, y: 0};
   private readonly _lerp = {x: 1, y: 1};
-  private bounds: Rectangle | undefined;
+  private _bounds: Rectangle | undefined;
 
   private following: GameObject;
 
@@ -20,8 +20,8 @@ export default class Camera extends Container.With(ConstrainedPosition) implemen
   }
 
   protected _addToScene(scene: Scene) {
-    if(this.bounds) {
-      const {x1, y1, x2, y2} = this.bounds;
+    if(this._bounds) {
+      const {x1, y1, x2, y2} = this._bounds;
       this.setBounds(x1, y1, x2, y2);
     }
 
@@ -55,7 +55,7 @@ export default class Camera extends Container.With(ConstrainedPosition) implemen
   }
 
   public setBounds(x1: number, y1: number, x2: number, y2: number) {
-    this.bounds = new Rectangle(x1, y1, x2 - x1, y2 - y1);
+    this._bounds = new Rectangle(x1, y1, x2 - x1, y2 - y1);
     if(this.scene) {
       this.position.setPositionBounds(x1 + this.scene.game.screen.width / 2,
         y1 + this.scene.game.screen.height / 2,
