@@ -9,6 +9,7 @@ export abstract class AbstractComponent<Name extends string, in T extends Abstra
    * Reference to the gameobject that the component is attached to.
    */
   private _gameobject: any;
+  public destroyed: boolean = false;
 
   public set gameobject(value: any) {
     this._gameobject = value;
@@ -58,6 +59,8 @@ export abstract class AbstractComponent<Name extends string, in T extends Abstra
   }
 
   public async destroy(): Promise<void> {
+    this.destroyed = true;
+    this._gameobject?.removeComponent(this);
     // To override
   }
 

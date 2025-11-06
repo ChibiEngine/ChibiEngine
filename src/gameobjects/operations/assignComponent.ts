@@ -6,7 +6,6 @@ import AbstractGameObject from "../AbstractGameObject";
 const ignore = ["constructor", "apply", "update", "variableUpdate", "componentName", "dontAddToUpdateList"];
 
 export default function assignComponent<O extends AbstractGameObject, C extends Component<string, O>>(target: O, component: C): O & C & ComponentProperty<C> {
-  // @ts-ignore
   component.gameobject = target;
 
   const properties = getProperties(component);
@@ -34,7 +33,18 @@ export default function assignComponent<O extends AbstractGameObject, C extends 
     }
   }
 
-  //@ts-ignore
-  target[component.componentName] = component;
+  Object.defineProperty(target, component.componentName, {
+    get: () => component,
+    set: (value: C) => {
+      // Destroy old component if any
+      // TODO: Implies a gameobject cannot have more than one component of the same type, is that something we want?
+      if(component.componentName in target) {
+        target.removeComponent(target[component.componentName as keyof AbstractGameObject] as Component<string, O>);
+      }
+      target.addComponent(value);
+    },
+    enumerable: true,
+    configurable: true,
+  });
   return target as any;
 }

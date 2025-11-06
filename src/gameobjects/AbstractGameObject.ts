@@ -53,11 +53,11 @@ export default abstract class AbstractGameObject extends Loadable {
     component.setTarget(this);
     component.initialize(this).then(() => {
       this.onCreated(async () => {
-        await component.preApply(this);
+        !component.destroyed && await component.preApply(this);
         this.onAddedToScene(async (_: unknown, scene: Scene) => {
-          await component.apply(this);
+          !component.destroyed && await component.apply(this);
           if(isUpdatable(component)) {
-            this.scene.addUpdatable(component);
+            !component.destroyed && this.scene.addUpdatable(component);
           }
         });
       });
@@ -69,8 +69,10 @@ export default abstract class AbstractGameObject extends Loadable {
     const index = this.components.indexOf(component);
     if (index === -1) return false;
     this.components.splice(index, 1);
-    component.destroy();
-    if (isUpdatable(component)) {
+    if(!component.destroyed) {
+      component.destroy();
+    }
+    if (this.scene && isUpdatable(component)) {
       this.scene.removeUpdatable(component);
     }
   }
