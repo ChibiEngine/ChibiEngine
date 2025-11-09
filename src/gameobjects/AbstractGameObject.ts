@@ -14,7 +14,11 @@ import {ChibiEvent} from "../event/ChibiEvent";
 
 export default abstract class AbstractGameObject extends Loadable {
   type = "gameobject";
-  protected components: Component<string, any>[] = [];
+  /**
+   * Component array for reading purposes.
+   * Do not modify this array directly, use addComponent and removeComponent methods.
+   */
+  public readonly components: Component<string, any>[] = [];
   public onAddedToScene = new ChibiEvent<[AbstractGameObject, Scene]>();
 
   private _scene: Scene;
