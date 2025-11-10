@@ -33,11 +33,10 @@ export default function assignComponent<O extends AbstractGameObject, C extends 
     }
   }
 
-  Object.defineProperty(target, component.componentName, {
+  const componentPropertyDefinition = {
     get: () => component,
     set: (value: C) => {
       // Destroy old component if any
-      // TODO: Implies a gameobject cannot have more than one component of the same type, is that something we want?
       if(component.componentName in target) {
         target.removeComponent(target[component.componentName as keyof AbstractGameObject] as Component<string, O>);
       }
@@ -45,6 +44,9 @@ export default function assignComponent<O extends AbstractGameObject, C extends 
     },
     enumerable: true,
     configurable: true,
-  });
+  };
+
+  Object.defineProperty(target, component.componentName, componentPropertyDefinition);
+  Object.defineProperty(target.components, component.componentName, componentPropertyDefinition);
   return target as any;
 }

@@ -96,7 +96,7 @@ export default abstract class GameObject extends AbstractGameObject.With(Positio
   public static With = AbstractGameObject.With;
 
   public async destroy(): Promise<void> {
-    for(const component of this.components) {
+    for(const component of Object.values(this.components)) {
       this.removeComponent(component);
     }
     if (this.scene) {

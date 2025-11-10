@@ -18,7 +18,7 @@ export default abstract class AbstractGameObject extends Loadable {
    * Component array for reading purposes.
    * Do not modify this array directly, use addComponent and removeComponent methods.
    */
-  public readonly components: Component<string, any>[] = [];
+  public readonly components: Record<string, Component<string, any>> = {};
   public onAddedToScene = new ChibiEvent<[AbstractGameObject, Scene]>();
 
   private _scene: Scene;
@@ -53,7 +53,7 @@ export default abstract class AbstractGameObject extends Loadable {
   //// COMPONENTS ////
 
   public addComponent<C extends Component<string, this>>(component: C) {
-    this.components.push(component);
+    this.components[component.componentName] = component;
     component.setTarget(this);
     component.initialize(this).then(() => {
       this.onCreated(async () => {
@@ -70,9 +70,9 @@ export default abstract class AbstractGameObject extends Loadable {
   }
 
   public removeComponent(component: Component<string, this>) {
-    const index = this.components.indexOf(component);
-    if (index === -1) return false;
-    this.components.splice(index, 1);
+    const existingComponent = this.components[component.componentName];
+    if (typeof existingComponent === "undefined") return false;
+    delete this.components[component.componentName];
     if(!component.destroyed) {
       component.destroy();
     }
@@ -82,7 +82,7 @@ export default abstract class AbstractGameObject extends Loadable {
   }
 
   public getComponent<T extends Component<string>>(type: Class<T>): T {
-    for (const component of this.components) {
+    for (const component of Object.values(this.components)) {
       if (component instanceof type) {
         return component;
       }
