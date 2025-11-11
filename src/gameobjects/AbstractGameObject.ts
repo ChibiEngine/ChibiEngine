@@ -20,6 +20,11 @@ export default abstract class AbstractGameObject extends Loadable {
    */
   public readonly components: Record<string, Component<string, any>> = {};
   public onAddedToScene = new ChibiEvent<[AbstractGameObject, Scene]>();
+  /**
+   * List of properties that are aliases to component properties.
+   * TODO: clean these up, there are too many props aliases
+   */
+  public readonly __componentPropsAliases: string[] = [];
 
   private _scene: Scene;
 

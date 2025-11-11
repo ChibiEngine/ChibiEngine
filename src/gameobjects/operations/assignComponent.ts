@@ -10,15 +10,18 @@ export default function assignComponent<O extends AbstractGameObject, C extends 
 
   const properties = getProperties(component);
   for(const [key, descriptor] of Object.entries(properties)) {
-    if(ignore.includes(key) || key in target) continue;
+    if(ignore.includes(key) || key in target && !target.__componentPropsAliases.includes(key)) continue;
 
+    target.__componentPropsAliases.push(key);
+
+    // If the property is a getter/setter, bind it on the target
     const get = descriptor?.get?.bind(component);
     const set = descriptor?.set?.bind(component);
 
     if(get || set) {
-      Object.defineProperty(target, key, { get, set });
+      Object.defineProperty(target, key, { get, set, configurable: true });
     } else if("value" in descriptor) {
-      if(typeof descriptor.value === "function") {
+      if(typeof descriptor.value === "function") { // TODO explain this
         const bindToComponent = "bindToComponent" in descriptor.value ? descriptor.value.bindToComponent : true;
         // @ts-ignore
         target[key] = bindToComponent ? descriptor.value.bind(component) : descriptor.value;
@@ -27,7 +30,8 @@ export default function assignComponent<O extends AbstractGameObject, C extends 
         // @ts-ignore
           get: () => component[key],
         // @ts-ignore
-          set: (value) => component[key] = value
+          set: (value) =>  component[key] = value,
+          configurable: true
         });
       }
     }
@@ -35,12 +39,14 @@ export default function assignComponent<O extends AbstractGameObject, C extends 
 
   const componentPropertyDefinition = {
     get: () => component,
-    set: (value: C) => {
-      // Destroy old component if any
-      if(component.componentName in target) {
-        target.removeComponent(target[component.componentName as keyof AbstractGameObject] as Component<string, O>);
+    set: (newComponent: C) => {
+      target.removeComponent(component);
+      if(newComponent) {
+        target.addComponent(newComponent);
       }
-      target.addComponent(value);
+    },
+    delete: () => {
+      target.removeComponent(component);
     },
     enumerable: true,
     configurable: true,
